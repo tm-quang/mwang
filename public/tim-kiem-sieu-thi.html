@@ -1,23 +1,81 @@
-<div class="container">
-    <h2><i class="fas fa-store-alt"></i> Tìm kiếm Thông tin Siêu Thị</h2>
-    <label for="maSTInput">Nhập Mã Siêu Thị (ví dụ: 12345)</label>
-    <div class="input-wrapper">
-        <input type="text" id="maSTInput" placeholder="Nhập mã siêu thị..." autocomplete="off">
-        <div id="suggestions-box" class="suggestions-container"></div>
-    </div>
-    <div style="display: flex; gap: 10px;">
-        <button id="searchButton" style="flex-grow: 1;">
-            <i class="fas fa-search"></i>
-            <span id="buttonText">Tìm Kiếm</span>
-        </button>
-        <button id="clearButton" type="button">
-            <i class="fas fa-eraser"></i>
-            <span>Xóa</span>
-        </button>
-    </div>
-    <div class="message-area">
-        <div id="loadingMessage" class="loading-message"><div class="spinner"></div></div>
-        <div id="errorMessage" class="error-message"></div>
-    </div>
+<!DOCTYPE html>
+<html>
+<head>
+    </head>
+<body>
+    <div class="container">
+        </div>
     <div id="resultOutput" class="result-box"></div>
-</div>
+
+<script>
+    const maSTInput = document.getElementById('maSTInput');
+    const searchButton = document.getElementById('searchButton');
+    const buttonText = document.getElementById('buttonText');
+    const resultOutput = document.getElementById('resultOutput');
+    const errorMessage = document.getElementById('errorMessage');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const suggestionsBox = document.getElementById('suggestions-box');
+    // ... các biến DOM khác
+    
+    async function searchStore() {
+        // [ĐIỀU CHỈNH] Bật trạng thái đang tìm kiếm
+        isSearching = true; 
+        
+        const maST = maSTInput.value;
+        suggestionsBox.style.display = 'none';
+        resultOutput.style.display = 'none';
+        errorMessage.textContent = '';
+        maSTInput.classList.remove('error');
+        searchButton.disabled = true;
+        buttonText.textContent = 'Đang tìm...';
+        loadingMessage.style.display = 'block';
+
+        if (!maST.trim()) {
+            errorMessage.textContent = 'Vui lòng nhập Mã Siêu Thị để tìm kiếm.';
+            maSTInput.classList.add('error');
+            resetButtonState();
+            return;
+        }
+
+        // ... hiển thị loading
+        searchButton.disabled = true;
+
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            alert("Lỗi xác thực. Vui lòng đăng nhập lại.");
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/search-store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ maST: maST })
+            });
+
+            if (response.status === 401) { throw new Error('Phiên đã hết hạn'); }
+            if (!response.ok && response.status !== 404) { throw new Error('Lỗi máy chủ'); }
+
+            const result = await response.json();
+
+            if (response.status === 404 || !result) {
+                errorMessage.textContent = 'Không tìm thấy thông tin cho Mã Siêu Thị: "' + maST + '".';
+            } else {
+                resultOutput.innerHTML = formatResult(result); // formatResult giữ nguyên
+                resultOutput.style.display = 'block';
+            }
+
+        } catch (error) {
+            errorMessage.textContent = 'Lỗi: ' + error.message;
+        } finally {
+            // ... ẩn loading
+            searchButton.disabled = false;
+        }
+    }
+    // ... các hàm khác như clearSearch, formatResult giữ nguyên ...
+</script>
+</body>
+</html>

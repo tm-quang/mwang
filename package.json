@@ -1,6 +1,7 @@
 {
   "name": "my-it-app",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,8 +9,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "googleapis": "^150.0.1"
+    "googleapis": "^140.0.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

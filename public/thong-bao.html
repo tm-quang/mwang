@@ -1,3 +1,182 @@
-<div id="notification-page-content">
-    <div id="loading-spinner-local" class="spinner"></div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        /* CSS gốc của bạn giữ nguyên */
+        #loading-spinner-local { border: 4px solid #e5e7eb; border-top: 4px solid #0056b3; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 50px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .columns-container-pb2 { display: flex; gap: 20px; }
+        .content-column { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .column-title { font-size: 1.2rem; font-weight: 600; color: #c00000; padding-bottom: 8px; margin-bottom: 16px; border-bottom: 2px solid #e5e7eb; display: flex; align-items: center; gap: 10px; }
+        .notification-list { display: flex; flex-direction: column; gap: 16px; }
+        .notification-card-pb3 { background-color: #eaeaea; border: 0.5px solid black; border-radius: 0.5rem; padding: 10px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
+        .notification-header-pb3 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; }
+        .notification-header-pb3 .icon { font-size: 1.3rem; color: black; }
+        .notification-header-pb3 h4 { margin: 0; font-size: 1.1rem; font-weight: 600; flex-grow: 1; }
+        .notification-message-pb3 { margin: 0 0 16px 0; color: black; line-height: 1.7; font-size: 0.95rem; }
+        .notification-footer-pb3 { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
+        .footer-left { text-align: left; flex: 1; }
+        .footer-center { text-align: center; flex: 1; }
+        .footer-right { text-align: right; flex: 1; }
+        .new-badge { background-color: #ef4444; color: white; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; animation: blink-animation 1.2s infinite; margin-left: 8px; }
+        .type-badge { padding: 4px 10px; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; color: #000; margin-left: auto; }
+        .type-báchhóaxanh { background-color: #90ee90; }
+        .type-tgdd-dmx { background-color: #ffd700; }
+        .type-avakid { background-color: #f08080; }
+        .type-ankhang { background-color: #add8e6; }
+        .type-kho-vp { background-color: #4682b4; color: white; }
+        .update-date-badge, .deadline-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; color: white; }
+        .update-date-badge { background-color: #22c55e; }
+        .deadline-badge { background-color: #ef4444; animation: blink-animation 1.5s infinite; }
+        .notification-link-btn-pb3 { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background-color: #0056b3; color: white !important; text-decoration: none; border-radius: 0.375rem; font-size: 0.85rem; font-weight: 500; transition: opacity 0.2s ease; }
+        .notification-link-btn-pb3:hover { opacity: 0.85; }
+        @keyframes blink-animation { 50% { opacity: 0.4; } }
+        @media (max-width: 768px) { .columns-container-pb2 { flex-direction: column; } .notification-footer-pb3 { flex-direction: column; align-items: stretch; text-align: center; } .footer-left, .footer-center, .footer-right { text-align: center; flex: none; } }
+        /* [THU GỌN] CSS cho tính năng thu gọn thông báo */
+.notification-card-pb3 {
+  /* Thêm transition để các thay đổi về box-shadow mượt mà hơn */
+  transition: box-shadow 0.3s ease;
+  cursor: pointer; /* Biến con trỏ thành hình bàn tay khi di chuột qua */
+}
+.notification-card-pb3:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+.notification-message-pb3 {
+  /* Hiệu ứng co giãn mượt mà */
+  transition: max-height 0.4s ease-out, padding 0.3s ease-out, margin 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: auto; /* Chiều cao tối đa khi mở */
+}
+.notification-card-pb3.collapsed .notification-message-pb3 {
+  max-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+.expand-icon {
+  margin-left: auto; /* Đẩy icon về phía bên phải */
+  font-size: 0.9rem;
+  color: #000000;
+  transition: transform 0.4s ease;
+}
+.notification-card-pb3.collapsed .expand-icon {
+  transform: rotate(0deg);
+}
+.notification-card-pb3:not(.collapsed) .expand-icon {
+  transform: rotate(-180deg);
+}
+    </style>
+    </head>
+<body>
+    <div id="notification-page-content">
+        <div id="loading-spinner-local"></div>
+    </div>
+
+<script>
+    async function loadNotificationData() {
+        const contentDiv = document.getElementById('notification-page-content');
+        contentDiv.innerHTML = '<div id="loading-spinner-local"></div>'; 
+
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            // Có thể chuyển hướng hoặc hiển thị lỗi
+            contentDiv.innerHTML = `<p style="color: red;">Lỗi xác thực. Vui lòng đăng nhập lại.</p>`;
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/notifications', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 401) {
+                // Token hết hạn hoặc không hợp lệ
+                alert('Phiên đã hết hạn, vui lòng đăng nhập lại.');
+                localStorage.removeItem('userToken');
+                window.parent.location.href = '/login.html'; // Dùng window.parent nếu trang này được load trong iframe
+                return;
+            }
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.message || 'Lỗi không xác định');
+            }
+            
+            const data = await response.json();
+            renderPage(data);
+
+        } catch (error) {
+            contentDiv.innerHTML = `<p style="color: red;">Lỗi tải dữ liệu: ${error.message}</p>`;
+            console.error(error);
+        }
+    }
+
+    function renderPage(allNotifications) {
+        const contentDiv = document.getElementById('notification-page-content');
+        if (!contentDiv) return;
+        
+        const trienKhaiData = allNotifications.filter(item => item.category === 'Triển khai');
+        const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
+
+        const createColumnHtml = (title, data) => {
+            let columnHtml = `<div class="content-column"><h2 class="column-title">${title}</h2><div class="notification-list">`;
+            if (data.length > 0) {
+                data.forEach(item => {
+                    // Logic tạo card HTML giữ nguyên như file gốc của bạn
+                    const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
+                    // ... các hTML khác
+                    columnHtml += `<div class="notification-card-pb3 collapsed"> ... </div>`;
+                });
+            } else {
+                columnHtml += '<p>Không có thông báo nào.</p>';
+            }
+            columnHtml += '</div></div>';
+            return columnHtml;
+        };
+        
+        let finalHtml = '<div class="columns-container-pb2">';
+        finalHtml += createColumnHtml('<i class="fas fa-bullhorn"></i> THÔNG BÁO TRIỂN KHAI', trienKhaiData);
+        finalHtml += createColumnHtml('<i class="fas fa-users"></i> THÔNG BÁO MTAY2', noiBoData);
+        finalHtml += '</div>';
+
+        contentDiv.innerHTML = finalHtml;
+        setupCollapseListeners(); // Hàm này giữ nguyên
+    }
+        function setupCollapseListeners() {
+            // Lắng nghe sự kiện trên toàn bộ tài liệu (document)
+            document.addEventListener('click', function(event) {
+                const allCards = document.querySelectorAll('.notification-card-pb3');
+                // Tìm thẻ thông báo gần nhất được click
+                const clickedCard = event.target.closest('.notification-card-pb3');
+
+                // Nếu click vào một link, để cho link hoạt động và không đóng/mở thẻ
+                if (event.target.closest('a')) {
+                    return;
+                }
+
+                // Lặp qua tất cả các thẻ
+                allCards.forEach(card => {
+                    // Nếu thẻ này không phải là thẻ vừa được click, hãy đóng nó lại
+                    if (card !== clickedCard) {
+                        card.classList.add('collapsed');
+                    }
+                });
+
+                // Nếu có một thẻ được click, đảo ngược trạng thái của nó (đóng/mở)
+                if (clickedCard) {
+                    clickedCard.classList.toggle('collapsed');
+                }
+            });
+        }
+        loadNotificationData();
+</script>
+</body>
+</html>
+
+
