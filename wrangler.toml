@@ -1,6 +1,16 @@
-# wrangler.toml
 name = "mwang"
 compatibility_date = "2024-06-17"
-
-# Dòng này là quan trọng nhất để sửa lỗi
 compatibility_flags = [ "nodejs_compat" ]
+
+# Dòng này rất quan trọng, chỉ cho Cloudflare biết thư mục chứa frontend
+pages_build_output_dir = "public"
+
+# Khai báo các binding cho Functions
+[[d1_databases]]
+binding = "DB" # Tên binding phải khớp với code: env.DB
+database_name = "mwang-db-app" # Thay bằng tên D1 database của bạn
+database_id = "fbcfd28a-9b89-419b-8baa-b27f3f14926f" # Thay bằng ID của D1 database
+
+[[kv_namespaces]]
+binding = "YOUR_KV_NAMESPACE" # Tùy chọn: nếu bạn dùng KV
+id = "YOUR_KV_ID"
