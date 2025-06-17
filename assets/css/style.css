@@ -66,24 +66,8 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 #left-sidebar-container.collapsed .menu-section-title span { display:none; }
 #left-sidebar-container.collapsed .menu-section { border-bottom: none; }
 
-/* === [BẬT LẠI] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER === */
-#left-sidebar-container.collapsed:hover {
-    width: 300px;
-    padding: 5px;
-    z-index: 6;
-}
-#left-sidebar-container.collapsed:hover .menu-button-sidebar span,
-#left-sidebar-container.collapsed:hover .dropdown-button span,
-#left-sidebar-container.collapsed:hover .menu-section-title span {
-    opacity: 1;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    pointer-events: auto;
-    padding: 0;
-    margin: 0;
-}
-/* === [KẾT THÚC] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER === */
+#left-sidebar-container.collapsed:hover { width: 300px; padding: 5px; z-index: 6; }
+#left-sidebar-container.collapsed:hover .menu-button-sidebar span, #left-sidebar-container.collapsed:hover .dropdown-button span, #left-sidebar-container.collapsed:hover .menu-section-title span { opacity: 1; width: auto; height: auto; overflow: visible; pointer-events: auto; padding: 0; margin: 0; }
 
 .sidebar-content-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1; overflow-y: auto; }
 .menu-section { width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--divider-color-dark); }
@@ -100,19 +84,37 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .dropdown { position: relative; display: flex; width: 100%; margin-bottom: 4px; justify-content: center; flex-direction: column; align-items: center; }
 .dropdown-button { align-items: left; }
 .dropdown-arrow { font-size: 0.8rem; transition: transform 0.2s ease; margin-left: 10px; display: none; }
-.dropdown-menu { display: none; position: fixed; min-width: 230px; z-index: 1001; background-color: #1f2937; border-radius: var(--border-radius-lg); padding: 6px; flex-direction: column; box-shadow: var(--shadow-lg); border: 1px solid var(--divider-color-dark); }
-.dropdown-menu.show { display: flex; }
-.dropdown-menu .menu-button-sidebar { width: 100%; box-sizing: border-box; }
-.dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
 
-/* === [KHẮC PHỤC LỖI] HIỂN THỊ LẠI CHỮ TRONG MENU CON === */
-#left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar span {
-    opacity: 1;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    pointer-events: auto;
+/* === [CẬP NHẬT] CSS CHO MENU CON === */
+.dropdown-menu {
+    display: none;
+    padding-left: 20px; /* Thụt lề cho menu con ở chế độ mở rộng */
+    background-color: rgba(0,0,0,0.15);
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    width: 90%;
+    margin: -4px auto 0 auto;
+    padding-top: 4px;
 }
+.dropdown-menu.show { display: block; }
+.dropdown-menu .menu-button-sidebar { width: 100%; box-sizing: border-box; }
+
+/* Chỉ áp dụng position:fixed khi sidebar thu gọn */
+#left-sidebar-container.collapsed .dropdown-menu {
+    position: fixed;
+    min-width: 230px;
+    z-index: 1001;
+    background-color: #1f2937;
+    border-radius: var(--border-radius-lg);
+    padding: 6px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--divider-color-dark);
+    padding-left: 6px; /* Reset padding-left */
+    margin: 0;
+}
+#left-sidebar-container.collapsed .dropdown-menu.show { display: flex; flex-direction: column; }
+#left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
+#left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar span { opacity: 1; width: auto; height: auto; overflow: visible; pointer-events: auto; }
+/* === [KẾT THÚC] CẬP NHẬT CSS MENU CON === */
 
 /* Right Sidebar */
 #right-sidebar-container { width: 250px; background-color: var(--bg-sidebar-right); color: var(--text-primary); padding: 16px; border-left: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; overflow-y: auto; transition: width 0.3s ease, padding 0.3s ease; position: relative; }
@@ -123,23 +125,8 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 #right-sidebar-container.collapsed .right-menu-section { margin-bottom: 10px; }
 #right-sidebar-container.collapsed h3 { height: auto; margin-bottom: 10px; justify-content:center; }
 #right-sidebar-container.collapsed h3 .icon { display: none; }
-
-/* === [BẬT LẠI] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER (BÊN PHẢI) === */
-#right-sidebar-container.collapsed:hover {
-    width: 250px;
-    padding: 16px;
-    z-index: 6;
-}
-#right-sidebar-container.collapsed:hover h3 span,
-#right-sidebar-container.collapsed:hover .link-button-right span {
-    opacity: 1;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    pointer-events: auto;
-}
-/* === [KẾT THÚC] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER (BÊN PHẢI) === */
-
+#right-sidebar-container.collapsed:hover { width: 250px; padding: 16px; z-index: 6; }
+#right-sidebar-container.collapsed:hover h3 span, #right-sidebar-container.collapsed:hover .link-button-right span { opacity: 1; width: auto; height: auto; overflow: visible; pointer-events: auto; }
 #right-sidebar-container h3 { color: var(--text-secondary); text-align: center; margin-bottom: 16px; font-size: 0.8rem; font-weight: 600; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
 .right-menu-section { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
 .link-button-right { background-color: var(--bg-content); color: var(--text-secondary); padding: 8px 12px; margin-bottom: 8px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); cursor: pointer; width: 85%; font-size: 0.9rem; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: flex-start; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
