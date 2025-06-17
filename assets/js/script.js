@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
         
-    // --- DỮ LIỆU MENU ---
     const leftMenuData = [
         {
             title: 'ADMIN',
             items: [
               { id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true, 
                 subItems: [
-                    { id: 'btnDatabase', text: 'DATABASE', pageUrl: '#', pageTitle: 'QUẢN LÝ DỮ LIỆU', icon: 'fa-solid fa-database' },
-                    { id: 'btnUserInfo', text: 'QUẢN LÝ USER', pageUrl: '#', pageTitle: 'QUẢN LÝ THÀNH VIÊN', icon: 'fa-solid fa-users' },
-                    { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', pageUrl: '#', pageTitle: 'TẠO THÔNG BÁO MỚI', icon: 'fa-regular fa-newspaper' },
+                    { id: 'btnDatabase', text: 'DATABASE', pageUrl: '#'},
+                    { id: 'btnUserInfo', text: 'QUẢN LÝ USER', pageUrl: '#'},
+                    { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', pageUrl: '#'},
                 ]
               }
             ]
@@ -18,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
             title: '2025 - IT MTAY2',
             items: [
                 { id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
-                  subItems: [ { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#', pageTitle: 'TRIỂN KHAI MIỀN TÂY 2', icon: 'fas fa-map-marked-alt' } ] 
+                  subItems: [ { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#'} ] 
                 },
-                { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', pageUrl: '#', pageTitle: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools' },
+                { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
             ]
         }
     ];
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
-    // --- DOM ELEMENTS ---
     const leftSidebar = document.getElementById('left-sidebar-container');
     const rightSidebar = document.getElementById('right-sidebar-container');
     const leftSidebarContent = leftSidebar.querySelector('.sidebar-content-wrapper');
@@ -53,20 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const supportPopup = document.getElementById('supportContactPopup');
     const closeSupportPopupBtn = document.getElementById('closeSupportPopup');
     
-    // --- STATE & TIMERS ---
     let leftSidebarTimeout, rightSidebarTimeout, dropdownTimeout;
     const HIDE_DELAY = 200;
-
-    // --- FUNCTIONS ---
-    
     const isDesktop = () => window.innerWidth > 1024;
-
-    const collapseSidebar = (sidebar) => {
-        if (sidebar) sidebar.classList.add('collapsed');
-    };
-    const expandSidebar = (sidebar) => {
-        if (sidebar) sidebar.classList.remove('collapsed');
-    };
 
     function hideAllDropdowns() {
         document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
@@ -74,27 +61,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderLeftMenu() {
         leftSidebarContent.innerHTML = '';
-        leftMenuData.forEach(section => {
+        leftMenuData.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'menu-section';
-            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${section.title}</span></h3>`;
+            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
             
-            section.items.forEach(item => {
-                if (item.isDropdown) {
+            sectionData.items.forEach(itemData => {
+                if (itemData.isDropdown) {
                     const dropdownDiv = document.createElement('div');
                     dropdownDiv.className = 'dropdown';
 
                     const button = document.createElement('div');
                     button.className = 'dropdown-button';
-                    button.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
+                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span>${itemData.text}</span>`;
                     
                     const menu = document.createElement('div');
                     menu.className = 'dropdown-menu';
-                    item.subItems.forEach(subItem => {
+                    itemData.subItems.forEach(subItemData => {
                         const link = document.createElement('a');
-                        link.href = subItem.pageUrl;
+                        link.href = subItemData.pageUrl;
                         link.className = 'menu-button-sidebar';
-                        link.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`;
+                        link.innerHTML = `<i class="${subItemData.icon || 'fa-solid fa-chevron-right'} icon"></i><span>${subItemData.text}</span>`;
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             if (!isDesktop()) {
@@ -107,16 +94,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     dropdownDiv.append(button, menu);
                     
+                    button.addEventListener('click', (e) => {
+                        if (!isDesktop()) {
+                            e.stopPropagation();
+                            const isAlreadyOpen = menu.classList.contains('show');
+                            hideAllDropdowns();
+                            if (!isAlreadyOpen) {
+                                menu.style.position = 'relative';
+                                menu.style.left = '0';
+                                menu.style.top = '0';
+                                menu.classList.add('show');
+                            }
+                        }
+                    });
+
                     dropdownDiv.addEventListener('mouseenter', () => {
                         if (isDesktop() && !leftSidebar.classList.contains('collapsed')) {
                             clearTimeout(dropdownTimeout);
                             hideAllDropdowns();
                             const rect = button.getBoundingClientRect();
+                            menu.style.position = 'fixed';
                             menu.style.top = `${rect.top}px`;
                             menu.style.left = `${leftSidebar.getBoundingClientRect().right + 5}px`;
                             menu.classList.add('show');
                         }
                     });
+
                     dropdownDiv.addEventListener('mouseleave', () => {
                         if (isDesktop()) {
                             dropdownTimeout = setTimeout(hideAllDropdowns, HIDE_DELAY);
@@ -125,9 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     sectionDiv.appendChild(dropdownDiv);
                 } else {
                     const link = document.createElement('a');
-                    link.href = item.pageUrl;
+                    link.href = itemData.pageUrl;
                     link.className = 'menu-button-sidebar';
-                    link.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
+                    link.innerHTML = `<i class="${itemData.icon} icon"></i><span>${itemData.text}</span>`;
                     sectionDiv.appendChild(link);
                 }
             });
@@ -137,16 +140,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderRightMenu() {
         rightSidebarContent.innerHTML = '';
-        rightMenuData.forEach(section => {
+        rightMenuData.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'menu-section';
-            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${section.title}</span></h3>`;
-            section.items.forEach(item => {
+            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
+            sectionData.items.forEach(itemData => {
                 const link = document.createElement('a');
-                link.href = item.href;
+                link.href = itemData.href;
                 link.target = '_blank';
                 link.className = 'right-sidebar-item';
-                link.innerHTML = `<i class="${item.icon} icon"></i><span class="right-sidebar-item-text">${item.text}</span>`;
+                link.innerHTML = `<i class="${itemData.icon} icon"></i><span class="right-sidebar-item-text">${itemData.text}</span>`;
                 sectionDiv.appendChild(link);
             });
             rightSidebarContent.appendChild(sectionDiv);
@@ -155,69 +158,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateClock() {
         const now = new Date();
-        const timeEl = document.getElementById('clock-time');
-        const dateEl = document.getElementById('clock-date');
-        if (timeEl) timeEl.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-        if (dateEl) dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
+        document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
     }
 
-    // --- EVENT LISTENERS ---
+    // --- EVENT LISTENERS & INITIALIZATION ---
     
-    // Sidebar hover for Desktop
     [leftSidebar, rightSidebar].forEach(sidebar => {
         if (!sidebar) return;
         sidebar.addEventListener('mouseenter', () => {
             if (isDesktop()) {
                 clearTimeout(sidebar === leftSidebar ? leftSidebarTimeout : rightSidebarTimeout);
-                expandSidebar(sidebar);
+                sidebar.classList.remove('collapsed');
             }
         });
         sidebar.addEventListener('mouseleave', () => {
             if (isDesktop()) {
-                const timeout = setTimeout(() => collapseSidebar(sidebar), HIDE_DELAY);
+                const timeout = setTimeout(() => sidebar.classList.add('collapsed'), HIDE_DELAY);
                 if (sidebar === leftSidebar) leftSidebarTimeout = timeout;
                 else rightSidebarTimeout = timeout;
             }
         });
     });
 
-    // Hamburger menu for Mobile/Tablet
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', () => {
-            leftSidebar.classList.toggle('open');
-            mobileOverlay.classList.toggle('show');
-        });
-    }
-    if(mobileOverlay) {
-        mobileOverlay.addEventListener('click', () => {
-            leftSidebar.classList.remove('open');
-            mobileOverlay.classList.remove('show');
-        });
-    }
+    hamburgerBtn.addEventListener('click', () => {
+        leftSidebar.classList.toggle('open');
+        mobileOverlay.classList.toggle('show');
+    });
 
-    // Support Popup
-    if (supportBtn) {
-        supportBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            supportPopup.classList.toggle('show');
-        });
-    }
-    if (closeSupportPopupBtn) {
-        closeSupportPopupBtn.addEventListener('click', () => supportPopup.classList.remove('show'));
-    }
+    mobileOverlay.addEventListener('click', () => {
+        leftSidebar.classList.remove('open');
+        mobileOverlay.classList.remove('show');
+        hideAllDropdowns();
+    });
+
+    supportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        supportPopup.classList.toggle('show');
+    });
+
+    closeSupportPopupBtn.addEventListener('click', () => supportPopup.classList.remove('show'));
+    
     document.addEventListener('click', (e) => {
-        if (supportPopup && !supportPopup.contains(e.target) && supportBtn && !supportBtn.contains(e.target)) {
+        if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
+        }
+        if (!e.target.closest('.dropdown')) {
+            hideAllDropdowns();
         }
     });
 
-    // --- INITIALIZATION ---
     renderLeftMenu();
     renderRightMenu();
-    if(isDesktop()){
-        collapseSidebar(leftSidebar);
-        collapseSidebar(rightSidebar);
-    }
     updateClock();
-    setInterval(updateClock, 60000); // Update clock every minute
+    setInterval(updateClock, 60000);
 });
