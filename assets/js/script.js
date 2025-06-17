@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
     
-    // Sample notification data
     const notificationData = {
         col1: [
             {
@@ -143,18 +142,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         link.innerHTML = `<i class="icon ${subItemData.icon}"></i><span>${subItemData.text}</span>`;
                         menu.appendChild(link);
                     });
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();
+
+                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON BẰNG HOVER ===
+                    dropdownDiv.addEventListener('mouseenter', () => {
                         const isAlreadyOpen = menu.classList.contains('show');
+                        if (isAlreadyOpen) return;
+
                         hideAllDropdowns();
-                        if (!isAlreadyOpen) {
-                            menu.classList.add('show');
-                            button.classList.add('active');
-                            const rect = button.getBoundingClientRect();
-                            menu.style.left = `${rect.right + 8}px`;
-                            menu.style.top = `${rect.top}px`;
-                        }
+                        menu.classList.add('show');
+                        button.classList.add('active');
+                        
+                        const rect = button.getBoundingClientRect();
+                        menu.style.left = `${rect.right + 8}px`;
+                        menu.style.top = `${rect.top}px`;
                     });
+
+                    dropdownDiv.addEventListener('mouseleave', () => {
+                        menu.classList.remove('show');
+                        button.classList.remove('active');
+                    });
+                    // === [KẾT THÚC] CẬP NHẬT SỰ KIỆN HOVER ===
+
                     dropdownDiv.append(button, menu);
                     sectionDiv.appendChild(dropdownDiv);
                 } else {
@@ -263,6 +271,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!DOM.supportPopup.contains(e.target) && !DOM.supportBtn.contains(e.target)) {
                 DOM.supportPopup.classList.remove('show');
             }
+            // Logic đóng dropdown khi click ra ngoài đã được xử lý bằng mouseleave,
+            // nhưng vẫn giữ lại để phòng trường hợp menu bị kẹt mở.
             if (!e.target.closest('.dropdown')) {
                 hideAllDropdowns();
             }
