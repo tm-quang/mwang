@@ -1,16 +1,14 @@
 {
-  "name": "my-it-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "wrangler pages deploy ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
   "dependencies": {
-    "googleapis": "^140.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "googleapis": "^128.0.0",
+    "itty-router": "^4.0.23",
+    "jose": "^5.0.1"
   }
 }
