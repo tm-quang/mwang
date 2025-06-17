@@ -1,2 +1,10 @@
-# File wrangler.toml đã được tối giản cho Pages
+# File wrangler.toml - Cấu hình lai để giải quyết lỗi
+name = "mwang"
 pages_build_output_dir = "public"
+
+# Khai báo binding D1 ở cấp cao nhất.
+# Chúng ta sẽ dựa vào UI của Cloudflare để bật cờ node_compat.
+[[d1_databases]]
+binding = "DB" # Tên binding phải khớp với code: env.DB
+database_name = "mwang-db-app"
+database_id = "fbcfd28a-9b89-419b-8baa-b27f3f14926f"
