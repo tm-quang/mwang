@@ -65,6 +65,26 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 #left-sidebar-container.collapsed .menu-section-title { padding: 0; height: auto; margin-bottom: 10px; justify-content: center; }
 #left-sidebar-container.collapsed .menu-section-title span { display:none; }
 #left-sidebar-container.collapsed .menu-section { border-bottom: none; }
+
+/* === [BẬT LẠI] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER === */
+#left-sidebar-container.collapsed:hover {
+    width: 300px;
+    padding: 5px;
+    z-index: 6;
+}
+#left-sidebar-container.collapsed:hover .menu-button-sidebar span,
+#left-sidebar-container.collapsed:hover .dropdown-button span,
+#left-sidebar-container.collapsed:hover .menu-section-title span {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    pointer-events: auto;
+    padding: 0;
+    margin: 0;
+}
+/* === [KẾT THÚC] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER === */
+
 .sidebar-content-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1; overflow-y: auto; }
 .menu-section { width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--divider-color-dark); }
 .menu-section:last-of-type { border-bottom: none; }
@@ -85,6 +105,15 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .dropdown-menu .menu-button-sidebar { width: 100%; box-sizing: border-box; }
 .dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
 
+/* === [KHẮC PHỤC LỖI] HIỂN THỊ LẠI CHỮ TRONG MENU CON === */
+#left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar span {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    pointer-events: auto;
+}
+
 /* Right Sidebar */
 #right-sidebar-container { width: 250px; background-color: var(--bg-sidebar-right); color: var(--text-primary); padding: 16px; border-left: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; overflow-y: auto; transition: width 0.3s ease, padding 0.3s ease; position: relative; }
 #right-sidebar-container.collapsed { width: 100px; padding: 16px 0; }
@@ -94,6 +123,23 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 #right-sidebar-container.collapsed .right-menu-section { margin-bottom: 10px; }
 #right-sidebar-container.collapsed h3 { height: auto; margin-bottom: 10px; justify-content:center; }
 #right-sidebar-container.collapsed h3 .icon { display: none; }
+
+/* === [BẬT LẠI] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER (BÊN PHẢI) === */
+#right-sidebar-container.collapsed:hover {
+    width: 250px;
+    padding: 16px;
+    z-index: 6;
+}
+#right-sidebar-container.collapsed:hover h3 span,
+#right-sidebar-container.collapsed:hover .link-button-right span {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    pointer-events: auto;
+}
+/* === [KẾT THÚC] TÍNH NĂNG TỰ MỞ RỘNG KHI HOVER (BÊN PHẢI) === */
+
 #right-sidebar-container h3 { color: var(--text-secondary); text-align: center; margin-bottom: 16px; font-size: 0.8rem; font-weight: 600; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
 .right-menu-section { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
 .link-button-right { background-color: var(--bg-content); color: var(--text-secondary); padding: 8px 12px; margin-bottom: 8px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); cursor: pointer; width: 85%; font-size: 0.9rem; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: flex-start; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
@@ -181,7 +227,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 }
 @media (max-width: 768px) {
     #main-header { padding: 12px 16px; }
-    #current-page-title, #session-timer-container, .greeting-text { display: none; }
+    #current-page-title, #session-timer-container, .greeting-text, #userNameDisplay { display: none; }
     .columns-container-pb2 { flex-direction: column; }
     .notification-footer-pb3 { flex-direction: column; align-items: stretch; text-align: center; }
     .footer-left, .footer-center, .footer-right { text-align: center; flex: none; }
