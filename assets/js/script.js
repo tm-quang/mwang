@@ -1,14 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
         
+    // --- DỮ LIỆU MENU (Bạn có thể dễ dàng thêm/sửa ở đây) ---
     const leftMenuData = [
         {
             title: 'ADMIN',
             items: [
-              { id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true, 
+              { 
+                text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true, 
                 subItems: [
-                    { id: 'btnDatabase', text: 'DATABASE', pageUrl: '#'},
-                    { id: 'btnUserInfo', text: 'QUẢN LÝ USER', pageUrl: '#'},
-                    { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', pageUrl: '#'},
+                    { text: 'DATABASE', pageUrl: '#', icon: 'fa-solid fa-database' },
+                    { text: 'QUẢN LÝ USER', pageUrl: '#', icon: 'fa-solid fa-users' },
+                    { text: 'TẠO THÔNG BÁO MỚI', pageUrl: '#', icon: 'fa-regular fa-newspaper' },
                 ]
               }
             ]
@@ -16,10 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: '2025 - IT MTAY2',
             items: [
-                { id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
-                  subItems: [ { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#'} ] 
+                { 
+                    text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
+                    subItems: [ { text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#', icon: 'fas fa-map-marked-alt' } ] 
                 },
-                { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
+                { text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
             ]
         }
     ];
@@ -41,19 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
+    // --- DOM ELEMENTS ---
+    const body = document.body;
     const leftSidebar = document.getElementById('left-sidebar-container');
     const rightSidebar = document.getElementById('right-sidebar-container');
     const leftSidebarContent = leftSidebar.querySelector('.sidebar-content-wrapper');
     const rightSidebarContent = rightSidebar.querySelector('.sidebar-content-wrapper');
-    const hamburgerBtn = document.getElementById('hamburger-menu');
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
     const mobileOverlay = document.getElementById('overlay');
     const supportBtn = document.getElementById('supportContactButton');
     const supportPopup = document.getElementById('supportContactPopup');
     const closeSupportPopupBtn = document.getElementById('closeSupportPopup');
     
-    let leftSidebarTimeout, rightSidebarTimeout, dropdownTimeout;
-    const HIDE_DELAY = 200;
-    const isDesktop = () => window.innerWidth > 1024;
+    // --- FUNCTIONS ---
+    
+    const isMobile = () => window.innerWidth <= 1024;
 
     function hideAllDropdowns() {
         document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
@@ -84,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         link.innerHTML = `<i class="${subItemData.icon || 'fa-solid fa-chevron-right'} icon"></i><span>${subItemData.text}</span>`;
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
-                            if (!isDesktop()) {
+                            if (isMobile()) {
                                 leftSidebar.classList.remove('open');
                                 mobileOverlay.classList.remove('show');
                             }
@@ -95,34 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownDiv.append(button, menu);
                     
                     button.addEventListener('click', (e) => {
-                        if (!isDesktop()) {
+                        if (isMobile()) {
                             e.stopPropagation();
                             const isAlreadyOpen = menu.classList.contains('show');
                             hideAllDropdowns();
-                            if (!isAlreadyOpen) {
-                                menu.style.position = 'relative';
-                                menu.style.left = '0';
-                                menu.style.top = '0';
-                                menu.classList.add('show');
-                            }
-                        }
-                    });
-
-                    dropdownDiv.addEventListener('mouseenter', () => {
-                        if (isDesktop() && !leftSidebar.classList.contains('collapsed')) {
-                            clearTimeout(dropdownTimeout);
-                            hideAllDropdowns();
-                            const rect = button.getBoundingClientRect();
-                            menu.style.position = 'fixed';
-                            menu.style.top = `${rect.top}px`;
-                            menu.style.left = `${leftSidebar.getBoundingClientRect().right + 5}px`;
-                            menu.classList.add('show');
-                        }
-                    });
-
-                    dropdownDiv.addEventListener('mouseleave', () => {
-                        if (isDesktop()) {
-                            dropdownTimeout = setTimeout(hideAllDropdowns, HIDE_DELAY);
+                            if (!isAlreadyOpen) menu.classList.add('show');
                         }
                     });
                     sectionDiv.appendChild(dropdownDiv);
@@ -164,26 +146,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- EVENT LISTENERS & INITIALIZATION ---
     
-    [leftSidebar, rightSidebar].forEach(sidebar => {
-        if (!sidebar) return;
-        sidebar.addEventListener('mouseenter', () => {
-            if (isDesktop()) {
-                clearTimeout(sidebar === leftSidebar ? leftSidebarTimeout : rightSidebarTimeout);
-                sidebar.classList.remove('collapsed');
-            }
-        });
-        sidebar.addEventListener('mouseleave', () => {
-            if (isDesktop()) {
-                const timeout = setTimeout(() => sidebar.classList.add('collapsed'), HIDE_DELAY);
-                if (sidebar === leftSidebar) leftSidebarTimeout = timeout;
-                else rightSidebarTimeout = timeout;
-            }
-        });
-    });
-
-    hamburgerBtn.addEventListener('click', () => {
-        leftSidebar.classList.toggle('open');
-        mobileOverlay.classList.toggle('show');
+    // Nút thu gọn/mở rộng menu chính
+    sidebarToggleBtn.addEventListener('click', () => {
+        if (isMobile()) {
+            leftSidebar.classList.toggle('open');
+            mobileOverlay.classList.toggle('show');
+        } else {
+            body.classList.toggle('sidebar-collapsed');
+        }
     });
 
     mobileOverlay.addEventListener('click', () => {
@@ -192,13 +162,14 @@ document.addEventListener('DOMContentLoaded', function() {
         hideAllDropdowns();
     });
 
+    // Popup Hỗ trợ
     supportBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         supportPopup.classList.toggle('show');
     });
-
     closeSupportPopupBtn.addEventListener('click', () => supportPopup.classList.remove('show'));
     
+    // Đóng popup và dropdown khi click ra ngoài
     document.addEventListener('click', (e) => {
         if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
@@ -208,8 +179,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Khởi chạy
     renderLeftMenu();
     renderRightMenu();
     updateClock();
-    setInterval(updateClock, 60000);
+    setInterval(updateClock, 60000); // Cập nhật đồng hồ mỗi phút
 });
