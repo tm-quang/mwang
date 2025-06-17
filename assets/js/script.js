@@ -1,27 +1,39 @@
 document.addEventListener('DOMContentLoaded', function() {
         
-    // --- DỮ LIỆU MENU (Bạn có thể dễ dàng thêm/sửa ở đây) ---
+    // ========================================================================
+    // HƯỚNG DẪN THÊM MENU
+    // Để thêm menu, bạn chỉ cần chỉnh sửa 2 mảng dữ liệu dưới đây.
+    // ========================================================================
+
     const leftMenuData = [
+        // Đây là một Nhóm Menu (ví dụ: ADMIN)
         {
             title: 'ADMIN',
             items: [
+              // Đây là một Menu Dropdown (có isDropdown: true)
               { 
-                text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true, 
+                text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
+                // subItems chứa các menu con
                 subItems: [
                     { text: 'DATABASE', pageUrl: '#', icon: 'fa-solid fa-database' },
                     { text: 'QUẢN LÝ USER', pageUrl: '#', icon: 'fa-solid fa-users' },
-                    { text: 'TẠO THÔNG BÁO MỚI', pageUrl: '#', icon: 'fa-regular fa-newspaper' },
                 ]
               }
             ]
         },
+        // Đây là một Nhóm Menu khác (ví dụ: 2025 - IT MTAY2)
         {
             title: '2025 - IT MTAY2',
             items: [
+                // Thêm một dropdown mới
                 { 
-                    text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
-                    subItems: [ { text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#', icon: 'fas fa-map-marked-alt' } ] 
+                    text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true, 
+                    subItems: [ 
+                        { text: 'KIỂM TRA LỖI', pageUrl: '#', icon: 'fas fa-eye' },
+                        { text: 'BÁO CÁO SÁNG', pageUrl: '#', icon: 'fas fa-sun' },
+                    ] 
                 },
+                // Đây là một Menu đơn (không có isDropdown)
                 { text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
             ]
         }
@@ -64,6 +76,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
     }
 
+    function createMenuItem(itemData) {
+        const link = document.createElement('a');
+        link.href = itemData.pageUrl || itemData.href || '#';
+        if (itemData.href) link.target = '_blank';
+        link.className = 'menu-item';
+        link.innerHTML = `<i class="${itemData.icon} icon"></i><span class="menu-item-text">${itemData.text}</span>`;
+        return link;
+    }
+
     function renderLeftMenu() {
         leftSidebarContent.innerHTML = '';
         leftMenuData.forEach(sectionData => {
@@ -77,16 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownDiv.className = 'dropdown';
 
                     const button = document.createElement('div');
-                    button.className = 'dropdown-button';
-                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span>${itemData.text}</span>`;
+                    button.className = 'dropdown-header';
+                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span class="menu-item-text">${itemData.text}</span>`;
                     
                     const menu = document.createElement('div');
                     menu.className = 'dropdown-menu';
                     itemData.subItems.forEach(subItemData => {
-                        const link = document.createElement('a');
-                        link.href = subItemData.pageUrl;
-                        link.className = 'menu-button-sidebar';
-                        link.innerHTML = `<i class="${subItemData.icon || 'fa-solid fa-circle-notch'} icon"></i><span>${subItemData.text}</span>`;
+                        const link = createMenuItem(subItemData);
+                        link.classList.add('menu-button-sidebar'); // For specific styling
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             if (isMobile()) {
@@ -109,11 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     sectionDiv.appendChild(dropdownDiv);
                 } else {
-                    const link = document.createElement('a');
-                    link.href = itemData.pageUrl;
-                    link.className = 'menu-button-sidebar';
-                    link.innerHTML = `<i class="${itemData.icon} icon"></i><span>${itemData.text}</span>`;
-                    sectionDiv.appendChild(link);
+                    sectionDiv.appendChild(createMenuItem(itemData));
                 }
             });
             leftSidebarContent.appendChild(sectionDiv);
@@ -127,11 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionDiv.className = 'menu-section';
             sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
             sectionData.items.forEach(itemData => {
-                const link = document.createElement('a');
-                link.href = itemData.href;
-                link.target = '_blank';
-                link.className = 'right-sidebar-item';
-                link.innerHTML = `<i class="${itemData.icon} icon"></i><span class="right-sidebar-item-text">${itemData.text}</span>`;
+                const link = createMenuItem(itemData);
+                link.classList.add('right-sidebar-item');
                 sectionDiv.appendChild(link);
             });
             rightSidebarContent.appendChild(sectionDiv);
@@ -172,11 +184,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
         }
-        if (!e.target.closest('.dropdown')) {
+        if (!e.target.closest('.dropdown-header')) {
             hideAllDropdowns();
         }
     });
 
+    // --- INITIALIZE ---
     renderLeftMenu();
     renderRightMenu();
     updateClock();
