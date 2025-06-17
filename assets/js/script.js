@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         }
     ];
-    
+
     const rightMenuData = [
         {
             title: "TRANG CÔNG VIỆC",
@@ -85,8 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return link;
     }
 
-function renderLeftMenu() {
-        leftSidebarContent.innerHTML = ''; [cite: 38]
+    // === HÀM renderLeftMenu ĐÃ ĐƯỢC CẬP NHẬT ===
+    function renderLeftMenu() {
+        leftSidebarContent.innerHTML = '';
         leftMenuData.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'menu-section';
@@ -99,18 +100,18 @@ function renderLeftMenu() {
 
                     const button = document.createElement('div');
                     button.className = 'dropdown-header';
-                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span class="menu-item-text">${itemData.text}</span>`; [cite: 40]
+                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span class="menu-item-text">${itemData.text}</span>`;
                     
                     const menu = document.createElement('div');
                     menu.className = 'dropdown-menu';
                     itemData.subItems.forEach(subItemData => {
                         const link = createMenuItem(subItemData);
-                        link.classList.add('menu-button-sidebar'); [cite: 42]
+                        link.classList.add('menu-button-sidebar');
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             if (isMobile()) {
                                 leftSidebar.classList.remove('open');
-                                mobileOverlay.classList.remove('show'); [cite: 43]
+                                mobileOverlay.classList.remove('show');
                             }
                         });
                         menu.appendChild(link);
@@ -125,7 +126,7 @@ function renderLeftMenu() {
                         const isAlreadyOpen = menu.classList.contains('show');
                         
                         // Luôn ẩn tất cả các dropdown khác trước khi mở cái mới
-                        hideAllDropdowns(); [cite: 46]
+                        hideAllDropdowns();
 
                         // Nếu menu chưa mở, thì mở nó ra
                         if (!isAlreadyOpen) {
@@ -140,6 +141,7 @@ function renderLeftMenu() {
             leftSidebarContent.appendChild(sectionDiv);
         });
     }
+
     function renderRightMenu() {
         rightSidebarContent.innerHTML = '';
         rightMenuData.forEach(sectionData => {
@@ -189,7 +191,7 @@ function renderLeftMenu() {
         if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
         }
-        if (!e.target.closest('.dropdown-header')) {
+        if (!e.target.closest('.dropdown')) { // Thay đổi điều kiện để không đóng dropdown khi click vào header
             hideAllDropdowns();
         }
     });
