@@ -1,19 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
         
-    // ========================================================================
-    // HƯỚNG DẪN THÊM MENU
-    // Để thêm menu, bạn chỉ cần chỉnh sửa 2 mảng dữ liệu dưới đây.
-    // ========================================================================
-
     const leftMenuData = [
-        // Đây là một Nhóm Menu (ví dụ: ADMIN)
         {
             title: 'ADMIN',
             items: [
-              // Đây là một Menu Dropdown (có isDropdown: true)
               { 
                 text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
-                // subItems chứa các menu con
                 subItems: [
                     { text: 'DATABASE', pageUrl: '#', icon: 'fa-solid fa-database' },
                     { text: 'QUẢN LÝ USER', pageUrl: '#', icon: 'fa-solid fa-users' },
@@ -21,42 +13,29 @@ document.addEventListener('DOMContentLoaded', function() {
               }
             ]
         },
-        // Đây là một Nhóm Menu khác (ví dụ: 2025 - IT MTAY2)
         {
             title: '2025 - IT MTAY2',
             items: [
-                // Thêm một dropdown mới
                 { 
-                    text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true, 
-                    subItems: [ 
-                        { text: 'KIỂM TRA LỖI', pageUrl: '#', icon: 'fas fa-eye' },
-                        { text: 'BÁO CÁO SÁNG', pageUrl: '#', icon: 'fas fa-sun' },
-                    ] 
+                    text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
+                    subItems: [ { text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#', icon: 'fas fa-map-marked-alt' } ] 
                 },
-                // Đây là một Menu đơn (không có isDropdown)
-                { text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
+                { text: 'LỊCH BẢO TRÌ', icon: 'fas fa-tools', pageUrl: '#'},
             ]
         }
     ];
     
     const rightMenuData = [
         {
-            title: "TRANG CÔNG VIỆC",
-            items: [
-                { text: "Báo cáo nội bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar" },
-                { text: "New Ticket", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt" },
-            ]
+            title: "CÔNG VIỆC",
+            items: [ { text: "Báo cáo", href: "#", icon: "fas fa-chart-bar" }, { text: "New Ticket", href: "#", icon: "fas fa-ticket-alt" } ]
         },
         {
             title: "GIẢI TRÍ",
-            items: [
-                { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" },
-                { text: "Facebook", href: "https://facebook.com", icon: "fab fa-facebook" },
-            ]
+            items: [ { text: "YouTube", href: "#", icon: "fab fa-youtube" }, { text: "Facebook", href: "#", icon: "fab fa-facebook" } ]
         }
     ];
 
-    // --- DOM ELEMENTS ---
     const body = document.body;
     const leftSidebar = document.getElementById('left-sidebar-container');
     const rightSidebar = document.getElementById('right-sidebar-container');
@@ -68,8 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const supportPopup = document.getElementById('supportContactPopup');
     const closeSupportPopupBtn = document.getElementById('closeSupportPopup');
     
-    // --- FUNCTIONS ---
-    
+    let dropdownTimeout;
+    const HIDE_DELAY = 200;
     const isMobile = () => window.innerWidth <= 1024;
 
     function hideAllDropdowns() {
@@ -105,26 +84,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     menu.className = 'dropdown-menu';
                     itemData.subItems.forEach(subItemData => {
                         const link = createMenuItem(subItemData);
-                        link.classList.add('menu-button-sidebar'); // For specific styling
-                        link.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            if (isMobile()) {
-                                leftSidebar.classList.remove('open');
-                                mobileOverlay.classList.remove('show');
-                            }
-                        });
                         menu.appendChild(link);
                     });
                     
                     dropdownDiv.append(button, menu);
                     
-                    button.addEventListener('click', (e) => {
-                        if (isMobile() || body.classList.contains('sidebar-collapsed')) {
-                            e.stopPropagation();
-                            const isAlreadyOpen = menu.classList.contains('show');
-                            hideAllDropdowns();
-                            if (!isAlreadyOpen) menu.classList.add('show');
-                        }
+                    dropdownDiv.addEventListener('mouseenter', () => {
+                        if (isMobile()) return;
+                        clearTimeout(dropdownTimeout);
+                        hideAllDropdowns();
+                        const rect = button.getBoundingClientRect();
+                        menu.style.top = `${rect.top}px`;
+                        menu.style.left = `${leftSidebar.getBoundingClientRect().right + 5}px`;
+                        menu.classList.add('show');
+                    });
+
+                    dropdownDiv.addEventListener('mouseleave', () => {
+                        if (isMobile()) return;
+                        dropdownTimeout = setTimeout(hideAllDropdowns, HIDE_DELAY);
                     });
                     sectionDiv.appendChild(dropdownDiv);
                 } else {
@@ -142,9 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionDiv.className = 'menu-section';
             sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
             sectionData.items.forEach(itemData => {
-                const link = createMenuItem(itemData);
-                link.classList.add('right-sidebar-item');
-                sectionDiv.appendChild(link);
+                sectionDiv.appendChild(createMenuItem(itemData));
             });
             rightSidebarContent.appendChild(sectionDiv);
         });
@@ -156,21 +131,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
     }
 
-    // --- EVENT LISTENERS & INITIALIZATION ---
-    
     sidebarToggleBtn.addEventListener('click', () => {
         if (isMobile()) {
             leftSidebar.classList.toggle('open');
             mobileOverlay.classList.toggle('show');
         } else {
-            body.classList.toggle('sidebar-collapsed');
+            body.classList.toggle('auto-collapse-mode');
         }
     });
 
     mobileOverlay.addEventListener('click', () => {
         leftSidebar.classList.remove('open');
         mobileOverlay.classList.remove('show');
-        hideAllDropdowns();
     });
 
     supportBtn.addEventListener('click', (e) => {
@@ -184,12 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
         }
-        if (!e.target.closest('.dropdown-header')) {
-            hideAllDropdowns();
-        }
     });
 
-    // --- INITIALIZE ---
     renderLeftMenu();
     renderRightMenu();
     updateClock();
