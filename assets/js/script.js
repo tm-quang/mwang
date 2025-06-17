@@ -19,23 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
                   subItems: [ { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', pageUrl: '#'} ] 
                 },
-                { id: 'btnDailyWork', text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true,
-                        { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', pageTitle: 'KIỂM TRA LỖI HỆ THỐNG', icon: 'fas fa-eye' },
-                        { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', icon: 'fas fa-eye' },
-                        { id: 'btnTEST1', text: 'MENU 1', pageTitle: 'TEST', icon: 'fas fa-eye' },
-                        { id: 'btnTEST2', text: 'MENU 2', pageTitle: 'TEST', icon: 'fas fa-eye' },
-                        { id: 'btnTEST3', text: 'MENU 3', pageTitle: 'TEST', icon: 'fas fa-eye' },
-                        { id: 'btnTimSheet', text: 'TÌM SHEET CÔNG VIỆC', pageTitle: 'TRA CỨU DỮ LIỆU TỪ GOOGLE SHEET', icon: 'fa-solid fa-folder-tree' },
                 { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
-                { id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
-                        subItems: [
-                        { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', icon: 'fas fa-store-alt' },
-                        { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', icon: 'fas fa-box-open' },
-                        { id: 'btnTEST1', text: 'MENU 1', icon: 'fas fa-eye' },
-                        { id: 'btnTEST2', text: 'MENU 2', icon: 'fas fa-eye' },
-                        { id: 'btnTEST3', text: 'MENU 3', icon: 'fas fa-eye' },
-                    ] 
-                }
             ]
         }
     ];
