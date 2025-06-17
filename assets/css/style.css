@@ -82,9 +82,9 @@ body.sidebar-collapsed .dropdown-menu { display: none !important; }
 .dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
 
 /* Popup Hỗ Trợ */
-.floating-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--success-color); color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 999; border:none; cursor: pointer; transition: transform 0.2s; }
-.floating-button:hover { transform: scale(1.1); }
-.floating-button .icon { margin: 0; font-size: 1.5rem; }
+.floating-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--success-color); color: var(--text-on-primary); border-radius: 50%; cursor: pointer; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); z-index: 999; transition: all 0.3s ease; border:none;}
+.floating-button:hover { transform: translateY(-3px) scale(1.05); }
+.floating-button .icon { font-size: 1.5rem; }
 .popup-container { position: fixed; bottom: 85px; right: 20px; width: 320px; background-color: var(--bg-content); border-radius: var(--border-radius-lg); box-shadow: 0 10px 15px rgba(0,0,0,0.1); z-index: 1000; display: none; flex-direction: column; animation: fadeInScale 0.3s; }
 .popup-container.show { display: flex; }
 .popup-header { background-color: var(--primary-color); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
