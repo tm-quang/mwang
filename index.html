@@ -9,24 +9,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;1000&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
     <div id="main-header">
         <div id="header-left">
-            <button id="sidebar-toggle-btn" class="hamburger-btn" title="Thu/mở trình đơn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <a href="#" id="btnGoHomeHeader" title="Về trang chủ"><i class="fas fa-home header-icon"></i></a>
+            <span id="sidebar-toggle-btn" title="Thu/mở menu">
+                <i class="fas fa-bars header-icon"></i>
+            </span>
         </div>
         <div id="current-page-title">TRANG CHỦ</div>
         <div id="header-right">
             <div id="user-controls" class="header-item">
-                <span class="greeting-text">Xin chào</span>
-                <button id="logoutButton" class="header-logout-btn">Đăng xuất</button>
+                <span class="greeting-text">Xin chào,</span>
+                <span id="userNameDisplay">User</span>
             </div>
+            <button id="logoutButton" class="header-logout-btn">Đăng xuất</button>
+            <div id="session-timer-container" class="header-item"></div>
             <div id="live-clock" class="header-item">
                 <span id="clock-time"></span>
                 <span id="clock-date"></span>
@@ -41,48 +43,17 @@
         
         <div id="content-container">
             <div id="functionContent">
-                <div class="columns-container">
+                 <div id="loadingSpinner"></div>
+                 <div class="columns-container-pb2">
                     <div class="content-column">
                         <h3 class="column-title"><i class="fas fa-bullhorn icon"></i><span>THÔNG BÁO CÔNG VIỆC TRIỂN KHAI</span></h3>
-                        <div class="notification-list">
-                            <div class="notification-card">
-                                <div class="notification-header">
-                                    <i class="fas fa-wrench icon"></i>
-                                    <h4>TRIỂN KHAI TỐI ƯU THIẾT BỊ BHX</h4>
-                                    <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
-                                    <span class="new-badge">NEW</span>
-                                </div>
+                        <div class="notification-list" id="notification-list-1">
                             </div>
-                             <div class="notification-card">
-                                <div class="notification-header">
-                                    <i class="fas fa-file-alt icon"></i>
-                                    <h4>FORM CẬP NHẬT TIẾN ĐỘ</h4>
-                                    <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
-                                    <span class="new-badge">NEW</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="content-column">
                         <h3 class="column-title"><i class="fas fa-tasks icon"></i><span>THÔNG BÁO CÔNG VIỆC MTAY2</span></h3>
-                        <div class="notification-list">
-                             <div class="notification-card">
-                                <div class="notification-header">
-                                    <i class="fas fa-calendar-alt icon"></i>
-                                    <h4>LỊCH - LAYOUT TỐI ƯU THIẾT BỊ</h4>
-                                    <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
-                                    <span class="new-badge">NEW</span>
-                                </div>
+                        <div class="notification-list" id="notification-list-2">
                             </div>
-                            <div class="notification-card">
-                                <div class="notification-header">
-                                    <i class="fas fa-bell icon"></i>
-                                    <h4>LỊCH BẢO TRÌ KIỂM KÊ</h4>
-                                     <span class="type-badge type-tgdđ-đmx">TGDD/DMX</span>
-                                    <span class="new-badge">NEW</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -94,19 +65,30 @@
     </div>
 
     <button id="supportContactButton" class="floating-button"><i class="fas fa-headset icon"></i></button>
+    
     <div id="supportContactPopup" class="popup-container">
         <div class="popup-header">
             <h3>Hỗ Trợ</h3>
             <button class="close-popup-button" id="closeSupportPopup">×</button>
         </div>
         <div class="popup-content">
-            <p><i class="fas fa-phone-alt icon"></i><span>Điện thoại: 0933 960 788</span></p>
-            <p><i class="fas fa-envelope icon"></i><span>Email: minhquang030@gmail.com</span></p>
-            <p><i class="fab fa-facebook-messenger icon"></i><span>Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></span></p>
+            <p><i class="fas fa-phone-alt"></i><span>Điện thoại: 0933 960 788</span></p>
+            <p><i class="fas fa-envelope"></i><span>Email: minhquang030@gmail.com</span></p>
+            <p><i class="fab fa-facebook-messenger"></i><span>Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></span></p>
         </div>
     </div>
     
-    <div id="overlay" class="mobile-overlay"></div>
+    <div id="confirmLogoutModal" class="modal-overlay">
+        <div class="modal-content">
+            <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+            <div class="modal-buttons">
+                <button id="confirmBtnNo">Không</button>
+                <button id="confirmBtnYes">Có</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-overlay"></div>
 
     <script src="assets/js/script.js"></script>
 </body>
