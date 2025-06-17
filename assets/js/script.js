@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         menu.appendChild(link);
                     });
 
-                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON BẰNG HOVER (LOGIC MỚI) ===
+                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON (LUÔN LÀ POP-UP) ===
                     dropdownDiv.addEventListener('mouseenter', () => {
                         const isAlreadyOpen = menu.classList.contains('show');
                         if (isAlreadyOpen) return;
@@ -152,16 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         menu.classList.add('show');
                         button.classList.add('active');
                         
-                        // Chỉ định vị menu bay ra khi sidebar đang thu gọn
-                        if (DOM.leftSidebar.classList.contains('collapsed')) {
-                            const rect = button.getBoundingClientRect();
-                            menu.style.left = `${rect.right + 8}px`;
-                            menu.style.top = `${rect.top}px`;
-                        } else {
-                            // Nếu không, reset vị trí để CSS xử lý (kiểu accordion)
-                            menu.style.left = '';
-                            menu.style.top = '';
-                        }
+                        // Luôn luôn tính toán vị trí để bay ra bên cạnh
+                        const rect = button.getBoundingClientRect();
+                        menu.style.left = `${rect.right + 8}px`;
+                        menu.style.top = `${rect.top}px`;
                     });
 
                     dropdownDiv.addEventListener('mouseleave', () => {
