@@ -1,16 +1,15 @@
 name = "mwang"
 compatibility_date = "2024-06-17"
 
-# Dòng này chỉ cho Cloudflare biết thư mục chứa frontend
+# Chỉ cho Cloudflare biết thư mục chứa frontend (HTML, CSS...)
 pages_build_output_dir = "public"
 
-# --- Cấu hình quan trọng cho Functions ---
-# Khai báo các thiết lập sẽ được áp dụng cho thư mục /functions
-[functions]
-# Bật chế độ tương thích Node.js cho tất cả các functions
-nodejs_compat = true
-# Khai báo binding D1 cho functions
-[[functions.d1_databases]]
+# Bật chế độ tương thích Node.js cho tất cả các functions của project này
+node_compat = true
+
+# Khai báo binding D1 ở cấp cao nhất
+[[d1_databases]]
 binding = "DB" # Tên binding phải khớp với code: env.DB
-database_name = "mwang-db-app" # Thay bằng tên D1 database của bạn
-database_id = "fbcfd28a-9b89-419b-8baa-b27f3f14926f" # Thay bằng ID của D1 database
+database_name = "mwang-db-app"
+database_id = "fbcfd28a-9b89-419b-8baa-b27f3f14926f"
+
