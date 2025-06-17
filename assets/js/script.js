@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const link = document.createElement('a');
                         link.href = subItemData.pageUrl;
                         link.className = 'menu-button-sidebar';
-                        link.innerHTML = `<i class="${subItemData.icon || 'fa-solid fa-chevron-right'} icon"></i><span>${subItemData.text}</span>`;
+                        link.innerHTML = `<i class="${subItemData.icon || 'fa-solid fa-circle-notch'} icon"></i><span>${subItemData.text}</span>`;
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             if (isMobile()) {
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownDiv.append(button, menu);
                     
                     button.addEventListener('click', (e) => {
-                        if (isMobile()) {
+                        if (isMobile() || body.classList.contains('sidebar-collapsed')) {
                             e.stopPropagation();
                             const isAlreadyOpen = menu.classList.contains('show');
                             hideAllDropdowns();
@@ -146,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- EVENT LISTENERS & INITIALIZATION ---
     
-    // Nút thu gọn/mở rộng menu chính
     sidebarToggleBtn.addEventListener('click', () => {
         if (isMobile()) {
             leftSidebar.classList.toggle('open');
@@ -162,14 +161,13 @@ document.addEventListener('DOMContentLoaded', function() {
         hideAllDropdowns();
     });
 
-    // Popup Hỗ trợ
     supportBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         supportPopup.classList.toggle('show');
     });
+
     closeSupportPopupBtn.addEventListener('click', () => supportPopup.classList.remove('show'));
     
-    // Đóng popup và dropdown khi click ra ngoài
     document.addEventListener('click', (e) => {
         if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
@@ -179,9 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Khởi chạy
     renderLeftMenu();
     renderRightMenu();
     updateClock();
-    setInterval(updateClock, 60000); // Cập nhật đồng hồ mỗi phút
+    setInterval(updateClock, 60000);
 });
