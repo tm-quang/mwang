@@ -18,9 +18,13 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <!-- PHẦN GIAO DIỆN HTML (GIỮ NGUYÊN) -->
+    <!-- PHẦN GIAO DIỆN HTML (ĐÃ CẬP NHẬT) -->
     <div id="main-header">
         <div id="header-left">
+            <!-- Nút Hamburger Menu cho di động -->
+            <button id="hamburger-menu" class="hamburger-btn">
+                <i class="fas fa-bars"></i>
+            </button>
             <span id="btnGoHomeHeader"><i class="fas fa-home header-icon"></i>Trang Chủ</span>
         </div>
         <div id="current-page-title">TRANG CHỦ - THÔNG BÁO</div>
@@ -29,10 +33,7 @@
                 <span class="greeting-text">Xin chào</span>
                 <button id="logoutButton" class="header-logout-btn">Đăng xuất</button>
             </div>
-            <div id="session-timer-container" class="header-item">
-                <i class="fas fa-stopwatch" style="margin-right: 5px; color: white;"></i>
-                <span id="session-timer" style="color: white; font-weight: 700;">60:00</span>
-            </div>
+            <!-- Đồng hồ thời gian thực -->
             <div id="live-clock" class="header-item">
                 <span id="clock-time"></span>
                 <span id="clock-date"></span>
@@ -48,7 +49,6 @@
         <div id="content-container">
             <div id="loadingSpinner" style="display: none;"></div>
             <div id="functionContent">
-                <!-- NỘI DUNG TRANG CHỦ VỚI TÍNH NĂNG GEMINI -->
                 <div class="columns-container">
                     <div class="content-column">
                         <h3 class="column-title"><i class="fas fa-bullhorn"></i><span>THÔNG BÁO CÔNG VIỆC TRIỂN KHAI</span></h3>
@@ -114,12 +114,21 @@
 
     <!-- CÁC THÀNH PHẦN PHỤ -->
     <button id="supportContactButton" class="floating-button"><i class="fas fa-headset icon"></i></button>
-    <div id="supportContactPopup" class="popup-container">...</div>
+    <div id="supportContactPopup" class="popup-container">
+        <div class="popup-header">
+            <h3>Hỗ Trợ</h3>
+            <button class="close-popup-button" id="closeSupportPopup">&times;</button>
+        </div>
+        <div class="popup-content">
+            <p><i class="fas fa-phone-alt"></i> Điện thoại: 0933 960 788</p>
+            <p><i class="fas fa-envelope"></i> Email: minhquang030@gmail.com</p>
+            <p><i class="fab fa-facebook-messenger"></i> Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></p>
+        </div>
+    </div>
 
     <div id="customConfirmModal" class="modal-overlay">...</div>
     <div id="adminLoginModal" class="modal-overlay">...</div>
 
-    <!-- MODAL HIỂN THỊ KẾT QUẢ TỪ GEMINI -->
     <div id="geminiResultModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 600px; text-align: left;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -134,8 +143,9 @@
             </div>
         </div>
     </div>
+    
+    <div id="overlay" class="mobile-overlay"></div>
 
-    <!-- Liên kết đến file JavaScript bên ngoài, đặt ở cuối body -->
     <script src="assets/js/script.js"></script>
 </body>
 </html>
