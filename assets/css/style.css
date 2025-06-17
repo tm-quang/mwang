@@ -119,3 +119,65 @@ body:not(.auto-collapse-mode) .sidebar:hover .icon { margin-right: 12px;}
     .columns-container { flex-direction: column; }
     #content-container { padding: 16px; }
 }
+/* =================================================== */
+/* ==   CSS MỚI CHO YÊU CẦU THU GỌN / MỞ RỘNG MENU   == */
+/* =================================================== */
+
+/* --- 1. Hành vi Hover để mở rộng khi Sidebar bị thu gọn --- */
+
+/* Áp dụng cho cả sidebar trái và phải */
+body.sidebar-collapsed .sidebar {
+    /* Khi thu gọn, menu sẽ có chiều rộng bằng icon */
+    min-width: var(--sidebar-collapsed-width); 
+    /* Thêm transition cho width để hiệu ứng mượt mà khi hover */
+    transition: min-width 0.2s ease, width 0.2s ease;
+}
+
+/* Khi di chuột vào sidebar trái ở chế độ thu gọn */
+body.sidebar-collapsed #left-sidebar-container:hover {
+    min-width: 280px; /* Mở rộng ra chiều rộng đầy đủ */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Thêm bóng đổ để nổi bật */
+}
+
+/* Khi di chuột vào sidebar phải ở chế độ thu gọn */
+body.sidebar-collapsed #right-sidebar-container:hover {
+    min-width: 250px; /* Mở rộng ra chiều rộng đầy đủ */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Khi sidebar được hover để mở rộng, hiện lại chữ */
+body.sidebar-collapsed .sidebar:hover .menu-item-text,
+body.sidebar-collapsed .sidebar:hover .menu-section-title span {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- 2. Định vị lại Menu con (Dropdown) khi Sidebar bị thu gọn --- */
+
+/* Khi sidebar thu gọn, coi mỗi menu cha như một điểm neo */
+body.sidebar-collapsed .dropdown {
+    position: relative;
+}
+
+/* Định vị menu con bay ra bên phải của menu cha */
+body.sidebar-collapsed .dropdown-menu {
+    position: absolute;
+    left: 100%; /* Đặt menu con ngay cạnh phải của menu cha */
+    top: 0;
+    width: 250px; /* Đặt chiều rộng cố định cho menu con */
+    background-color: var(--bg-sidebar-hover);
+    border-radius: var(--border-radius-md); 
+    padding: 8px;
+    margin-left: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 1001; /* Đảm bảo menu con nằm trên mọi thứ khác */
+    padding-left: 8px; /* Reset padding-left mặc định */
+}
+
+/* Sửa lại nền của các mục trong menu con để đồng bộ */
+body.sidebar-collapsed .dropdown-menu .menu-item {
+    background-color: transparent;
+}
+body.sidebar-collapsed .dropdown-menu .menu-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
