@@ -85,36 +85,12 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .dropdown-button { align-items: left; }
 .dropdown-arrow { font-size: 0.8rem; transition: transform 0.2s ease; margin-left: 10px; display: none; }
 
-/* === [CẬP NHẬT] CSS CHO MENU CON === */
-.dropdown-menu {
-    display: none;
-    padding-left: 20px; /* Thụt lề cho menu con ở chế độ mở rộng */
-    background-color: rgba(0,0,0,0.15);
-    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
-    width: 90%;
-    margin: -4px auto 0 auto;
-    padding-top: 4px;
-}
-.dropdown-menu.show { display: block; }
+/* === [CẬP NHẬT] CSS CHO MENU CON (LUÔN LÀ POP-UP) === */
+.dropdown-menu { display: none; position: fixed; min-width: 230px; z-index: 1001; background-color: #1f2937; border-radius: var(--border-radius-lg); padding: 6px; flex-direction: column; box-shadow: var(--shadow-lg); border: 1px solid var(--divider-color-dark); }
+.dropdown-menu.show { display: flex; }
 .dropdown-menu .menu-button-sidebar { width: 100%; box-sizing: border-box; }
-
-/* Chỉ áp dụng position:fixed khi sidebar thu gọn */
-#left-sidebar-container.collapsed .dropdown-menu {
-    position: fixed;
-    min-width: 230px;
-    z-index: 1001;
-    background-color: #1f2937;
-    border-radius: var(--border-radius-lg);
-    padding: 6px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--divider-color-dark);
-    padding-left: 6px; /* Reset padding-left */
-    margin: 0;
-}
-#left-sidebar-container.collapsed .dropdown-menu.show { display: flex; flex-direction: column; }
-#left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
+.dropdown-menu .menu-button-sidebar:hover { background-color: #4b5563; }
 #left-sidebar-container.collapsed .dropdown-menu .menu-button-sidebar span { opacity: 1; width: auto; height: auto; overflow: visible; pointer-events: auto; }
-/* === [KẾT THÚC] CẬP NHẬT CSS MENU CON === */
 
 /* Right Sidebar */
 #right-sidebar-container { width: 250px; background-color: var(--bg-sidebar-right); color: var(--text-primary); padding: 16px; border-left: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; overflow-y: auto; transition: width 0.3s ease, padding 0.3s ease; position: relative; }
