@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         { id: 'btnTEST1', text: 'MENU 1', pageTitle: 'TEST', icon: 'fas fa-eye' },
                         { id: 'btnTEST2', text: 'MENU 2', pageTitle: 'TEST', icon: 'fas fa-eye' },
                         { id: 'btnTEST3', text: 'MENU 3', pageTitle: 'TEST', icon: 'fas fa-eye' },
-                        { id: 'btnTimSheet', text: 'TÌM SHEET CÔNG VIỆC', pageTitle: 'TRA CỨU DỮ LIỆU TỪ GOOGLE SHEET', icon: 'fa-solid fa-folder-tree' }
+                        { id: 'btnTimSheet', text: 'TÌM SHEET CÔNG VIỆC', pageTitle: 'TRA CỨU DỮ LIỆU TỪ GOOGLE SHEET', icon: 'fa-solid fa-folder-tree' },
                 { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', icon: 'fas fa-tools', pageUrl: '#'},
                 { id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                         subItems: [
