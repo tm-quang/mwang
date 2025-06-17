@@ -14,14 +14,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Liên kết đến file CSS bên ngoài -->
+    <!-- Liên kết đến file CSS của bạn -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <!-- PHẦN GIAO DIỆN HTML (ĐÃ CẬP NHẬT) -->
     <div id="main-header">
         <div id="header-left">
-            <!-- Nút Hamburger Menu cho di động -->
             <button id="hamburger-menu" class="hamburger-btn">
                 <i class="fas fa-bars"></i>
             </button>
@@ -33,7 +31,6 @@
                 <span class="greeting-text">Xin chào</span>
                 <button id="logoutButton" class="header-logout-btn">Đăng xuất</button>
             </div>
-            <!-- Đồng hồ thời gian thực -->
             <div id="live-clock" class="header-item">
                 <span id="clock-time"></span>
                 <span id="clock-date"></span>
@@ -42,12 +39,11 @@
     </div>
 
     <div id="main-content-area">
-        <div id="left-sidebar-container" class="collapsed">
+        <div id="left-sidebar-container" class="sidebar collapsed">
             <div class="sidebar-content-wrapper"></div>
         </div>
         
         <div id="content-container">
-            <div id="loadingSpinner" style="display: none;"></div>
             <div id="functionContent">
                 <div class="columns-container">
                     <div class="content-column">
@@ -60,9 +56,6 @@
                                     <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
                                     <span class="new-badge">NEW</span>
                                 </div>
-                                <div class="notification-footer">
-                                    <button class="gemini-suggest-btn">✨ Gợi ý công việc</button>
-                                </div>
                             </div>
                             <div class="notification-card">
                                 <div class="notification-header">
@@ -70,9 +63,6 @@
                                     <h4>FORM CẬP NHẬT TIẾN ĐỘ</h4>
                                     <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
                                     <span class="new-badge">NEW</span>
-                                </div>
-                                <div class="notification-footer">
-                                    <button class="gemini-suggest-btn">✨ Gợi ý công việc</button>
                                 </div>
                             </div>
                         </div>
@@ -87,18 +77,12 @@
                                     <span class="type-badge type-báchhóaxanh">BáchHóaXanh</span>
                                     <span class="new-badge">NEW</span>
                                 </div>
-                                <div class="notification-footer">
-                                    <button class="gemini-suggest-btn">✨ Gợi ý công việc</button>
-                                </div>
                             </div>
                             <div class="notification-card">
                                 <div class="notification-header">
-                                    <i class="fas fa-vial icon"></i>
+                                    <i class="fas fa-bell icon"></i>
                                     <h4>LỊCH BẢO TRÌ KIỂM KÊ</h4>
                                     <span class="new-badge">NEW</span>
-                                </div>
-                                <div class="notification-footer">
-                                    <button class="gemini-suggest-btn">✨ Gợi ý công việc</button>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +91,7 @@
             </div>
         </div>
 
-        <div id="right-sidebar-container" class="collapsed">
+        <div id="right-sidebar-container" class="sidebar collapsed">
             <div class="sidebar-content-wrapper"></div>
         </div>
     </div>
@@ -120,19 +104,15 @@
             <button class="close-popup-button" id="closeSupportPopup">&times;</button>
         </div>
         <div class="popup-content">
-            <p><i class="fas fa-phone-alt"></i> Điện thoại: 0933 960 788</p>
-            <p><i class="fas fa-envelope"></i> Email: minhquang030@gmail.com</p>
-            <p><i class="fab fa-facebook-messenger"></i> Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></p>
+            <p><i class="fas fa-phone-alt icon"></i><span>Điện thoại: 0933 960 788</span></p>
+            <p><i class="fas fa-envelope icon"></i><span>Email: minhquang030@gmail.com</span></p>
+            <p><i class="fab fa-facebook-messenger icon"></i><span>Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></span></p>
         </div>
     </div>
-
-    <div id="customConfirmModal" class="modal-overlay">...</div>
-    <div id="adminLoginModal" class="modal-overlay">...</div>
-
-    
     
     <div id="overlay" class="mobile-overlay"></div>
 
+    <!-- Liên kết đến file JavaScript của bạn -->
     <script src="assets/js/script.js"></script>
 </body>
 </html>
