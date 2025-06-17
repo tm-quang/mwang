@@ -85,12 +85,6 @@ body { margin: 0; font-family: var(--font-family); background-color: var(--bg-ma
         .link-button-right.success:hover { background-color: var(--success-color); color: var(--text-on-primary); }
         .link-button-right.info { border-color: #0ea5e9; color: #0ea5e9; }
         .link-button-right.info:hover { background-color: #0ea5e9; color: var(--text-on-primary); }
-/* Dropdown */
-.dropdown-menu { display: none; padding-left: 16px; }
-.dropdown-menu.show { display: block; }
-.dropdown-menu .menu-item { background-color: rgba(255,255,255,0.05); }
-.dropdown-menu .menu-item:hover { background-color: rgba(255,255,255,0.1); }
-.dropdown-menu .icon { font-size: 0.8rem; }
 
 /* Floating Button & Popup */
 .floating-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--success-color); color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 999; border:none; cursor: pointer; transition: transform 0.2s; }
