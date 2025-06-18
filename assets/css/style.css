@@ -150,6 +150,8 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .popup-content a:hover { text-decoration: underline; }
 .greeting-text { color: white; margin-right: 10px; font-weight: 500; }
 #session-timer-container { display: flex; align-items: center; margin-left: 20px; font-size: 0.9rem; }
+/* Dán đoạn code này vào cuối file style.css */
+
 /* Ẩn thanh cuộn cho các trình duyệt Webkit (Chrome, Safari, Edge...) */
 #left-sidebar-container::-webkit-scrollbar,
 #right-sidebar-container::-webkit-scrollbar {
