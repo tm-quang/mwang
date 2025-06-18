@@ -3,7 +3,7 @@
 // =================================================================================
 
 // DÁN URL CỦA WEB APP BẠN ĐÃ DEPLOY TỪ GOOGLE APPS SCRIPT VÀO ĐÂY
-const API_URL = "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY";
+const API_URL = "https://script.google.com/macros/s/AKfycbzmTLBBJwY5f680gbHOOoln7kB2lK6sY9DvFKOQD5_DvbM3BtRD-6UcXVrNwyGGBYD3uw/exec";
 
 // Cấu hình menu được giữ nguyên
 const leftMenuData = [
