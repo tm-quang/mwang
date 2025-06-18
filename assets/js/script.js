@@ -3,16 +3,16 @@
 // =================================================================================
 
 // DÁN URL CỦA WEB APP BẠN ĐÃ DEPLOY TỪ GOOGLE APPS SCRIPT VÀO ĐÂY
-const API_URL = "https://script.google.com/macros/s/AKfycbzmTLBBJwY5f680gbHOOoln7kB2lK6sY9DvFKOQD5_DvbM3BtRD-6UcXVrNwyGGBYD3uw/exec";
+const API_URL = "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY";
 
-// Cấu hình menu được giữ nguyên
+// Cấu hình menu
 const leftMenuData = [
     {
         title: 'ADMIN',
         items: [
           {
             id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
-            isAdmin: true, // Đánh dấu menu cần bảo vệ
+            isAdmin: true,
             subItems: [
                 { id: 'btnDatabase', text: 'DATABASE', functionName: 'getPage_AdminDatabase', pageTitle: 'QUẢN LÝ DỮ LIỆU', icon: 'fa-solid fa-database' },
                 { id: 'btnUserInfo', text: 'QUẢN LÝ USER', functionName: 'getPage_AdminThongTinThanhVien', pageTitle: 'QUẢN LÝ THÀNH VIÊN', icon: 'fa-solid fa-users' },
@@ -132,6 +132,9 @@ let isSidebarPinned = false;
  */
 async function callApi(action, payload = {}) {
     try {
+        if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
+            throw new Error("API_URL chưa được cấu hình trong file script.js. Vui lòng kiểm tra lại.");
+        }
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -144,7 +147,7 @@ async function callApi(action, payload = {}) {
         return await response.json();
     } catch (error) {
         console.error(`Lỗi khi gọi API cho action "${action}":`, error);
-        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi kết nối đến máy chủ. Vui lòng kiểm tra lại đường truyền hoặc liên hệ quản trị viên.</p>`;
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi kết nối đến máy chủ. Vui lòng kiểm tra lại API_URL và kết nối mạng.</p>`;
         loadingSpinner.style.display = 'none';
         throw error;
     }
@@ -322,13 +325,19 @@ function hideAllDropdowns() {
 
 function updateClock() {
     const now = new Date();
-    document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
-    document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
+    const timeElement = document.getElementById('clock-time');
+    const dateElement = document.getElementById('clock-date');
+    if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString('vi-VN');
+    }
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
 }
 
 function forceLogout(message) {
     alert(message);
-    window.location.href = "/";
+    window.location.reload();
 }
 
 async function handleAdminLogin() {
@@ -366,6 +375,7 @@ async function handleAdminLogin() {
     }
 }
 
+// === MAIN EXECUTION - SỰ KIỆN CHÍNH KHI TRANG TẢI XONG ===
 document.addEventListener('DOMContentLoaded', function() {
     renderLeftMenu();
     renderRightMenu();
@@ -417,11 +427,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const supportBtn = document.getElementById('supportContactButton');
     const supportPopup = document.getElementById('supportContactPopup');
     supportBtn.addEventListener('click', () => supportPopup.classList.toggle('show'));
-    document.getElementById('closeSupportPopup').addEventListener('click', () => supportPopup.classList.remove('show');
+    
+    // === ĐÂY LÀ DÒNG BỊ LỖI TRƯỚC ĐÓ - ĐÃ SỬA LẠI ===
+    document.getElementById('closeSupportPopup').addEventListener('click', () => {
+        supportPopup.classList.remove('show');
+    });
     
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.dropdown')) hideAllDropdowns();
-        if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) supportPopup.classList.remove('show');
+        if (!e.target.closest('.dropdown')) {
+            hideAllDropdowns();
+        }
+        if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
+            supportPopup.classList.remove('show');
+        }
     });
     
     updateClock();
