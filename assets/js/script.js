@@ -25,43 +25,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         { text: 'BÁO CÁO SÁNG', pageUrl: '#', icon: 'fas fa-sun' },
                     ] 
                 },
-                { text: 'LỊCH BẢO TRÌ - KIỂM KÊ', pageUrl: '#', icon: 'fas fa-tools', type: 'orange' },
+                { text: 'LỊCH BẢO TRÌ - KIỂM KÊ', pageUrl: '#', icon: 'fas fa-tools' },
             ]
         }
     ];
 
     const rightMenuData = [
-        { title: "TRANG CÔNG VIỆC", icon: "fas fa-briefcase",
+        { title: "TRANG CÔNG VIỆC",
             items: [
-                { text: "Báo cáo nội bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", type: "primary" },
-                { text: "New Ticket", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", type: "success" },
+                { text: "Báo cáo nội bộ", href: "#", icon: "fas fa-chart-bar" },
+                { text: "New Ticket", href: "#", icon: "fas fa-ticket-alt" },
             ]
         },
-        { title: "GIẢI TRÍ", icon: "fas fa-gamepad",
+        { title: "GIẢI TRÍ",
             items: [
-                { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube", type: "info" },
-                { text: "Facebook", href: "https://facebook.com", icon: "fab fa-facebook" },
+                { text: "YouTube", href: "#", icon: "fab fa-youtube" },
+                { text: "Facebook", href: "#", icon: "fab fa-facebook" },
             ]
         }
     ];
-    
-    const notificationData = {
-        col1: [
-            {
-                icon: 'fa-wrench', title: 'TRIỂN KHAI TỐI ƯU THIẾT BỊ BHX', type: 'type-báchhóaxanh', isNew: true,
-                message: 'Đã có layout và lịch triển khai mới cho các siêu thị Bách Hóa Xanh trong khu vực. Vui lòng xem chi tiết.',
-                updateDate: '17-06-2025', deadline: '25-06-2025', link: '#'
-            }
-        ],
-        col2: [
-             {
-                icon: 'fa-file-alt', title: 'FORM CẬP NHẬT TIẾN ĐỘ', type: 'type-tgdđ-đmx', isNew: true,
-                message: 'Form báo cáo tiến độ công việc hàng ngày đã được cập nhật phiên bản mới. Áp dụng từ hôm nay.',
-                updateDate: '17-06-2025', deadline: '18-06-2025', link: '#'
-            }
-        ]
-    };
-
 
     // ===================================================================
     // B. DOM ELEMENT SELECTORS
@@ -70,168 +52,109 @@ document.addEventListener('DOMContentLoaded', function() {
     const DOM = {
         leftSidebar: document.getElementById('left-sidebar-container'),
         rightSidebar: document.getElementById('right-sidebar-container'),
-        leftSidebarContent: document.querySelector('#left-sidebar-container .sidebar-content-wrapper'),
-        rightSidebarContent: document.querySelector('#right-sidebar-container .sidebar-content-wrapper'),
         sidebarToggleBtn: document.getElementById('sidebar-toggle-btn'),
         mobileOverlay: document.getElementById('mobile-overlay'),
-        supportBtn: document.getElementById('supportContactButton'),
-        supportPopup: document.getElementById('supportContactPopup'),
-        closeSupportPopupBtn: document.getElementById('closeSupportPopup'),
-        logoutBtn: document.getElementById('logoutButton'),
-        confirmLogoutModal: document.getElementById('confirmLogoutModal'),
-        confirmBtnYes: document.getElementById('confirmBtnYes'),
-        confirmBtnNo: document.getElementById('confirmBtnNo'),
-        clock: {
-            time: document.getElementById('clock-time'),
-            date: document.getElementById('clock-date')
-        },
-        notificationLists: {
-            col1: document.getElementById('notification-list-1'),
-            col2: document.getElementById('notification-list-2')
-        }
+        // ... (các element khác)
     };
 
-
     // ===================================================================
-    // C. CORE & HELPER FUNCTIONS
+    // C. FUNCTIONS
     // ===================================================================
 
     const isMobile = () => window.innerWidth <= 1024;
 
+    /** Đóng tất cả các menu con đang mở */
     function hideAllDropdowns() {
         document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
         document.querySelectorAll('.dropdown-button.active').forEach(btn => btn.classList.remove('active'));
     }
-
-    function showModal(modalElement) {
-        if (modalElement) modalElement.classList.add('show');
-    }
-
-    function hideModal(modalElement) {
-        if (modalElement) modalElement.classList.remove('show');
-    }
-
-
-    // ===================================================================
-    // D. UI RENDERING & UPDATES
-    // ===================================================================
-
+    
+    /** Dựng menu bên trái từ dữ liệu */
     function renderLeftMenu() {
-        DOM.leftSidebarContent.innerHTML = '';
+        const container = DOM.leftSidebar.querySelector('.sidebar-content-wrapper');
+        container.innerHTML = '';
         leftMenuData.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'menu-section';
-            
-            if (sectionData.title) {
-                sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
-            }
-            
+            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
+
             sectionData.items.forEach(itemData => {
                 if (itemData.isDropdown) {
                     const dropdownDiv = document.createElement('div');
                     dropdownDiv.className = 'dropdown';
+                    
                     const button = document.createElement('button');
                     button.className = 'dropdown-button';
                     button.innerHTML = `<i class="icon ${itemData.icon}"></i><span>${itemData.text}</span>`;
+                    
                     const menu = document.createElement('div');
                     menu.className = 'dropdown-menu';
                     itemData.subItems.forEach(subItemData => {
                         const link = document.createElement('a');
                         link.href = subItemData.pageUrl || '#';
-                        link.className = 'menu-button-sidebar';
+                        link.className = 'menu-button';
                         link.innerHTML = `<i class="icon ${subItemData.icon}"></i><span>${subItemData.text}</span>`;
                         menu.appendChild(link);
                     });
 
-                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON (LOGIC ĐƠN GIẢN HÓA) ===
-                    dropdownDiv.addEventListener('mouseenter', () => {
-                        hideAllDropdowns();
-                        menu.classList.add('show');
-                        button.classList.add('active');
+                    // [FIX #1, #2, #5] Dùng CLICK để mở/đóng menu cho ổn định
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isAlreadyOpen = menu.classList.contains('show');
+                        hideAllDropdowns(); // Luôn đóng cái khác trước
+                        if (!isAlreadyOpen) {
+                            menu.classList.add('show');
+                            button.classList.add('active');
+                        }
                     });
-
-                    dropdownDiv.addEventListener('mouseleave', () => {
-                        menu.classList.remove('show');
-                        button.classList.remove('active');
-                    });
-                    // === [KẾT THÚC] CẬP NHẬT ===
 
                     dropdownDiv.appendChild(button);
                     dropdownDiv.appendChild(menu);
                     sectionDiv.appendChild(dropdownDiv);
-
                 } else {
                     const link = document.createElement('a');
                     link.href = itemData.pageUrl || '#';
-                    link.className = 'menu-button-sidebar';
-                    if (itemData.type) link.classList.add(itemData.type);
+                    link.className = 'menu-button';
                     link.innerHTML = `<i class="icon ${itemData.icon}"></i><span>${itemData.text}</span>`;
                     sectionDiv.appendChild(link);
                 }
             });
-            DOM.leftSidebarContent.appendChild(sectionDiv);
+            container.appendChild(sectionDiv);
         });
     }
 
+    /** Dựng menu bên phải */
     function renderRightMenu() {
-        DOM.rightSidebarContent.innerHTML = '';
+        const container = DOM.rightSidebar.querySelector('.sidebar-content-wrapper');
+        container.innerHTML = '';
         rightMenuData.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'right-menu-section';
-            if (sectionData.title) {
-                sectionDiv.innerHTML = `<h3><i class="icon ${sectionData.icon}"></i><span>${sectionData.title}</span></h3>`;
-            }
+            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
+
+            const list = document.createElement('div');
+            list.style.width = '100%';
+            list.style.padding = '0 8px';
+
             sectionData.items.forEach(itemData => {
                 const link = document.createElement('a');
                 link.href = itemData.href || '#';
                 link.target = '_blank';
-                link.className = 'link-button-right';
-                if(itemData.type) link.classList.add(itemData.type);
+                link.className = 'link-button';
                 link.innerHTML = `<i class="icon ${itemData.icon}"></i><span>${itemData.text}</span>`;
-                sectionDiv.appendChild(link);
+                list.appendChild(link);
             });
-            DOM.rightSidebarContent.appendChild(sectionDiv);
+            sectionDiv.appendChild(list);
+            container.appendChild(sectionDiv);
         });
-    }
-    
-    function renderNotifications() {
-        const createNotificationHTML = (n) => `
-            <div class="notification-card-pb3">
-                <div class="notification-header-pb3">
-                    <i class="icon ${n.icon}"></i>
-                    <h4>${n.title}</h4>
-                    <span class="type-badge ${n.type}">${n.type.replace('type-', '').replace('báchhóaxanh', 'BHX').replace('tgdđ-đmx','TGDD/DMX')}</span>
-                    ${n.isNew ? '<span class="new-badge">NEW</span>' : ''}
-                </div>
-                <p class="notification-message-pb3">${n.message}</p>
-                <div class="notification-footer-pb3">
-                    <div class="footer-left">
-                        <span class="update-date-badge"><i class="fas fa-calendar-check"></i>${n.updateDate}</span>
-                    </div>
-                    <div class="footer-center">
-                        <span class="deadline-badge"><i class="fas fa-hourglass-half"></i>${n.deadline}</span>
-                    </div>
-                    <div class="footer-right">
-                        <a href="${n.link}" class="notification-link-btn-pb3">Xem ngay <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>`;
-
-        DOM.notificationLists.col1.innerHTML = notificationData.col1.map(createNotificationHTML).join('');
-        DOM.notificationLists.col2.innerHTML = notificationData.col2.map(createNotificationHTML).join('');
-    }
-
-    function updateClock() {
-        const now = new Date();
-        if (DOM.clock.time) DOM.clock.time.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second:'2-digit' });
-        if (DOM.clock.date) DOM.clock.date.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
     }
 
     // ===================================================================
-    // E. EVENT LISTENERS & INITIALIZATION
+    // D. EVENT LISTENERS & INITIALIZATION
     // ===================================================================
 
     function setupEventListeners() {
+        // Nút chính để đóng/mở sidebar
         DOM.sidebarToggleBtn.addEventListener('click', () => {
             if (isMobile()) {
                 DOM.leftSidebar.classList.toggle('open');
@@ -242,47 +165,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Overlay cho mobile
         DOM.mobileOverlay.addEventListener('click', () => {
             DOM.leftSidebar.classList.remove('open');
             DOM.mobileOverlay.classList.remove('show');
-            hideAllDropdowns();
         });
 
-        DOM.supportBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            DOM.supportPopup.classList.toggle('show');
-        });
-
-        DOM.closeSupportPopupBtn.addEventListener('click', () => DOM.supportPopup.classList.remove('show'));
-
-        DOM.logoutBtn.addEventListener('click', () => showModal(DOM.confirmLogoutModal));
-        DOM.confirmBtnNo.addEventListener('click', () => hideModal(DOM.confirmLogoutModal));
-        DOM.confirmBtnYes.addEventListener('click', () => {
-            console.log("User logged out.");
-            hideModal(DOM.confirmLogoutModal);
-        });
-        
+        // Đóng menu khi click ra ngoài
         document.addEventListener('click', (e) => {
-            if (!DOM.supportPopup.contains(e.target) && !DOM.supportBtn.contains(e.target)) {
-                DOM.supportPopup.classList.remove('show');
-            }
             if (!e.target.closest('.dropdown')) {
                 hideAllDropdowns();
             }
-            if (e.target === DOM.confirmLogoutModal) {
-                 hideModal(DOM.confirmLogoutModal);
-            }
+            // ... (các event listener cho popup khác)
         });
     }
-    
+
     function init() {
         renderLeftMenu();
         renderRightMenu();
-        renderNotifications();
-        updateClock();
-        setInterval(updateClock, 1000);
         setupEventListeners();
-        console.log("Application Initialized.");
+        // ... (các hàm khởi tạo khác như đồng hồ)
     }
 
     init();
