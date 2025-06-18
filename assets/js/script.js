@@ -143,29 +143,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         menu.appendChild(link);
                     });
 
-                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON (LUÔN LÀ POP-UP) ===
+                    // === [CẬP NHẬT] SỰ KIỆN MỞ MENU CON (LOGIC ĐƠN GIẢN HÓA) ===
                     dropdownDiv.addEventListener('mouseenter', () => {
-                        const isAlreadyOpen = menu.classList.contains('show');
-                        if (isAlreadyOpen) return;
-
                         hideAllDropdowns();
                         menu.classList.add('show');
                         button.classList.add('active');
-                        
-                        // Luôn luôn tính toán vị trí để bay ra bên cạnh
-                        const rect = button.getBoundingClientRect();
-                        menu.style.left = `${rect.right + 8}px`;
-                        menu.style.top = `${rect.top}px`;
                     });
 
                     dropdownDiv.addEventListener('mouseleave', () => {
                         menu.classList.remove('show');
                         button.classList.remove('active');
                     });
-                     // === [KẾT THÚC] CẬP NHẬT ===
+                    // === [KẾT THÚC] CẬP NHẬT ===
 
-                    dropdownDiv.append(button, menu);
+                    dropdownDiv.appendChild(button);
+                    dropdownDiv.appendChild(menu);
                     sectionDiv.appendChild(dropdownDiv);
+
                 } else {
                     const link = document.createElement('a');
                     link.href = itemData.pageUrl || '#';
