@@ -76,6 +76,12 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .menu-button-sidebar, .dropdown-button { background-color: transparent; color: var(--text-on-dark); padding: 10px 12px; margin-bottom: 4px; border: none; border-radius: var(--border-radius-md); cursor: pointer; width: 90%; font-size: 0.9rem; font-weight: 500; text-align: left; text-decoration: none; display: flex; justify-content: flex-start; align-items: center; transition: background-color 0.2s ease, color 0.2s ease; margin-left: auto; margin-right: auto; }
 .menu-button-sidebar:hover, .dropdown-button:hover, .dropdown-button.active { background-color: #374151; color: var(--text-on-dark-hover); }
 .menu-button-sidebar .icon, .dropdown-button .icon { margin-right: 12px; font-size: 1rem; min-width: 20px; text-align: center; color: #9ca3af; transition: color 0.2s ease; }
+/* === [KHẮC PHỤC LỖI] CĂN CHỈNH ICON VÀ CHỮ === */
+.menu-button-sidebar span, .dropdown-button span {
+    white-space: nowrap;      /* Ngăn không cho chữ tự động xuống hàng */
+    overflow: hidden;         /* Ẩn phần chữ bị dư */
+    text-overflow: ellipsis;  /* Hiển thị '...' nếu chữ quá dài */
+}
 .menu-button-sidebar:hover .icon, .dropdown-button:hover .icon, .dropdown-button.active .icon { color: var(--text-on-dark-hover); }
 .menu-button-sidebar.green { color: var(--success-color); }
 .menu-button-sidebar.orange { color: var(--warning-color); }
@@ -85,7 +91,6 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .dropdown-button { align-items: left; }
 .dropdown-arrow { font-size: 0.8rem; transition: transform 0.2s ease; margin-left: 10px; display: none; }
 
-/* === [CẬP NHẬT] CSS CHO MENU CON (LUÔN LÀ POP-UP) === */
 .dropdown-menu { display: none; position: fixed; min-width: 230px; z-index: 1001; background-color: #1f2937; border-radius: var(--border-radius-lg); padding: 6px; flex-direction: column; box-shadow: var(--shadow-lg); border: 1px solid var(--divider-color-dark); }
 .dropdown-menu.show { display: flex; }
 .dropdown-menu .menu-button-sidebar { width: 100%; box-sizing: border-box; }
