@@ -571,7 +571,12 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
     font-style: italic;
     color: var(--text-secondary);
 }
-
+    .input-error {
+        border-color: var(--danger-color) !important;
+    }
+    .input-error:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+    }
 @media (max-width: 768px) {
     .form-grid-hang-bk {
         grid-template-columns: 1fr;
