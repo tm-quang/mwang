@@ -378,7 +378,7 @@ function setupCollapseListeners() {
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = 'TRANG CHỦ - THÔNG BÁO';
+    currentPageTitle.textContent = '';
     try {
         const response = await callApi('getNotifications');
         if (response.success && Array.isArray(response.data)) {
