@@ -24,9 +24,9 @@ const leftMenuData = [
         title: '2025 - IT MTAY2',
         items: [
             { 
-                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-people-group', isDropdown: true, 
+                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-people-roof', isDropdown: true, 
                   subItems: [
-                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-people-group' },
+                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-people-roof' },
                     { id: 'btnBHXToiUu', text: 'BHX - TỐI ƯU THIẾT BỊ', htmlFile: 'cv-trien-khai-bhx.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
                  ] 
             },
@@ -56,7 +56,7 @@ const leftMenuData = [
                  id: 'btnHuongDanIT', text: 'TÀI LIỆU - HƯỚNG DẪN', icon: 'fas fa-question-circle', isDropdown: true, 
                 subItems: [
                     { id: 'btnTGDD', text: 'TGDD & ĐMX', htmlFile: 'tai-lieu-tgdd-dmx.html', pageTitle: 'Thế Giới Di Động & Điện Máy Xanh', icon: 'fas fa-mobile-alt' },
-                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', htmlFile: 'cv-bach-hoa-xanh.html', pageTitle: '', icon: 'fas fa-store' },
+                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', htmlFile: 'tai-lieu-bhx.html', pageTitle: '', icon: 'fas fa-store' },
                     { id: 'btnAvakid', text: 'AVAKID', htmlFile: 'tai-lieu-avakid.html', pageTitle: 'AvaKID', icon: 'fas fa-child' },
                     { id: 'btnAnKhang', text: 'AN KHANG', htmlFile: 'tai-lieu-an-khang.html', pageTitle: 'An Khang', icon: 'fas fa-pills' },
                     { id: 'btnKhoVp', text: 'KHO/VP', htmlFile: 'tai-lieu-kho-vp.html', pageTitle: 'Kho/VP', icon: 'fas fa-warehouse' },
