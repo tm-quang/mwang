@@ -290,11 +290,18 @@ function renderRightMenu() {
     });
 }
 
-// === HÀM loadFunctionContent ĐƯỢC CẬP NHẬT HOÀN TOÀN ===
+// === THAY THẾ HÀM CŨ BẰNG HÀM NÀY ===
 async function loadFunctionContent(item) {
+    // Nếu hàm được gọi mà không có item (ví dụ khi nhấn nút home),
+    // thì mặc định chuyển hướng về trang chủ thông báo.
+    if (!item) {
+        goToHomePage();
+        return;
+    }
+
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = item.pageTitle || 'TÌM KIẾM THÔNG TIN SIÊU THỊ';
+    currentPageTitle.textContent = item.pageTitle || '';
 
     try {
         let htmlContent = '';
