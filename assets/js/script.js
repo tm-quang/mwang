@@ -77,17 +77,34 @@ const rightMenuData = [
         title: "TRANG CÔNG VIỆC",
         icon: "fas fa-briefcase",
         items: [
-            { text: "Báo cáo nội bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
-            { text: "New Ticket", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "success" },
-            { text: "Google Docs", href: "https://docs.google.com/", icon: "fas fa-file-alt", className: "info" },
+            { text: "Báo Cáo Nội Bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
+            { text: "Xwork", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "primary" },
+            { text: "Pfcontroller", href: "https://pfsense.tgdd.vn/", icon: "fa-solid fa-server", className: "primary" },
+            { text: "IOT", href: "https://iot.tgdd.vn/", icon: "fa-regular fa-lightbulb", className: "primary" },
+            { text: "AWS", href: "https://newticket.tgdd.vn/ticket", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+            { text: "Cms App", href: "https://cmsapp.thegioididong.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+            { text: "POS BHX", href: "https://pos.bachhoaxanh.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+        ]
+    },
+    {
+        title: "CÔNG CỤ",
+        icon: "fas fa-tools",
+        items: [
+            { text: "Google Drive", href: "https://drive.google.com/", icon: "fa-solid fa-cloud" , className: "info" },
+            { text: "Google Calendar", href: "https://calendar.google.com/", icon: "fa-solid fa-calendar-alt" , className: "info" },
+            { text: "Google Docs", href: "https://docs.google.com/", icon: "fa-solid fa-file-alt" , className: "info" },
+            { text: "Google Forms", href: "https://forms.google.com/", icon: "fa-solid fa-file-signature" , className: "info" },
+            { text: "Google Meet", href: "https://meet.google.com/", icon: "fa-solid fa-video" , className: "info" },
+            { text: "Google Chat", href: "https://chat.google.com/", icon: "fa-solid fa-comments" , className: "info" },
         ]
     },
     {
         title: "GIẢI TRÍ",
         icon: "fas fa-gamepad",
          items: [
-            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" },
-            { text: "Facebook", href: "https://facebook.com", icon: "fab fa-facebook" },
+            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "success" },
+            { text: "Zing News", href: "https://znews.vn/", icon: "fa-solid fa-newspaper" , className: "success" },
+            { text: "VNExpress", href: "https://vnexpress.net/", icon: "fa-solid fa-newspaper" , className: "success" },
         ]
     }
 ];
