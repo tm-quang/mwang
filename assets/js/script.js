@@ -46,7 +46,6 @@ const leftMenuData = [
                 id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
-                    // === THAY ĐỔI Ở ĐÂY ===
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
                     { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: '', icon: 'fas fa-eye' },
                     { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: '', icon: 'fas fa-eye' },
@@ -641,6 +640,55 @@ async function handleAdminLogin() {
     }
 }
 
+// === LOGIC CHO POPUP THÔNG BÁO DI ĐỘNG (MỚI THÊM) ===
+function handleMobileWelcomePopup() {
+    // --- Cấu hình ---
+    const alwaysShowPopup = false; // Đặt là true để luôn hiện popup khi tải lại trang
+    // ----------------
+
+    const isMobileDevice = window.innerWidth <= 768; // Chỉ áp dụng cho màn hình điện thoại
+    if (!isMobileDevice) return;
+
+    const popup = document.getElementById('mobile-welcome-popup');
+    const closeBtn = document.getElementById('close-mobile-popup');
+    const countdownSpan = document.getElementById('popup-countdown');
+    if (!popup || !closeBtn || !countdownSpan) return;
+
+    let countdown = 5;
+    let countdownInterval;
+    let autoCloseTimeout;
+
+    const closePopup = () => {
+        popup.classList.remove('show');
+        clearInterval(countdownInterval);
+        clearTimeout(autoCloseTimeout);
+    };
+
+    const showPopup = () => {
+        popup.classList.add('show');
+        sessionStorage.setItem('popupShown', 'true');
+
+        countdownInterval = setInterval(() => {
+            countdown--;
+            countdownSpan.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+
+        autoCloseTimeout = setTimeout(closePopup, 5000);
+    };
+
+    closeBtn.addEventListener('click', closePopup);
+
+    const popupHasBeenShown = sessionStorage.getItem('popupShown');
+
+    if (alwaysShowPopup || !popupHasBeenShown) {
+        showPopup();
+    }
+}
+
+
 // === MAIN EXECUTION ===
 document.addEventListener('DOMContentLoaded', function() {
     renderLeftMenu();
@@ -730,6 +778,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     goToHomePage();
     
+    // === KHỞI CHẠY POPUP CHO DI ĐỘNG ===
+    handleMobileWelcomePopup();
+
     ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
     startCountdown();
 });
