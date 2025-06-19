@@ -671,3 +671,41 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
     .input-error:focus {
         box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
     }
+/* ======================================================= */
+/* === CSS CHO DÒNG CHỮ CHẠY (MARQUEE) (MỚI THÊM) === */
+/* ======================================================= */
+.running-text-marquee {
+    background-color: #fff5f5; /* Màu nền highlight đỏ nhạt */
+    border: 1px solid #fcc2c3;
+    border-radius: var(--border-radius-md);
+    padding: 8px 0;
+    overflow: hidden;
+    margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+    font-size: 0.95rem; /* Cỡ chữ bằng nội dung thông báo trên desktop */
+    white-space: nowrap; /* Đảm bảo chữ không xuống dòng */
+    box-shadow: var(--shadow-sm);
+}
+
+.running-text-marquee p {
+    display: inline-block;
+    margin: 0;
+    padding-left: 100%; /* Bắt đầu ở bên ngoài lề phải */
+    color: #c00000; /* Chữ màu đỏ */
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* Tạo hiệu ứng highlight nhẹ cho chữ */
+    animation: marquee-scroll 25s linear infinite;
+}
+
+/* Animation cho chữ chạy từ phải qua trái */
+@keyframes marquee-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-200%); } /* Di chuyển một khoảng đủ dài để chữ biến mất hẳn */
+}
+
+/* Tinh chỉnh cỡ chữ trên di động */
+@media (max-width: 768px) {
+    .running-text-marquee {
+        font-size: 0.85rem; /* Cỡ chữ bằng nội dung thông báo trên di động */
+    }
+}   
+    
