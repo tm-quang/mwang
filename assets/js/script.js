@@ -416,7 +416,7 @@ async function loadNotificationsPage() {
         const response = await callApi('getNotifications');
         loadingSpinner.style.display = 'none';
         if (response.success) {
-            renderNotifications(response.data); // Giả sử API trả về data trong `response.data`
+            renderNotifications(response); // Giả sử API trả về data trong `response.data`
         } else {
             throw new Error(response.message || 'Không thể tải dữ liệu thông báo.');
         }
