@@ -1,5 +1,33 @@
 // =================================================================================
-// PHẦN 1: CẤU HÌNH & API
+// PHẦN 0: LOGIC KIỂM TRA ĐĂNG NHẬP (GATEKEEPER)
+// =================================================================================
+// Logic này phải được chạy đầu tiên để bảo vệ trang chính.
+(function() {
+    // Chỉ thực hiện trên trang chính, không chạy trên trang đăng nhập (index.html)
+    // Giả sử trang chính của bạn sau khi đổi tên là "trang-chu.html"
+    if (window.location.pathname.endsWith('trang-chu.html')) {
+        const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+
+        if (isAuthenticated !== 'true') {
+            // Nếu chưa đăng nhập, chuyển hướng về trang login (index.html)
+            window.location.href = 'index.html';
+        } else {
+            // Nếu đã đăng nhập, hiển thị tên người dùng và làm trang web hiện ra
+            const userName = sessionStorage.getItem('userName');
+            const greetingText = document.querySelector('.greeting-text');
+
+            if (userName && greetingText) {
+                greetingText.textContent = `Xin chào, ${userName}`;
+            }
+            // Hiển thị nội dung trang chính sau khi đã xác thực
+            document.body.style.visibility = 'visible';
+        }
+    }
+})();
+
+
+// =================================================================================
+// PHẦN 1: CẤU HÌNH & API (GIỮ NGUYÊN)
 // =================================================================================
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwYngixrO7jMyLyvYtTgAieHeppH3kL4brU3Oh4VfGYY3jY9bcBqsZo2dUhpxTRsybV0g/exec";
@@ -105,7 +133,7 @@ const rightMenuData = [
 ];
 
 // =================================================================================
-// PHẦN 2: LOGIC GIAO DIỆN
+// PHẦN 2: LOGIC GIAO DIỆN (GIỮ NGUYÊN VÀ CẬP NHẬT)
 // =================================================================================
 
 // DOM Elements
@@ -619,15 +647,12 @@ function updateClock() {
 }
 
 function forceLogout(message) {
+    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('userName');
     alert(message);
-    window.location.reload();
+    window.location.href = 'index.html'; // Chuyển về trang đăng nhập
 }
 
-/**
- * === HÀM ĐĂNG NHẬP ADMIN ĐÃ ĐƯỢC THAY ĐỔI ===
- * Thay vì gọi API, hàm này sẽ kiểm tra thông tin đăng nhập
- * với 2 tài khoản được gán cứng trong code.
- */
 function handleAdminLogin() {
     const username = adminUsername.value.trim();
     const password = adminPassword.value;
@@ -641,19 +666,16 @@ function handleAdminLogin() {
     adminLoginSubmit.textContent = 'Đang kiểm tra...';
     adminLoginError.textContent = '';
 
-    // Kiểm tra thông tin đăng nhập với tài khoản gán cứng
     const validCredentials = 
         (username === 'admin' && password === 'dictionary') || 
         (username === 'mwang' && password === '1412');
 
-    // Giả lập độ trễ mạng để người dùng thấy trạng thái "Đang kiểm tra..."
     setTimeout(() => {
         if (validCredentials) {
             isAdminAuthenticated = true;
             adminLoginModal.style.display = 'none';
             adminUsername.value = '';
             adminPassword.value = '';
-            // Tự động mở menu admin sau khi đăng nhập thành công
             document.getElementById('btnADMIN').click(); 
         } else {
             isAdminAuthenticated = false;
@@ -741,86 +763,89 @@ function handleMobileWelcomePopup() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    renderLeftMenu();
-    renderRightMenu();
-    
-    function handleResize() {
-        isMobileView = window.innerWidth <= 1080;
-        if (!isMobileView) {
-            leftSidebarContainer.classList.remove('open');
-            mobileOverlay.classList.remove('show');
-            if (isSidebarPinned) {
-                 expandSidebar(leftSidebarContainer);
-                 expandSidebar(rightSidebarContainer);
+    // Chỉ thực thi logic của trang chính nếu đây là trang-chu.html
+    if (window.location.pathname.endsWith('trang-chu.html')) {
+        renderLeftMenu();
+        renderRightMenu();
+        
+        function handleResize() {
+            isMobileView = window.innerWidth <= 1080;
+            if (!isMobileView) {
+                leftSidebarContainer.classList.remove('open');
+                mobileOverlay.classList.remove('show');
+                if (isSidebarPinned) {
+                    expandSidebar(leftSidebarContainer);
+                    expandSidebar(rightSidebarContainer);
+                } else {
+                    collapseSidebar(leftSidebarContainer);
+                    collapseSidebar(rightSidebarContainer);
+                }
             } else {
-                 collapseSidebar(leftSidebarContainer);
-                 collapseSidebar(rightSidebarContainer);
+                leftSidebarContainer.classList.add('collapsed');
             }
-        } else {
-             leftSidebarContainer.classList.add('collapsed');
         }
+        
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        sidebarToggleButton.addEventListener('click', () => {
+            if (isMobileView) {
+                leftSidebarContainer.classList.toggle('open');
+                mobileOverlay.classList.toggle('show');
+            } else {
+                isSidebarPinned = !isSidebarPinned;
+                const icon = sidebarToggleButton.querySelector('i');
+                if (isSidebarPinned) {
+                    expandSidebar(leftSidebarContainer); expandSidebar(rightSidebarContainer);
+                    icon.classList.remove('fa-bars'); icon.classList.add('fa-thumbtack');
+                    sidebarToggleButton.title = "Bỏ ghim thanh công cụ";
+                } else {
+                    collapseSidebar(leftSidebarContainer); collapseSidebar(rightSidebarContainer);
+                    icon.classList.remove('fa-thumbtack'); icon.classList.add('fa-bars');
+                    sidebarToggleButton.title = "Ghim thanh công cụ";
+                }
+            }
+        });
+
+        mobileOverlay.addEventListener('click', closeMobileSidebar);
+    
+        leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
+        leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
+        rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
+        rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
+
+        document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
+        
+        adminLoginSubmit.addEventListener('click', handleAdminLogin);
+        adminLoginCancel.addEventListener('click', () => { adminLoginModal.style.display = 'none'; });
+        adminPassword.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAdminLogin(); });
+
+        document.getElementById('logoutButton').addEventListener('click', () => { customConfirmModal.style.display = 'flex'; });
+        document.getElementById('confirmBtnNo').addEventListener('click', () => { customConfirmModal.style.display = 'none'; });
+        document.getElementById('confirmBtnYes').addEventListener('click', () => {
+            customConfirmModal.style.display = 'none';
+            forceLogout('Bạn đã đăng xuất.');
+        });
+
+        const supportBtn = document.getElementById('supportContactButton');
+        const supportPopup = document.getElementById('supportContactPopup');
+        supportBtn.addEventListener('click', () => supportPopup.classList.toggle('show'));
+        document.getElementById('closeSupportPopup').addEventListener('click', () => supportPopup.classList.remove('show'));
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) hideAllDropdowns();
+            if (supportPopup && !supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
+                supportPopup.classList.remove('show');
+            }
+        }, true);
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+        goToHomePage();
+        
+        handleMobileWelcomePopup();
+
+        ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
+        startCountdown();
     }
-    
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    sidebarToggleButton.addEventListener('click', () => {
-        if (isMobileView) {
-            leftSidebarContainer.classList.toggle('open');
-            mobileOverlay.classList.toggle('show');
-        } else {
-            isSidebarPinned = !isSidebarPinned;
-            const icon = sidebarToggleButton.querySelector('i');
-            if (isSidebarPinned) {
-                expandSidebar(leftSidebarContainer); expandSidebar(rightSidebarContainer);
-                icon.classList.remove('fa-bars'); icon.classList.add('fa-thumbtack');
-                sidebarToggleButton.title = "Bỏ ghim thanh công cụ";
-            } else {
-                collapseSidebar(leftSidebarContainer); collapseSidebar(rightSidebarContainer);
-                icon.classList.remove('fa-thumbtack'); icon.classList.add('fa-bars');
-                sidebarToggleButton.title = "Ghim thanh công cụ";
-            }
-        }
-    });
-
-    mobileOverlay.addEventListener('click', closeMobileSidebar);
-  
-    leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
-    leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
-    rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
-    rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
-
-    document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
-    
-    adminLoginSubmit.addEventListener('click', handleAdminLogin);
-    adminLoginCancel.addEventListener('click', () => { adminLoginModal.style.display = 'none'; });
-    adminPassword.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAdminLogin(); });
-
-    document.getElementById('logoutButton').addEventListener('click', () => { customConfirmModal.style.display = 'flex'; });
-    document.getElementById('confirmBtnNo').addEventListener('click', () => { customConfirmModal.style.display = 'none'; });
-    document.getElementById('confirmBtnYes').addEventListener('click', () => {
-        customConfirmModal.style.display = 'none';
-        forceLogout('Bạn đã đăng xuất.');
-    });
-
-    const supportBtn = document.getElementById('supportContactButton');
-    const supportPopup = document.getElementById('supportContactPopup');
-    supportBtn.addEventListener('click', () => supportPopup.classList.toggle('show'));
-    document.getElementById('closeSupportPopup').addEventListener('click', () => supportPopup.classList.remove('show'));
-    
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.dropdown')) hideAllDropdowns();
-        if (supportPopup && !supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
-            supportPopup.classList.remove('show');
-        }
-    }, true);
-    
-    updateClock();
-    setInterval(updateClock, 1000);
-    goToHomePage();
-    
-    handleMobileWelcomePopup();
-
-    ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
-    startCountdown();
 });
