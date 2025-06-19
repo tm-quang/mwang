@@ -132,7 +132,8 @@ let isSidebarPinned = false;
  */
 async function callApi(action, payload = {}) {
     try {
-        if (API_URL === "https://script.google.com/macros/s/AKfycbzmTLBBJwY5f680gbHOOoln7kB2lK6sY9DvFKOQD5_DvbM3BtRD-6UcXVrNwyGGBYD3uw/exec") {
+        // === SỬA LẠI ĐIỀU KIỆN KIỂM TRA CHO ĐÚNG ===
+        if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
             throw new Error("API_URL chưa được cấu hình trong file script.js. Vui lòng kiểm tra lại.");
         }
         const response = await fetch(API_URL, {
@@ -147,11 +148,14 @@ async function callApi(action, payload = {}) {
         return await response.json();
     } catch (error) {
         console.error(`Lỗi khi gọi API cho action "${action}":`, error);
-        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi kết nối đến máy chủ. Vui lòng kiểm tra lại API_URL và kết nối mạng.</p>`;
+        // Thay đổi thông báo lỗi để hiển thị lỗi thực tế từ `catch`
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải thông báo: ${error.message}</p>`;
         loadingSpinner.style.display = 'none';
         throw error;
     }
 }
+
+// ... (TOÀN BỘ PHẦN CODE CÒN LẠI GIỮ NGUYÊN NHƯ FILE BẠN GỬI) ...
 
 function updateTimerDisplay() {
     const timerElement = document.getElementById('session-timer');
@@ -311,25 +315,14 @@ async function loadFunctionContent(functionName, pageTitle = '') {
 }
 
 // === BẮT ĐẦU PHẦN CODE MỚI ĐỂ HIỂN THỊ THÔNG BÁO ===
-
-/**
- * Hàm mới để render trang thông báo từ dữ liệu JSON
- * @param {Array} allNotifications - Mảng dữ liệu thông báo từ API
- */
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
     
-    // Phân loại dữ liệu dựa trên cột "Loại thông báo"
     const trienKhaiData = allNotifications.filter(item => item.category === 'Triển khai');
     const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
 
-    // Hàm trợ giúp tạo HTML cho một cột
     const createColumnHtml = (title, icon, data) => {
-        let columnHtml = `
-          <div class="content-column">
-            <h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2>
-            <div class="notification-list">`;
-
+        let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
                 const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
@@ -370,61 +363,47 @@ function renderNotifications(allNotifications) {
     finalHtml += '</div>';
 
     functionContent.innerHTML = finalHtml;
-
-    // Kích hoạt tính năng thu/mở thẻ thông báo
     setupCollapseListeners();
 }
 
-/**
- * Hàm mới để quản lý sự kiện click thu/mở thẻ thông báo
- */
 function setupCollapseListeners() {
     functionContent.addEventListener('click', function(event) {
-        // Chỉ xử lý nếu click vào header của thẻ
         const header = event.target.closest('.notification-header-pb3');
         if (!header) return;
-
         const clickedCard = header.closest('.notification-card-pb3');
         if (!clickedCard) return;
-
-        // Nếu click vào một link trong header, không làm gì cả
         if (event.target.closest('a')) {
             return;
         }
-        
-        // Đóng tất cả các thẻ khác
         const allCards = functionContent.querySelectorAll('.notification-card-pb3');
         allCards.forEach(card => {
             if (card !== clickedCard) {
                 card.classList.add('collapsed');
             }
         });
-
-        // Mở/đóng thẻ được click
         clickedCard.classList.toggle('collapsed');
     });
 }
-/**
- * Hàm chính để tải trang thông báo
- */
+
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
     currentPageTitle.textContent = 'TRANG CHỦ - THÔNG BÁO';
     
     try {
+        // === SỬA LẠI ĐỂ DÙNG TRỰC TIẾP RESPONSE, KHÔNG CÓ .DATA ===
         const response = await callApi('getNotifications');
         loadingSpinner.style.display = 'none';
-        if (response.success) {
-            renderNotifications(response.data); // Giả sử API trả về data trong `response.data`
-        } else {
-            throw new Error(response.message || 'Không thể tải dữ liệu thông báo.');
-        }
+        // Giả sử API trả về trực tiếp một mảng notifications
+        renderNotifications(response);
     } catch (error) {
         loadingSpinner.style.display = 'none';
-        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải thông báo: ${error.message}</p>`;
+        // `callApi` đã xử lý việc hiển thị lỗi rồi, không cần làm lại ở đây
     }
 }
+
+// === KẾT THÚC PHẦN CODE MỚI ===
+
 function goToHomePage() {
     loadNotificationsPage();
 }
@@ -543,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const supportPopup = document.getElementById('supportContactPopup');
     supportBtn.addEventListener('click', () => supportPopup.classList.toggle('show'));
     
-    // === ĐÂY LÀ DÒNG BỊ LỖI TRƯỚC ĐÓ - ĐÃ SỬA LẠI ===
     document.getElementById('closeSupportPopup').addEventListener('click', () => {
         supportPopup.classList.remove('show');
     });
