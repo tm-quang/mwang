@@ -294,7 +294,7 @@ function renderRightMenu() {
 async function loadFunctionContent(item) {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = item.pageTitle || '';
+    currentPageTitle.textContent = item.pageTitle || 'TÌM KIẾM THÔNG TIN SIÊU THỊ';
 
     try {
         let htmlContent = '';
