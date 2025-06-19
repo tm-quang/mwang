@@ -107,7 +107,7 @@
         <div class="support-info-box" id="supportInfoBox">
             <div class="support-header">
                 <h4>Liên Hệ Hỗ Trợ:</h4>
-                <button class="close-support-btn" id="closeSupportBox">&times;</button>
+                <button class="close-support-btn" id="closeSupportBox">×</button>
             </div>
             <div class="support-body">
                 <p>112080 - Trần Minh Quang</p>
@@ -216,17 +216,13 @@
                 if (response.success) {
                     sessionStorage.setItem('isAuthenticated', 'true');
                     sessionStorage.setItem('userName', response.fullName);
-                    sessionStorage.setItem('userMode', 'user'); // Set mode as regular user
+                    sessionStorage.setItem('userMode', 'user');
                     
                     showPopup('Đăng nhập thành công!', 'Đăng nhập thành công!', 'success');
                     
                     document.getElementById('popupCloseBtn-login').onclick = () => {
                         window.location.href = 'trang-chu.html';
                     };
-                    setTimeout(() => {
-                         window.location.href = 'trang-chu.html';
-                    }, 1500);
-
                 } else {
                     showErrorAlert(response.message);
                 }
