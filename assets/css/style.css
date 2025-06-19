@@ -233,3 +233,199 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
         flex-direction: column;
     }
 }
+/* ======================================================= */
+/* === ĐỊNH DẠNG RIÊNG CHO TRANG TÌM KIẾM SIÊU THỊ === */
+/* ======================================================= */
+
+.search-page-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 32px;
+    background-color: var(--bg-content);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.search-page-container h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 28px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.search-page-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.search-page-container .input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-page-container input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-page-container input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+}
+
+.search-page-container input.error {
+    border-color: var(--danger-color);
+}
+
+.search-page-container input.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.search-page-container button {
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.search-page-container button#searchButton {
+    background-color: var(--primary-color);
+}
+.search-page-container button#searchButton:hover {
+    background-color: #004494; /* primary-hover for this page */
+    transform: translateY(-2px);
+}
+
+.search-page-container button:active {
+    transform: translateY(0);
+}
+
+.search-page-container button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.search-page-container button#clearButton {
+    background-color: var(--danger-color);
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 120px;
+}
+
+.search-page-container button#clearButton:hover {
+    background-color: #dc2626;
+}
+
+.search-page-container .message-area {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 500;
+    height: 24px;
+}
+
+.search-page-container .error-message {
+    color: var(--danger-color);
+}
+
+.search-page-container .loading-message {
+    color: var(--primary-color);
+    display: none;
+}
+
+.search-page-container .spinner {
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+/* --- CSS CHO HỘP GỢI Ý --- */
+.suggestions-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 100;
+    max-height: 210px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background-color: #f3f4f6; }
+.suggestion-item .code { font-weight: 700; color: var(--primary-color); }
+.suggestion-item .name { font-size: 0.9rem; color: var(--text-secondary); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 10px; }
+
+/* CSS CHO KHUNG KẾT QUẢ HIỆN ĐẠI */
+.result-box {
+    margin-top: 24px;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    display: none;
+    animation: fadeInResult 0.4s ease-out;
+}
+
+.result-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.result-main-title {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+}
+
+.result-section { margin-bottom: 20px; }
+.result-section:last-child { margin-bottom: 0; }
+.result-section-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.result-row { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #e0e5ec; font-size: 0.95rem; opacity: 0; animation: slideInUp 0.5s ease-out forwards; }
+.result-row:last-child { border-bottom: none; }
+.result-icon { color: var(--primary-color); margin-right: 12px; width: 20px; text-align: center; }
+.result-label { color: var(--text-secondary); font-weight: 500; flex-basis: 150px; }
+.result-value { color: var(--text-primary); font-weight: 600; }
+
+@keyframes fadeInResult { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
