@@ -120,10 +120,12 @@ const sidebarToggleButton = document.getElementById('sidebar-toggle-btn');
 let dropdownTimeout;
 const HIDE_DELAY = 300;
 let isAdminAuthenticated = false; 
+let countdownInterval; 
+let countdownSeconds = 3600; 
 let isSidebarPinned = false;
 
 /**
- * Hàm gọi API trung tâm - SỬ DỤNG GET
+ * Hàm gọi API trung tâm - ĐÃ CHUYỂN SANG DÙNG GET
  * @param {string} action - Tên của hành động
  * @param {object} payload - Dữ liệu gửi đi
  */
@@ -133,10 +135,13 @@ async function callApi(action, payload = {}) {
             throw new Error("API_URL chưa được cấu hình trong file script.js.");
         }
         
+        // Xây dựng URL với các tham số
         const url = new URL(API_URL);
         url.searchParams.append('action', action);
+        // Đóng gói payload thành chuỗi JSON để gửi qua URL
         url.searchParams.append('payload', JSON.stringify(payload));
 
+        // Thực hiện yêu cầu GET, không cần body hay method
         const response = await fetch(url, { redirect: 'follow' });
 
         if (!response.ok) {
@@ -149,6 +154,31 @@ async function callApi(action, payload = {}) {
         loadingSpinner.style.display = 'none';
         throw error;
     }
+}
+
+// ... (TOÀN BỘ PHẦN CODE CÒN LẠI GIỮ NGUYÊN NHƯ FILE BẠN GỬI) ...
+
+function updateTimerDisplay() {
+    const timerElement = document.getElementById('session-timer');
+    if (timerElement) {
+        const minutes = Math.floor(countdownSeconds / 60);
+        const seconds = countdownSeconds % 60;
+        timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+function startCountdown() {
+    clearInterval(countdownInterval);
+    countdownSeconds = 3600;
+    updateTimerDisplay();
+    countdownInterval = setInterval(() => {
+        countdownSeconds--;
+        updateTimerDisplay();
+        if (countdownSeconds <= 0) {
+            clearInterval(countdownInterval);
+            forceLogout('Phiên đã hết hạn. Vui lòng đăng nhập lại.');
+        }
+    }, 1000);
 }
 
 function renderLeftMenu() {
@@ -165,7 +195,7 @@ function renderLeftMenu() {
                 dropdownDiv.className = 'dropdown';
                 const dropdownButton = document.createElement('div');
                 dropdownButton.className = `dropdown-button ${item.className || ''}`;
-                dropdownButton.innerHTML = `<i class="<span class="math-inline">\{item\.icon\} icon"\></i\><span\></span>{item.text}</span>`;
+                dropdownButton.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
                 dropdownButton.id = item.id;
                 const dropdownMenu = document.createElement('div');
                 dropdownMenu.className = 'dropdown-menu';
@@ -174,7 +204,7 @@ function renderLeftMenu() {
                     subLink.href = '#';
                     subLink.id = subItem.id;
                     subLink.className = `menu-button-sidebar ${subItem.className || ''}`;
-                    subLink.innerHTML = `<i class="<span class="math-inline">\{subItem\.icon\} icon"\></i\><span\></span>{subItem.text}</span>`;
+                    subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`;
                     subLink.addEventListener('click', (e) => {
                         e.preventDefault();
                         hideAllDropdowns();
@@ -222,7 +252,7 @@ function renderLeftMenu() {
                 a.href = '#';
                 a.id = item.id;
                 a.className = `menu-button-sidebar ${item.className || ''}`;
-                a.innerHTML = `<i class="<span class="math-inline">\{item\.icon\} icon"\></i\><span\></span>{item.text}</span>`;
+                a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
                     hideAllDropdowns();
@@ -243,7 +273,7 @@ function renderRightMenu() {
     rightSidebarContentWrapper.innerHTML = '';
     rightMenuData.forEach(section => {
         const title = document.createElement('h3');
-        title.innerHTML = `<i class="<span class="math-inline">\{section\.icon\}"\></i\><span\></span>{section.title}</span>`;
+        title.innerHTML = `<i class="${section.icon}"></i><span>${section.title}</span>`;
         const menuSection = document.createElement('div');
         menuSection.className = 'right-menu-section';
         section.items.forEach(item => {
@@ -251,7 +281,7 @@ function renderRightMenu() {
             link.href = item.href;
             link.target = '_blank';
             link.className = `link-button-right ${item.className || ''}`;
-            link.innerHTML = `<i class="<span class="math-inline">\{item\.icon\} icon"\></i\><span\></span>{item.text}</span>`;
+            link.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
             menuSection.appendChild(link);
         });
 
@@ -285,8 +315,117 @@ async function loadFunctionContent(functionName, pageTitle = '') {
     }
 }
 
+// === BẮT ĐẦU PHẦN CODE MỚI ĐỂ HIỂN THỊ THÔNG BÁO ===
+function renderNotifications(allNotifications) {
+    if (!functionContent) return;
+    
+    // Kiểm tra nếu có lỗi trả về từ API
+    if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
+        return;
+    }
+
+    const trienKhaiData = allNotifications.filter(item => item.category === 'Triển khai');
+    const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
+
+    const createColumnHtml = (title, icon, data) => {
+        let columnHtml = `
+          <div class="content-column">
+            <h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2>
+            <div class="notification-list">`;
+
+        if (data.length > 0) {
+            data.forEach(item => {
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
+                const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
+                const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
+                const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
+                const deadlineHtml = item.deadline ? `<span class="deadline-badge"><i class="fas fa-hourglass-half"></i> Deadline: ${item.deadline}</span>` : '';
+                
+                columnHtml += `
+                  <div class="notification-card-pb3 collapsed">
+                    <div class="notification-header-pb3">
+                        <i class="${item.icon} icon"></i>
+                        <h4>${item.title}</h4>
+                        ${typeBadgeHtml}
+                        ${newBadgeHtml}
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="notification-message-pb3">
+                        ${item.message}
+                        <div class="notification-footer-pb3">
+                            <div class="footer-left">${updateDateHtml}</div>
+                            <div class="footer-center">${deadlineHtml}</div>
+                            <div class="footer-right">${linkButtonHtml}</div>
+                        </div>
+                    </div>
+                  </div>`;
+            });
+        } else {
+            columnHtml += '<p>Không có thông báo nào.</p>';
+        }
+        columnHtml += '</div></div>';
+        return columnHtml;
+    };
+    
+    let finalHtml = '<div class="columns-container-pb2">';
+    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData);
+    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData);
+    finalHtml += '</div>';
+
+    functionContent.innerHTML = finalHtml;
+    setupCollapseListeners();
+}
+
+function setupCollapseListeners() {
+    functionContent.addEventListener('click', function(event) {
+        const header = event.target.closest('.notification-header-pb3');
+        if (!header) return;
+
+        const clickedCard = header.closest('.notification-card-pb3');
+        if (!clickedCard) return;
+
+        if (event.target.closest('a')) {
+            return;
+        }
+        
+        const allCards = functionContent.querySelectorAll('.notification-card-pb3');
+        allCards.forEach(card => {
+            if (card !== clickedCard) {
+                card.classList.add('collapsed');
+            }
+        });
+
+        clickedCard.classList.toggle('collapsed');
+    });
+}
+
+async function loadNotificationsPage() {
+    functionContent.innerHTML = '';
+    loadingSpinner.style.display = 'block';
+    currentPageTitle.textContent = '';
+    
+    try {
+        const response = await callApi('getNotifications');
+        loadingSpinner.style.display = 'none';
+        if (response.success && Array.isArray(response.data)) {
+            renderNotifications(response.data);
+        } else {
+            // Nếu API trả về lỗi nhưng không bị catch, hiển thị message lỗi
+            throw new Error(response.message || 'Dữ liệu trả về không hợp lệ.');
+        }
+    } catch (error) {
+        // Hàm callApi đã xử lý hiển thị lỗi, nên ở đây không cần làm gì thêm
+        // Chỉ cần đảm bảo spinner đã tắt
+        loadingSpinner.style.display = 'none';
+    }
+}
+
+
+// === KẾT THÚC PHẦN CODE MỚI ===
+
 function goToHomePage() {
-    loadFunctionContent('getPage_ThongBao', 'TRANG CHỦ');
+    loadNotificationsPage();
 }
 
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
@@ -419,4 +558,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateClock();
     setInterval(updateClock, 1000);
     goToHomePage();
+    
+    ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
+    startCountdown();
 });
