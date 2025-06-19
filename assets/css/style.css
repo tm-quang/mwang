@@ -129,11 +129,11 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .footer-right { text-align: right; }
 .new-badge { background-color: #ef4444; color: white; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; animation: blink-animation 1.2s infinite; margin-left: 8px; }
 .type-badge { padding: 4px 10px; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; color: #000; margin-left: auto; }
-.type-báchhóaxanh { background-color: #90ee90; }
-.type-tgdđ-đmx { background-color: #ffd900; }
-.type-avakid { background-color: #ff6161; }
-.type-ankhang { background-color: #01eeff; }
-.type-kho-vp { background-color: #008afc; color: white; }
+.type-báchhóaxanh { background-color: #008a20; }
+.type-tgdđ-đmx { background-color: #f8d40b; }
+.type-avakid { background-color: #d33434; }
+.type-ankhang { background-color: #00eeff; }
+.type-kho-vp { background-color: #008cff; color: white; }
 .update-date-badge, .deadline-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; color: white; }
 .update-date-badge { background-color: #22c55e; }
 .deadline-badge { background-color: #ef4444; animation: blink-animation 1.5s infinite; }
