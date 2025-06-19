@@ -675,12 +675,9 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 /* === CSS CHO DÒNG CHỮ CHẠY (MARQUEE) (MỚI THÊM) === */
 /* ======================================================= */
 .running-text-marquee {
-    background-color: #fff5f5; /* Màu nền highlight đỏ nhạt */
-    border: 1px solid #fcc2c3;
-    border-radius: 0.375rem; /* Bo góc nhẹ */
-    padding: 8px 0;
+    padding: 5px 0;
     overflow: hidden;
-    margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+    margin-bottom: 10px; /* Khoảng cách với nội dung bên dưới */
     font-size: 0.95rem; /* Cỡ chữ bằng nội dung thông báo trên desktop */
     white-space: nowrap; /* Đảm bảo chữ không xuống dòng */
     box-shadow: var(--shadow-sm);
