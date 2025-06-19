@@ -162,8 +162,9 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 /* ======================================================= */
 /* === PHẦN RESPONSIVE CHO DI ĐỘNG (ĐÃ TỐI ƯU HÓA) === */
 /* ======================================================= */
-/* Dành cho Tablet và các màn hình nhỏ hơn 1024px */
-@media (max-width: 768px) {
+
+/* Áp dụng cho TABLET và các thiết bị nhỏ hơn (dưới 1080px) */
+@media (max-width: 1080px) {
     /* Chuyển sidebar trái thành dạng menu trượt ra (overlay) */
     #left-sidebar-container {
         position: fixed;
@@ -178,8 +179,6 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
     #left-sidebar-container.open {
         transform: translateX(0);
     }
-    
-    /* Khi sidebar mở, nó không còn ở trạng thái collapsed của desktop nữa */
     #left-sidebar-container.open.collapsed {
         width: 300px;
     }
@@ -202,30 +201,30 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
         margin-left: 0;
         margin-right: 0;
     }
-     #left-sidebar-container.open .menu-button-sidebar .icon, 
-     #left-sidebar-container.open .dropdown-button .icon {
+    #left-sidebar-container.open .menu-button-sidebar .icon, 
+    #left-sidebar-container.open .dropdown-button .icon {
         margin-right: 12px;
         font-size: 1rem;
     }
 
-    /* Ẩn sidebar phải hoàn toàn trên di động để tiết kiệm không gian */
+    /* Ẩn sidebar phải hoàn toàn */
     #right-sidebar-container {
         display: none;
     }
     
-    /* Vô hiệu hóa tính năng ghim/thu gọn của desktop trên mobile để tránh xung đột */
+    /* Vô hiệu hóa tính năng ghim/thu gọn của desktop */
     body.sidebar-collapsed #left-sidebar-container {
        width: 300px;
        transform: translateX(-100%); /* Luôn ẩn khi không có class 'open' */
     }
 }
 
-/* Chỉ dành cho điện thoại (màn hình hẹp hơn 768px) */
-@media (max-width: 1080px) {
+/* CHỈ áp dụng cho ĐIỆN THOẠI (màn hình hẹp hơn 768px) */
+@media (max-width: 768px) {
     #main-header { padding: 10px 15px; }
     #header-right { gap: 10px; }
     
-    /* Ẩn bớt các yếu tố để tiết kiệm không gian */
+    /* Ẩn bớt các yếu tố trên header để tiết kiệm không gian */
     #current-page-title, 
     #header-right .greeting-text,
     #live-clock #clock-date {
@@ -235,17 +234,16 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 
     #content-container { padding: 10px; }
     
-    /* === THAY ĐỔI QUAN TRỌNG: Chuyển 2 cột thông báo thành 1 cột === */
+    /* Chuyển 2 cột thông báo thành 1 cột */
     .columns-container-pb2 {
         flex-direction: column;
     }
-
     .notification-footer-pb3 {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
     }
-     .footer-left, .footer-center, .footer-right {
+    .footer-left, .footer-center, .footer-right {
         text-align: left;
         width: 100%;
     }
@@ -261,73 +259,72 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
     .search-container-hang-bk h2, .search-page-container h2 {
         font-size: 1.3rem;
     }
-     .button-container-hang-bk {
+    .button-container-hang-bk {
         flex-direction: column;
     }
-        /* ================================================= */
-    /* === THÊM ĐOẠN CODE MỚI CỦA BẠN VÀO ĐÂY === */
+    
+    /* Giảm kích thước font chữ thông báo cho gọn */
     .notification-message-pb3 {
-        font-size: 0.80rem; /* Kích thước chữ nhỏ hơn cho di động */
-        line-height: 1.6;   /* Giảm nhẹ khoảng cách dòng cho dễ đọc */
+        font-size: 0.85rem; 
+        line-height: 1.6;
     }
-        /* === THÊM TIẾP ĐOẠN NÀY VÀO ĐỂ CHỈNH TIÊU ĐỀ === */
     .notification-header-pb3 h4 {
-        font-size: 1rem; /* Chỉnh kích thước tiêu đề cho di động */
+        font-size: 1rem;
     }
+
+    /* Định dạng cho popup chỉ dành cho di động */
     .mobile-popup {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    z-index: 2500;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0.3s, opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: translateX(-50%) translateY(20px);
-}
-.mobile-popup.show {
-    visibility: visible;
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-.mobile-popup-content {
-    background-color: #2c3e50; /* Màu nền tối */
-    color: #ecf0f1; /* Màu chữ sáng */
-    padding: 20px;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    position: relative;
-    border: 1px solid #34495e;
-}
-.mobile-popup-content p {
-    margin: 0 0 15px 0;
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-.mobile-popup-close {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #bdc3c7;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: color 0.2s;
-}
-.mobile-popup-close:hover {
-    color: #ffffff;
-}
-.mobile-popup-timer {
-    font-size: 0.8rem;
-    color: #95a5a6;
-}
-    /* ================================================= */
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        width: 90%;
+        max-width: 400px;
+        z-index: 2500;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.3s, opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        transform: translateX(-50%) translateY(20px);
+    }
+    .mobile-popup.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .mobile-popup-content {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+        text-align: center;
+        position: relative;
+        border: 1px solid #34495e;
+    }
+    .mobile-popup-content p {
+        margin: 0 0 15px 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    .mobile-popup-close {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: #bdc3c7;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.2s;
+    }
+    .mobile-popup-close:hover {
+        color: #ffffff;
+    }
+    .mobile-popup-timer {
+        font-size: 0.8rem;
+        color: #95a5a6;
+    }
 }
 
 /* ======================================================= */
