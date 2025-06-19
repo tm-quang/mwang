@@ -24,9 +24,9 @@ const leftMenuData = [
         title: '2025 - IT MTAY2',
         items: [
             { 
-                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-people-roof', isDropdown: true, 
+                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-user-group', isDropdown: true, 
                   subItems: [
-                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-people-roof' },
+                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-user-group' },
                     { id: 'btnBHXToiUu', text: 'BHX - TỐI ƯU THIẾT BỊ', htmlFile: 'cv-trien-khai-bhx.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
                  ] 
             },
