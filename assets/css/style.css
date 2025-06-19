@@ -1,10 +1,10 @@
 /* TOÀN BỘ CSS HIỆN TẠI CỦA BẠN CHO GIAO DIỆN CHÍNH, GIỮ NGUYÊN */
 :root {
     --primary-color: #0056b3;
-    --primary-hover: #4338ca;
-    --danger-color: #ef4444;
+    --primary-hover: #3527cf;
+    --danger-color: #ff0000;
     --danger-hover: #dc2626;
-    --success-color: #22c55e;
+    --success-color: #15ff00;
     --warning-color: #f97316;
     --bg-main: #ffffff;
     --bg-content: #ffffff;
