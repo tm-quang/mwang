@@ -427,6 +427,166 @@ async function loadNotificationsPage() {
 function goToHomePage() {
     loadNotificationsPage();
 }
+// === BẮT ĐẦU LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ (CLIENT-SIDE) ===
+
+// Hàm khởi tạo, được gọi sau khi HTML của trang tìm kiếm được tải vào DOM
+function initSearchStorePage() {
+    const maSTInput = document.getElementById('maSTInput');
+    const searchButton = document.getElementById('searchButton');
+    const clearButton = document.getElementById('clearButton');
+
+    if (!maSTInput || !searchButton || !clearButton) {
+        console.error("Không tìm thấy các thành phần của trang tìm kiếm siêu thị.");
+        return;
+    }
+
+    maSTInput.addEventListener('input', handleStoreSuggestionInput);
+    maSTInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearchStore();
+        }
+    });
+    
+    searchButton.addEventListener('click', handleSearchStore);
+    clearButton.addEventListener('click', clearStoreSearch);
+}
+
+// Hàm xử lý và hiển thị gợi ý
+async function handleStoreSuggestionInput(event) {
+    const maSTInput = event.target;
+    const suggestionsBox = document.getElementById('suggestions-box');
+    const inputText = maSTInput.value;
+
+    if (!suggestionsBox) return;
+
+    if (inputText.length < 2) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+    }
+
+    try {
+        const response = await callApi('getStoreSuggestions', { partialCode: inputText });
+        
+        if (response && response.length > 0) {
+            suggestionsBox.innerHTML = '';
+            response.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `<span class="code">${suggestion.code}</span><span class="name">${suggestion.name}</span>`;
+                item.onclick = () => {
+                    maSTInput.value = suggestion.code;
+                    suggestionsBox.style.display = 'none';
+                    handleSearchStore();
+                };
+                suggestionsBox.appendChild(item);
+            });
+            suggestionsBox.style.display = 'block';
+        } else {
+            suggestionsBox.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Lỗi khi lấy gợi ý:', error);
+        suggestionsBox.style.display = 'none';
+    }
+}
+
+// Hàm thực hiện tìm kiếm
+async function handleSearchStore() {
+    const maSTInput = document.getElementById('maSTInput');
+    const resultOutput = document.getElementById('resultOutput');
+    const errorMessage = document.getElementById('errorMessage');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const searchButton = document.getElementById('searchButton');
+    const buttonText = document.getElementById('buttonText');
+    const suggestionsBox = document.getElementById('suggestions-box');
+
+    const maST = maSTInput.value;
+    suggestionsBox.style.display = 'none';
+    resultOutput.style.display = 'none';
+    errorMessage.textContent = '';
+    maSTInput.classList.remove('error');
+
+    if (!maST.trim()) {
+        errorMessage.textContent = 'Vui lòng nhập Mã Siêu Thị để tìm kiếm.';
+        maSTInput.classList.add('error');
+        return;
+    }
+
+    searchButton.disabled = true;
+    buttonText.textContent = 'Đang tìm...';
+    loadingMessage.style.display = 'block';
+
+    try {
+        // Sử dụng callApi để giao tiếp với backend
+        const response = await callApi('searchStore', { maST: maST });
+        
+        if (response && response.error) {
+            errorMessage.textContent = response.message;
+            maSTInput.classList.add('error');
+        } else if (response) {
+            resultOutput.innerHTML = formatStoreSearchResult(response);
+            resultOutput.style.display = 'block';
+        } else {
+            errorMessage.textContent = `Không tìm thấy thông tin cho Mã Siêu Thị: "${maST}".`;
+            maSTInput.classList.add('error');
+        }
+    } catch (error) {
+        errorMessage.textContent = 'Lỗi kết nối máy chủ: ' + error.message;
+        maSTInput.classList.add('error');
+    } finally {
+        searchButton.disabled = false;
+        buttonText.textContent = 'Tìm Kiếm';
+        loadingMessage.style.display = 'none';
+    }
+}
+
+// Hàm xóa kết quả tìm kiếm
+function clearStoreSearch() {
+    const maSTInput = document.getElementById('maSTInput');
+    const resultOutput = document.getElementById('resultOutput');
+    const errorMessage = document.getElementById('errorMessage');
+    const suggestionsBox = document.getElementById('suggestions-box');
+    
+    maSTInput.value = '';
+    resultOutput.style.display = 'none';
+    errorMessage.textContent = '';
+    maSTInput.classList.remove('error');
+    if (suggestionsBox) {
+        suggestionsBox.style.display = 'none';
+    }
+}
+
+// Hàm định dạng HTML cho kết quả tìm kiếm
+function formatStoreSearchResult(data) {
+    const createRow = (icon, label, value, delay) => `
+        <div class="result-row" style="animation-delay: ${delay}s;">
+            <i class="fas ${icon} result-icon"></i>
+            <span class="result-label">${label}</span>
+            <span class="result-value">${value || 'N/A'}</span>
+        </div>`;
+    return `
+    <div class="result-card">
+        <div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div>
+        <div class="result-section">
+            <div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>
+            ${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}
+            ${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}
+            ${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}
+            ${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}
+            ${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}
+            ${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}
+        </div>
+        <div class="result-section">
+            <div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>
+            ${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}
+            ${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}
+            ${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}
+        </div>
+    </div>`;
+}
+// === KẾT THÚC LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
 
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
 function expandSidebar(sidebarElement) { sidebarElement.classList.remove('collapsed'); }
