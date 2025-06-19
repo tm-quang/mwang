@@ -384,7 +384,6 @@ function setupCollapseListeners() {
         const clickedCard = header.closest('.notification-card-pb3');
         if (!clickedCard || event.target.closest('a')) return;
         
-        // Chỉ đóng các card khác nếu card được click đang bị đóng
         if (clickedCard.classList.contains('collapsed')) {
              const allCards = functionContent.querySelectorAll('.notification-card-pb3');
              allCards.forEach(card => { if (card !== clickedCard) card.classList.add('collapsed'); });
@@ -416,7 +415,6 @@ function goToHomePage() {
     loadNotificationsPage();
 }
 
-// === LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
 function initSearchStorePage() {
     const maSTInput = document.getElementById('maSTInput');
     const searchButton = document.getElementById('searchButton');
@@ -489,7 +487,6 @@ function formatStoreSearchResult(data) {
     return `<div class="result-card"><div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}</div></div>`;
 }
 
-// === BẮT ĐẦU LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
 function initSearchHangBKPage() {
     const searchButton = document.getElementById('searchButtonHangBK');
     const clearButton = document.getElementById('clearButtonHangBK');
@@ -499,7 +496,6 @@ function initSearchHangBKPage() {
 }
 
 async function handleSearchHangBK() {
-    // Lấy các element
     const maKhoSelect = document.getElementById('maKhoSelect');
     const maUserInput = document.getElementById('maUserInput');
     const searchButton = document.getElementById('searchButtonHangBK');
@@ -510,11 +506,9 @@ async function handleSearchHangBK() {
     const noResultsMessage = document.getElementById('noResultsMessageHangBK');
     const loadingMessage = document.getElementById('loadingMessageHangBK');
     
-    // Lấy giá trị
     const maKho = maKhoSelect.value;
     const maUser = maUserInput.value.trim();
 
-    // Reset giao diện
     resultTableContainer.style.display = 'none';
     resultTableBody.innerHTML = '';
     errorMessage.textContent = '';
@@ -522,7 +516,6 @@ async function handleSearchHangBK() {
     maKhoSelect.classList.remove('input-error');
     maUserInput.classList.remove('input-error');
 
-    // Kiểm tra điều kiện
     let hasError = false;
     if (!maKho) {
         errorMessage.textContent = 'Vui lòng chọn Mã Kho. ';
@@ -538,7 +531,6 @@ async function handleSearchHangBK() {
         return;
     }
 
-    // Hiển thị trạng thái loading
     searchButton.disabled = true;
     buttonText.textContent = 'Đang tìm...';
     loadingMessage.style.display = 'block';
@@ -584,10 +576,7 @@ function clearSearchHangBK() {
     document.getElementById('maKhoSelect').classList.remove('input-error');
     document.getElementById('maUserInput').classList.remove('input-error');
 }
-// === KẾT THÚC LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
 
-
-// --- CÁC HÀM TIỆN ÍCH KHÁC ---
 function collapseSidebar(sidebarElement) { if(!isMobileView) sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
 function expandSidebar(sidebarElement) { if(!isMobileView) sidebarElement.classList.remove('collapsed'); }
 function hideAllDropdowns() {
@@ -640,21 +629,26 @@ async function handleAdminLogin() {
     }
 }
 
-// === LOGIC CHO POPUP THÔNG BÁO DI ĐỘNG (MỚI THÊM) ===
+// === LOGIC CHO POPUP THÔNG BÁO DI ĐỘNG (ĐÃ CẬP NHẬT) ===
 function handleMobileWelcomePopup() {
-    // --- Cấu hình ---
-    const alwaysShowPopup = false; // Đặt là true để luôn hiện popup khi tải lại trang
-    // ----------------
+    const alwaysShowPopup = false; 
 
-    const isMobileDevice = window.innerWidth <= 768; // Chỉ áp dụng cho màn hình điện thoại
-    if (!isMobileDevice) return;
+    // === PHƯƠNG PHÁP KIỂM TRA MỚI, CHÍNH XÁC HƠN ===
+    // Điều kiện: màn hình hẹp VÀ có khả năng cảm ứng
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const isMobileDevice = window.innerWidth <= 1080 && hasTouch; // Tăng giới hạn chiều rộng lên 1080px cho các máy tính bảng
+
+    if (!isMobileDevice) {
+        return;
+    }
+    // ===============================================
 
     const popup = document.getElementById('mobile-welcome-popup');
     const closeBtn = document.getElementById('close-mobile-popup');
     const countdownSpan = document.getElementById('popup-countdown');
     if (!popup || !closeBtn || !countdownSpan) return;
 
-    let countdown = 15; // Thời gian đếm ngược tính bằng giây
+    let countdown = 15; // Thay đổi: tăng lên 15 giây
     let countdownInterval;
     let autoCloseTimeout;
 
@@ -676,7 +670,7 @@ function handleMobileWelcomePopup() {
             }
         }, 1000);
 
-        autoCloseTimeout = setTimeout(closePopup, 5000);
+        autoCloseTimeout = setTimeout(closePopup, 15000); // Thay đổi: tăng lên 15000ms
     };
 
     closeBtn.addEventListener('click', closePopup);
@@ -689,19 +683,15 @@ function handleMobileWelcomePopup() {
 }
 
 
-// === MAIN EXECUTION ===
 document.addEventListener('DOMContentLoaded', function() {
     renderLeftMenu();
     renderRightMenu();
     
-    // === LOGIC MỚI CHO RESPONSIVE & SIDEBAR ===
     function handleResize() {
         isMobileView = window.innerWidth <= 1080;
         if (!isMobileView) {
-            // Nếu chuyển sang view desktop, đóng menu mobile và loại bỏ class open
             leftSidebarContainer.classList.remove('open');
             mobileOverlay.classList.remove('show');
-            // Phục hồi trạng thái ghim nếu có
             if (isSidebarPinned) {
                  expandSidebar(leftSidebarContainer);
                  expandSidebar(rightSidebarContainer);
@@ -710,21 +700,18 @@ document.addEventListener('DOMContentLoaded', function() {
                  collapseSidebar(rightSidebarContainer);
             }
         } else {
-             // Trên mobile, sidebar luôn ở trạng thái "collapsed" về mặt logic desktop
              leftSidebarContainer.classList.add('collapsed');
         }
     }
     
     window.addEventListener('resize', handleResize);
-    handleResize(); // Chạy lần đầu khi tải trang
+    handleResize();
 
     sidebarToggleButton.addEventListener('click', () => {
         if (isMobileView) {
-            // Chức năng cho mobile: Mở/đóng off-canvas menu
             leftSidebarContainer.classList.toggle('open');
             mobileOverlay.classList.toggle('show');
         } else {
-            // Chức năng cho desktop: Ghim/bỏ ghim
             isSidebarPinned = !isSidebarPinned;
             const icon = sidebarToggleButton.querySelector('i');
             if (isSidebarPinned) {
@@ -739,16 +726,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Đóng sidebar khi click vào overlay
     mobileOverlay.addEventListener('click', closeMobileSidebar);
   
-    // Logic cũ cho hover trên desktop
     leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
     leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
     rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
   
-    // === CÁC EVENT LISTENER KHÁC ===
     document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
     
     adminLoginSubmit.addEventListener('click', handleAdminLogin);
@@ -778,7 +762,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     goToHomePage();
     
-    // === KHỞI CHẠY POPUP CHO DI ĐỘNG ===
     handleMobileWelcomePopup();
 
     ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
