@@ -2,7 +2,7 @@
 // PHẦN 1: CẤU HÌNH & API
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbx_kHpTGftFq8uFMvMMCzbBDt6-9Y28wxIFNosM0T6dH80bnqE8T-im34a63xuaLKGjmQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzfjsLfF1k_vyk9bNuCYz8hfHZq5pnJ9BlwqbuLmBJDZyAxSWK12FBH6pVuyYT_stkZ9A/exec";
 
 const leftMenuData = [
     {
@@ -10,7 +10,7 @@ const leftMenuData = [
         items: [
           {
             id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
-            isAdmin: true,
+            //isAdmin: true,
             subItems: [
                 { id: 'btnDatabase', text: 'DATABASE', functionName: 'getPage_AdminDatabase', pageTitle: 'QUẢN LÝ DỮ LIỆU', icon: 'fa-solid fa-database' },
                 { id: 'btnUserInfo', text: 'QUẢN LÝ USER', functionName: 'getPage_AdminThongTinThanhVien', pageTitle: 'QUẢN LÝ THÀNH VIÊN', icon: 'fa-solid fa-users' },
@@ -46,7 +46,8 @@ const leftMenuData = [
                 id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: 'TÌM KIẾM SIÊU THỊ', icon: 'fas fa-store-alt' },
-                    { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', functionName: 'getPage_TimKiemHangBK', icon: 'fas fa-box-open' },
+                    // === THAY ĐỔI Ở ĐÂY ===
+                    { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: 'TÌM KIẾM HÀNG HÓA BACKUP', icon: 'fas fa-box-open' },
                     { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: '', icon: 'fas fa-eye' },
                     { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: 'TEST', icon: 'fas fa-eye' },
                     { id: 'btnTEST3', text: 'MENU 3', functionName: 'getPage_TEST3', pageTitle: 'TEST', icon: 'fas fa-eye' },
@@ -195,10 +196,7 @@ function renderLeftMenu() {
                     subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`;
                     subLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (!subItem) {
-                            console.error("Lỗi dữ liệu: subItem không tồn tại.", e.target);
-                            return;
-                        }
+                        if (!subItem) { console.error("Lỗi dữ liệu: subItem không tồn tại.", e.target); return; }
                         hideAllDropdowns();
                         loadFunctionContent(subItem);
                         if (!isSidebarPinned) {
@@ -247,10 +245,7 @@ function renderLeftMenu() {
                 a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (!item) {
-                        console.error("Lỗi dữ liệu: item không tồn tại.", e.target);
-                        return;
-                    }
+                    if (!item) { console.error("Lỗi dữ liệu: item không tồn tại.", e.target); return; }
                     hideAllDropdowns();
                     loadFunctionContent(item);
                     if (!isSidebarPinned) {
@@ -280,7 +275,6 @@ function renderRightMenu() {
             link.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
             menuSection.appendChild(link);
         });
-
         rightSidebarContentWrapper.appendChild(title);
         rightSidebarContentWrapper.appendChild(menuSection);
     });
@@ -288,10 +282,9 @@ function renderRightMenu() {
 
 // === HÀM loadFunctionContent ĐÃ SỬA LỖI ===
 async function loadFunctionContent(item) {
-    // Kiểm tra đầu vào. Nếu item không phải là một object hợp lệ, dừng lại.
     if (!item || typeof item !== 'object' || !('id' in item)) {
         console.error("loadFunctionContent được gọi với đối số không hợp lệ:", item);
-        loadingSpinner.style.display = 'none'; // Tắt vòng xoay
+        loadingSpinner.style.display = 'none';
         return; 
     }
 
@@ -317,8 +310,11 @@ async function loadFunctionContent(item) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = htmlContent;
 
+        // === THÊM KHỞI TẠO CHO TRANG MỚI Ở ĐÂY ===
         if (item.id === 'btnTimSieuThi') {
             initSearchStorePage();
+        } else if (item.id === 'btnTimHangBK') {
+            initSearchHangBKPage();
         }
         
         Array.from(functionContent.querySelectorAll('script')).forEach(oldScript => {
@@ -401,7 +397,7 @@ function goToHomePage() {
     loadNotificationsPage();
 }
 
-// === BẮT ĐẦU LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ (CLIENT-SIDE) ===
+// === LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
 function initSearchStorePage() {
     const maSTInput = document.getElementById('maSTInput');
     const searchButton = document.getElementById('searchButton');
@@ -412,7 +408,6 @@ function initSearchStorePage() {
     searchButton.addEventListener('click', handleSearchStore);
     clearButton.addEventListener('click', clearStoreSearch);
 }
-
 async function handleStoreSuggestionInput(event) {
     const maSTInput = event.target;
     const suggestionsBox = document.getElementById('suggestions-box');
@@ -434,7 +429,6 @@ async function handleStoreSuggestionInput(event) {
         } else { suggestionsBox.style.display = 'none'; }
     } catch (error) { console.error('Lỗi khi lấy gợi ý:', error); suggestionsBox.style.display = 'none'; }
 }
-
 async function handleSearchStore() {
     const maSTInput = document.getElementById('maSTInput');
     const resultOutput = document.getElementById('resultOutput');
@@ -460,7 +454,6 @@ async function handleSearchStore() {
     } catch (error) { errorMessage.textContent = 'Lỗi kết nối máy chủ: ' + error.message; maSTInput.classList.add('error'); } 
     finally { searchButton.disabled = false; buttonText.textContent = 'Tìm Kiếm'; loadingMessage.style.display = 'none'; }
 }
-
 function clearStoreSearch() {
     const maSTInput = document.getElementById('maSTInput');
     const resultOutput = document.getElementById('resultOutput');
@@ -472,12 +465,100 @@ function clearStoreSearch() {
     maSTInput.classList.remove('error');
     if (suggestionsBox) suggestionsBox.style.display = 'none';
 }
-
 function formatStoreSearchResult(data) {
     const createRow = (icon, label, value, delay) => `<div class="result-row" style="animation-delay: ${delay}s;"><i class="fas ${icon} result-icon"></i><span class="result-label">${label}</span><span class="result-value">${value || 'N/A'}</span></div>`;
     return `<div class="result-card"><div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}</div></div>`;
 }
-// === KẾT THÚC LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
+
+// === BẮT ĐẦU LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
+function initSearchHangBKPage() {
+    const searchButton = document.getElementById('searchButtonHangBK');
+    const clearButton = document.getElementById('clearButtonHangBK');
+    if (!searchButton || !clearButton) return;
+    searchButton.addEventListener('click', handleSearchHangBK);
+    clearButton.addEventListener('click', clearSearchHangBK);
+}
+
+async function handleSearchHangBK() {
+    // Lấy các element
+    const maKhoSelect = document.getElementById('maKhoSelect');
+    const maUserInput = document.getElementById('maUserInput');
+    const searchButton = document.getElementById('searchButtonHangBK');
+    const buttonText = document.getElementById('buttonTextHangBK');
+    const resultTableContainer = document.getElementById('resultTableContainerHangBK');
+    const resultTableBody = document.getElementById('resultTableBodyHangBK');
+    const errorMessage = document.getElementById('errorMessageHangBK');
+    const noResultsMessage = document.getElementById('noResultsMessageHangBK');
+    const loadingMessage = document.getElementById('loadingMessageHangBK');
+    
+    // Lấy giá trị
+    const maKho = maKhoSelect.value;
+    const maUser = maUserInput.value.trim();
+
+    // Reset giao diện
+    resultTableContainer.style.display = 'none';
+    resultTableBody.innerHTML = '';
+    errorMessage.textContent = '';
+    noResultsMessage.style.display = 'none';
+    maKhoSelect.classList.remove('input-error');
+    maUserInput.classList.remove('input-error');
+
+    // Kiểm tra điều kiện đầu vào
+    if (!maKho && !maUser) {
+        errorMessage.textContent = 'Vui lòng chọn Mã Kho hoặc nhập Mã Nhân Viên.';
+        if (!maKho) maKhoSelect.classList.add('input-error');
+        if (!maUser) maUserInput.classList.add('input-error');
+        return;
+    }
+
+    // Hiển thị trạng thái loading
+    searchButton.disabled = true;
+    buttonText.textContent = 'Đang tìm...';
+    loadingMessage.style.display = 'block';
+
+    try {
+        const results = await callApi('searchHangBK', { maKho, maUser });
+        if (results && results.length > 0) {
+            results.forEach(rowData => {
+                const row = resultTableBody.insertRow();
+                row.insertCell().textContent = rowData.maNV;
+                row.insertCell().textContent = rowData.maTaiSan;
+                row.insertCell().textContent = rowData.tenTaiSan;
+                row.insertCell().textContent = rowData.loaiTaiSan;
+                row.insertCell().textContent = rowData.ngayNhap;
+                row.insertCell().textContent = rowData.trangThai;
+                row.insertCell().textContent = rowData.maKho;
+                row.insertCell().textContent = rowData.tenKho;
+                row.insertCell().textContent = rowData.userVaTenSoHuu;
+            });
+            resultTableContainer.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'block';
+            resultTableContainer.style.display = 'block';
+        }
+    } catch (error) {
+        errorMessage.textContent = 'Đã xảy ra lỗi: ' + error.message;
+        console.error("Lỗi gọi API tìm hàng BK:", error);
+    } finally {
+        searchButton.disabled = false;
+        buttonText.textContent = 'Tìm Kiếm';
+        loadingMessage.style.display = 'none';
+    }
+}
+
+function clearSearchHangBK() {
+    document.getElementById('maKhoSelect').value = '';
+    document.getElementById('maUserInput').value = '';
+    document.getElementById('maUserSelect').value = '';
+    document.getElementById('resultTableContainerHangBK').style.display = 'none';
+    document.getElementById('resultTableBodyHangBK').innerHTML = '';
+    document.getElementById('errorMessageHangBK').textContent = '';
+    document.getElementById('noResultsMessageHangBK').style.display = 'none';
+    document.getElementById('maKhoSelect').classList.remove('input-error');
+    document.getElementById('maUserInput').classList.remove('input-error');
+}
+// === KẾT THÚC LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
+
 
 // --- CÁC HÀM TIỆN ÍCH KHÁC ---
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
