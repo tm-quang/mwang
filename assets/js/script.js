@@ -426,7 +426,7 @@ async function loadNotificationsPage() {
     }
 }
 function goToHomePage() {
-    loadNotificationsPage('getPage_ThongBao', 'TRANG CHỦ');
+    loadNotificationsPage();
 }
 
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
