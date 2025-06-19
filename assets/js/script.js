@@ -320,7 +320,6 @@ async function loadFunctionContent(item) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = htmlContent;
 
-        // === THÊM KHỞI TẠO CHO TRANG MỚI Ở ĐÂY ===
         if (item.id === 'btnTimSieuThi') {
             initSearchStorePage();
         } else if (item.id === 'btnTimHangBK') {
@@ -334,7 +333,6 @@ async function loadFunctionContent(item) {
             oldScript.parentNode.replaceChild(newScript, oldScript);
         });
 
-        // Đóng sidebar trên mobile sau khi tải nội dung
         closeMobileSidebar();
 
     } catch (error) {
@@ -357,7 +355,7 @@ function renderNotifications(allNotifications) {
         let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
-                const newBadgeHtml = item.isNew ? '<span class="new-badge">Mới</span>' : '';
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
                 const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
                 const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
                 const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
@@ -631,49 +629,69 @@ async function handleAdminLogin() {
 
 // === LOGIC CHO POPUP THÔNG BÁO DI ĐỘNG (ĐÃ CẬP NHẬT) ===
 function handleMobileWelcomePopup() {
-    const alwaysShowPopup = false; 
+    const alwaysShowPopup = false;
 
-    // === PHƯƠNG PHÁP KIỂM TRA MỚI, CHÍNH XÁC HƠN ===
-    // Điều kiện: màn hình hẹp VÀ có khả năng cảm ứng
     const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    const isMobileDevice = window.innerWidth <= 1080 && hasTouch; // Tăng giới hạn chiều rộng lên 1080px cho các máy tính bảng
+    const isMobileDevice = window.innerWidth <= 1080 && hasTouch;
 
     if (!isMobileDevice) {
         return;
     }
-    // ===============================================
 
-    const popup = document.getElementById('mobile-welcome-popup');
-    const closeBtn = document.getElementById('close-mobile-popup');
-    const countdownSpan = document.getElementById('popup-countdown');
-    if (!popup || !closeBtn || !countdownSpan) return;
-
-    let countdown = 15; // Thay đổi: tăng lên 15 giây
+    let popupElement = null;
     let countdownInterval;
     let autoCloseTimeout;
 
     const closePopup = () => {
-        popup.classList.remove('show');
+        if (popupElement) {
+            popupElement.classList.remove('show');
+            setTimeout(() => {
+                if (popupElement) popupElement.remove();
+                popupElement = null;
+            }, 300);
+        }
         clearInterval(countdownInterval);
         clearTimeout(autoCloseTimeout);
     };
 
     const showPopup = () => {
-        popup.classList.add('show');
+        const popupHTML = `
+            <div class="mobile-popup-content">
+                <button class="mobile-popup-close">×</button>
+                <p>Đây là giao diện cho di động, chọn chế độ "xem trang web cho máy tính" trên trình duyệt, hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p>
+                <div class="mobile-popup-timer">
+                    Tự động đóng sau <span class="popup-countdown">15</span> giây...
+                </div>
+            </div>
+        `;
+        popupElement = document.createElement('div');
+        popupElement.id = 'mobile-welcome-popup';
+        popupElement.className = 'mobile-popup';
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        setTimeout(() => {
+            if (popupElement) popupElement.classList.add('show');
+        }, 20);
+
         sessionStorage.setItem('popupShown', 'true');
+
+        const closeBtn = popupElement.querySelector('.mobile-popup-close');
+        const countdownSpan = popupElement.querySelector('.popup-countdown');
+        let countdown = 15;
+
+        closeBtn.addEventListener('click', closePopup);
 
         countdownInterval = setInterval(() => {
             countdown--;
-            countdownSpan.textContent = countdown;
+            if (countdownSpan) countdownSpan.textContent = countdown;
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
             }
         }, 1000);
 
-        autoCloseTimeout = setTimeout(closePopup, 15000); // Thay đổi: tăng lên 15000ms
+        autoCloseTimeout = setTimeout(closePopup, 15000);
     };
-
-    closeBtn.addEventListener('click', closePopup);
 
     const popupHasBeenShown = sessionStorage.getItem('popupShown');
 
