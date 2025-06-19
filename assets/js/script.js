@@ -353,7 +353,6 @@ function renderNotifications(allNotifications) {
         <div class="running-text-marquee">
             <div class="marquee-inner">
                 <span>${marqueeText}</span>
-                <span>${marqueeText}</span>
             </div>
         </div>
     `;
