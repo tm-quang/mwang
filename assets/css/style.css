@@ -677,7 +677,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .running-text-marquee {
     background-color: #fff5f5; /* Màu nền highlight đỏ nhạt */
     border: 1px solid #fcc2c3;
-    border-radius: var(--border-radius-md);
+    border-radius: 0.375rem; /* Bo góc nhẹ */
     padding: 8px 0;
     overflow: hidden;
     margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
