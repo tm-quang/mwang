@@ -654,7 +654,7 @@ function handleMobileWelcomePopup() {
     const countdownSpan = document.getElementById('popup-countdown');
     if (!popup || !closeBtn || !countdownSpan) return;
 
-    let countdown = 5;
+    let countdown = 15; // Thời gian đếm ngược tính bằng giây
     let countdownInterval;
     let autoCloseTimeout;
 
