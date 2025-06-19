@@ -10,11 +10,11 @@ const leftMenuData = [
         items: [
           {
             id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
-            //isAdmin: true,
+            isAdmin: true,
             subItems: [
-                { id: 'btnDatabase', text: 'DATABASE', functionName: 'getPage_AdminDatabase', pageTitle: '', icon: 'fa-solid fa-database' },
-                { id: 'btnUserInfo', text: 'QUẢN LÝ USER', functionName: 'getPage_AdminThongTinThanhVien', pageTitle: '', icon: 'fa-solid fa-users' },
-                { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', functionName: 'getPage_ThongBao', pageTitle: '', icon: 'fa-regular fa-newspaper' },
+                { id: 'btnDatabase', text: 'DATABASE', htmlFile: 'admin-database.html', pageTitle: '', icon: 'fa-solid fa-database' },
+                { id: 'btnUserInfo', text: 'THÔNG TIN USER', htmlFile: 'admin-user-info.html', pageTitle: '', icon: 'fa-solid fa-users' },
+                { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', htmlFile: 'admin-thong-bao.html', pageTitle: '', icon: 'fa-regular fa-newspaper' },
             ]
           }
         ]
@@ -44,7 +44,8 @@ const leftMenuData = [
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
-                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fas fa-eye' },
+                    { id: 'btnTaiLieu', text: 'TÌM TÀI LIỆU | LINK', htmlFile: 'tim-kiem-tai-lieu.html', pageTitle: '', icon: 'fa-solid fa-file' },
+                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-circle-check' },
                 ] 
              }
         ]
@@ -63,8 +64,8 @@ const leftMenuData = [
                 ] 
             },
             { id: 'btnphanmem', text: 'TẢI XUỐNG', icon: 'fa-solid fa-download', isDropdown: true, subItems: [
-                { id: 'btnVPN', text: 'TẢI VPN', htmlFile: 'download-vpn', pageTitle: '', icon: 'fas fa-download' },
-                { id: 'btnDrive', text: 'DRIVE TÀI LIỆU', htmlFile: 'download-drive', pageTitle: '', icon: 'fas fa-download' },
+                { id: 'btnVPN', text: 'TẢI VPN', htmlFile: 'download-vpn.html', pageTitle: '', icon: 'fas fa-download' },
+                { id: 'btnDrive', text: 'DRIVE TÀI LIỆU', htmlFile: 'download-drive.html', pageTitle: '', icon: 'fas fa-download' },
             ] },
 
             { id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', htmlFile: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt' },
