@@ -350,7 +350,7 @@ function renderNotifications(allNotifications) {
     // --- HTML cho dòng chữ chạy (Marquee) ---
     const marqueeHtml = `
         <div class="running-text-marquee">
-            <p>Phiên bản đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng, liên hệ admin</p>
+            <p>Trang đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng | Liên hệ để báo lỗi hoặc góp ý: 112080 - Trần Minh Quang | ĐT: 039 418 1140 | Cảm ơn!</p>
         </div>
     `;
     // -----------------------------------------
