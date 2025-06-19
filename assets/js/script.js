@@ -47,7 +47,7 @@ const leftMenuData = [
             { 
                 id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                 subItems: [
-                    { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', functionName: 'getPage_TimKiemSieuThi', icon: 'fas fa-store-alt' },
+                    { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: 'TÌM KIẾM SIÊU THỊ', icon: 'fas fa-store-alt' },
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', functionName: 'getPage_TimKiemHangBK', icon: 'fas fa-box-open' },
                     { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: '', icon: 'fas fa-eye' },
                     { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: 'TEST', icon: 'fas fa-eye' },
