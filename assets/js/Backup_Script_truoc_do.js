@@ -10,11 +10,11 @@ const leftMenuData = [
         items: [
           {
             id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, 
-            //isAdmin: true,
+            isAdmin: true,
             subItems: [
-                { id: 'btnDatabase', text: 'DATABASE', functionName: 'getPage_AdminDatabase', pageTitle: '', icon: 'fa-solid fa-database' },
-                { id: 'btnUserInfo', text: 'QUẢN LÝ USER', functionName: 'getPage_AdminThongTinThanhVien', pageTitle: '', icon: 'fa-solid fa-users' },
-                { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', functionName: 'getPage_ThongBao', pageTitle: '', icon: 'fa-regular fa-newspaper' },
+                { id: 'btnDatabase', text: 'DATABASE', htmlFile: 'admin-database.html', pageTitle: '', icon: 'fa-solid fa-database' },
+                { id: 'btnUserInfo', text: 'THÔNG TIN USER', htmlFile: 'admin-user-info.html', pageTitle: '', icon: 'fa-solid fa-users' },
+                { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', htmlFile: 'admin-thong-bao.html', pageTitle: '', icon: 'fa-regular fa-newspaper' },
             ]
           }
         ]
@@ -24,52 +24,51 @@ const leftMenuData = [
         title: '2025 - IT MTAY2',
         items: [
             { 
-                id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
-                 subItems: [
-                    { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', functionName: 'getPage_CvTrienKhaiMtay2', pageTitle: '', icon: 'fas fa-map-marked-alt' },
-                    { id: 'btnBHXToiUu', text: 'TỐI ƯU BHX 2025', functionName: 'getPage_TkBhxToiUu', pageTitle: '', icon: 'fas fa-cogs' },
+                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-user-group', isDropdown: true, 
+                  subItems: [
+                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-user-group' },
+                    { id: 'btnBHXToiUu', text: 'BHX - TỐI ƯU THIẾT BỊ', htmlFile: 'cv-trien-khai-bhx.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
                  ] 
             },
             { 
                 id: 'btnDailyWork', text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true, 
                  subItems: [
-                    { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', functionName: 'getPage_CvMonitor', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', functionName: 'getPage_Cvcbs', pageTitle: '', icon: 'fas fa-eye' },
-                     { id: 'btnTEST1', text: 'MENU 1', functionName: 'getPage_TEST1', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST3', text: 'MENU 3', functionName: 'getPage_TEST3', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTimSheet', text: 'TÌM SHEET CÔNG VIỆC', functionName: 'getTimSheetHtml', pageTitle: '', icon: 'fa-solid fa-folder-tree' }
+                    { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', htmlFile: 'cv-monitor.html', pageTitle: '', icon: 'fa-solid fa-desktop' },
+                    { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', htmlFile: 'cv-cbs.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
+                    { id: 'btnTimSheet', text: 'TÌM KIẾM SHEET CÔNG VIỆC', htmlFile: 'tai-lieu-tim-sheet.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-folder-tree' }
                 ] 
             },
-             { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', functionName: 'getPage_CvBaotriKiemke', pageTitle: '', icon: 'fas fa-tools' },
+             { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', htmlFile: 'cv-bao-tri-kiem-ke.html', pageTitle: '', icon: 'fas fa-tools' },
             { 
                 id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
-                    // === THAY ĐỔI Ở ĐÂY ===
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
-                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST3', text: 'MENU 3', functionName: 'getPage_TEST3', pageTitle: '', icon: 'fas fa-eye' },
+                    { id: 'btnTaiLieu', text: 'TÌM TÀI LIỆU | LINK', htmlFile: 'tim-kiem-tai-lieu.html', pageTitle: '', icon: 'fa-solid fa-file' },
+                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-circle-check' },
                 ] 
              }
         ]
     },
     {
-        title: 'TÀI LIỆU - HƯỚNG DẪN - PHẦN MỀM',
+        title: 'TÀI LIỆU - HƯỚNG DẪN',
         items: [
             { 
                  id: 'btnHuongDanIT', text: 'TÀI LIỆU - HƯỚNG DẪN', icon: 'fas fa-question-circle', isDropdown: true, 
                 subItems: [
-                    { id: 'btnTGDD', text: 'TGDD & ĐMX', functionName: 'getTGDDHtml', pageTitle: 'Thế Giới Di Động & Điện Máy Xanh', icon: 'fas fa-mobile-alt' },
-                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', functionName: 'getPage_HuongDanBhx', pageTitle: 'Bách Hóa XANH', icon: 'fas fa-store' },
-                    { id: 'btnAvakid', text: 'AVAKID', functionName: 'getAvakidHtml', pageTitle: 'AvaKID', icon: 'fas fa-child' },
-                    { id: 'btnAnKhang', text: 'AN KHANG', functionName: 'getAnKhangHtml', pageTitle: 'An Khang', icon: 'fas fa-pills' },
-                    { id: 'btnKhoVp', text: 'KHO/VP', functionName: 'getKhoVpHtml', pageTitle: 'Kho/VP', icon: 'fas fa-warehouse' },
+                    { id: 'btnTGDD', text: 'TGDD & ĐMX', htmlFile: 'tai-lieu-tgdd-dmx.html', pageTitle: 'Thế Giới Di Động & Điện Máy Xanh', icon: 'fas fa-mobile-alt' },
+                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', htmlFile: 'tai-lieu-bhx.html', pageTitle: '', icon: 'fas fa-store' },
+                    { id: 'btnAvakid', text: 'AVAKID', htmlFile: 'tai-lieu-avakid.html', pageTitle: 'AvaKID', icon: 'fas fa-child' },
+                    { id: 'btnAnKhang', text: 'AN KHANG', htmlFile: 'tai-lieu-an-khang.html', pageTitle: 'An Khang', icon: 'fas fa-pills' },
+                    { id: 'btnKhoVp', text: 'KHO/VP', htmlFile: 'tai-lieu-kho-vp.html', pageTitle: 'Kho/VP', icon: 'fas fa-warehouse' },
                 ] 
             },
-            { id: 'btnphanmem', text: 'PHẦN MỀM', functionName: 'getPage_PhanMemIt', pageTitle: 'DOWNLOAD PHẦN MỀM', icon: 'fas fa-book-open' },
-            { id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', functionName: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt' },
+            { id: 'btnphanmem', text: 'TẢI XUỐNG', icon: 'fa-solid fa-download', isDropdown: true, subItems: [
+                { id: 'btnVPN', text: 'TẢI VPN', htmlFile: 'download-vpn.html', pageTitle: '', icon: 'fas fa-download' },
+                { id: 'btnDrive', text: 'DRIVE TÀI LIỆU', htmlFile: 'download-drive.html', pageTitle: '', icon: 'fas fa-download' },
+            ] },
+
+            { id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', htmlFile: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt' },
         ]
     }
 ];
@@ -78,17 +77,29 @@ const rightMenuData = [
         title: "TRANG CÔNG VIỆC",
         icon: "fas fa-briefcase",
         items: [
-            { text: "Báo cáo nội bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
-            { text: "New Ticket", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "success" },
-            { text: "Google Docs", href: "https://docs.google.com/", icon: "fas fa-file-alt", className: "info" },
+            { text: "Báo Cáo Nội Bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
+            { text: "Xwork", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "primary" },
+            { text: "Pfcontroller", href: "https://pfsense.tgdd.vn/", icon: "fa-solid fa-server", className: "primary" },
+            { text: "IOT", href: "https://iot.tgdd.vn/", icon: "fa-regular fa-lightbulb", className: "primary" },
+            { text: "AWS", href: "https://newticket.tgdd.vn/ticket", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+            { text: "Cms App", href: "https://cmsapp.thegioididong.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+            { text: "POS BHX", href: "https://pos.bachhoaxanh.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+        ]
+    },
+    {
+        title: "CÔNG CỤ",
+        icon: "fas fa-tools",
+        items: [
+            { text: "Google Drive", href: "https://drive.google.com/", icon: "fa-solid fa-cloud" , className: "info" },
+            { text: "Google Sheets", href: "https://sheets.google.com/", icon: "fa-solid fa-file" , className: "info" },
+            { text: "Google Meet", href: "https://meet.google.com/", icon: "fa-solid fa-video" , className: "info" },
         ]
     },
     {
         title: "GIẢI TRÍ",
         icon: "fas fa-gamepad",
          items: [
-            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" },
-            { text: "Facebook", href: "https://facebook.com", icon: "fab fa-facebook" },
+            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "youtube" },
         ]
     }
 ];
@@ -113,6 +124,7 @@ const adminLoginSubmit = document.getElementById('adminLoginSubmit');
 const adminLoginCancel = document.getElementById('adminLoginCancel');
 const sidebarToggleButton = document.getElementById('sidebar-toggle-btn');
 const customConfirmModal = document.getElementById('customConfirmModal');
+const mobileOverlay = document.getElementById('mobile-overlay');
 
 
 // State & Timers
@@ -122,6 +134,7 @@ let isAdminAuthenticated = false;
 let countdownInterval; 
 let countdownSeconds = 3600; 
 let isSidebarPinned = false;
+let isMobileView = window.innerWidth <= 1080;
 
 async function callApi(action, payload = {}) {
     try {
@@ -170,6 +183,13 @@ function startCountdown() {
     }, 1000);
 }
 
+function closeMobileSidebar() {
+    if (isMobileView) {
+        leftSidebarContainer.classList.remove('open');
+        mobileOverlay.classList.remove('show');
+    }
+}
+
 function renderLeftMenu() {
     leftSidebarContentWrapper.innerHTML = '';
     leftMenuData.forEach((section) => {
@@ -199,8 +219,9 @@ function renderLeftMenu() {
                         if (!subItem) { console.error("Lỗi dữ liệu: subItem không tồn tại.", e.target); return; }
                         hideAllDropdowns();
                         loadFunctionContent(subItem);
-                        if (!isSidebarPinned) {
-                            collapseSidebar(leftSidebarContainer);
+                        if (!isSidebarPinned || isMobileView) {
+                           closeMobileSidebar();
+                           collapseSidebar(leftSidebarContainer);
                         }
                     });
                     dropdownMenu.appendChild(subLink);
@@ -232,10 +253,11 @@ function renderLeftMenu() {
                     dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
                 } else {
                     const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); };
-                    dropdownButton.onmouseenter = () => { clearTimeout(dropdownTimeout); showMenu(); };
-                    dropdownButton.onmouseleave = () => { dropdownTimeout = setTimeout(hideMenu, 300); };
+                    dropdownButton.onmouseenter = () => { if(!isMobileView) { clearTimeout(dropdownTimeout); showMenu(); } };
+                    dropdownButton.onclick = () => { if(isMobileView) { showMenu(); } }; // For touch devices
+                    dropdownButton.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
                     dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
-                    dropdownMenu.onmouseleave = () => { dropdownTimeout = setTimeout(hideMenu, 300); };
+                    dropdownMenu.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
                 }
             } else {
                 const a = document.createElement('a');
@@ -248,7 +270,8 @@ function renderLeftMenu() {
                     if (!item) { console.error("Lỗi dữ liệu: item không tồn tại.", e.target); return; }
                     hideAllDropdowns();
                     loadFunctionContent(item);
-                    if (!isSidebarPinned) {
+                    if (!isSidebarPinned || isMobileView) {
+                        closeMobileSidebar();
                         collapseSidebar(leftSidebarContainer);
                     }
                 });
@@ -280,7 +303,6 @@ function renderRightMenu() {
     });
 }
 
-// === HÀM loadFunctionContent ĐÃ SỬA LỖI ===
 async function loadFunctionContent(item) {
     if (!item || typeof item !== 'object' || !('id' in item)) {
         console.error("loadFunctionContent được gọi với đối số không hợp lệ:", item);
@@ -310,7 +332,6 @@ async function loadFunctionContent(item) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = htmlContent;
 
-        // === THÊM KHỞI TẠO CHO TRANG MỚI Ở ĐÂY ===
         if (item.id === 'btnTimSieuThi') {
             initSearchStorePage();
         } else if (item.id === 'btnTimHangBK') {
@@ -323,14 +344,29 @@ async function loadFunctionContent(item) {
             newScript.appendChild(document.createTextNode(oldScript.innerHTML));
             oldScript.parentNode.replaceChild(newScript, oldScript);
         });
+
+        closeMobileSidebar();
+
     } catch (error) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải nội dung: ${error.message}</p>`;
     }
 }
 
+// ==========================================================
+// === HÀM RENDER THÔNG BÁO (ĐÃ CẬP NHẬT VỚI MARQUEE) ===
+// ==========================================================
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
+
+    // --- HTML cho dòng chữ chạy (Marquee) ---
+    const marqueeHtml = `
+        <div class="running-text-marquee">
+            <p>Trang đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng | Liên hệ để báo lỗi hoặc góp ý: 112080 - Trần Minh Quang | ĐT: 039 418 1140 | Cảm ơn!</p>
+        </div>
+    `;
+    // -----------------------------------------
+
     if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
         return;
@@ -343,7 +379,7 @@ function renderNotifications(allNotifications) {
         let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
-                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">MỚI</span>' : '';
                 const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
                 const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
                 const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
@@ -358,7 +394,9 @@ function renderNotifications(allNotifications) {
         return columnHtml;
     };
     
-    let finalHtml = '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
+    // Ghép dòng chữ chạy và các cột thông báo
+    let finalHtml = marqueeHtml + '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
+    
     functionContent.innerHTML = finalHtml;
     setupCollapseListeners();
 }
@@ -369,8 +407,12 @@ function setupCollapseListeners() {
         if (!header) return;
         const clickedCard = header.closest('.notification-card-pb3');
         if (!clickedCard || event.target.closest('a')) return;
-        const allCards = functionContent.querySelectorAll('.notification-card-pb3');
-        allCards.forEach(card => { if (card !== clickedCard) card.classList.add('collapsed'); });
+        
+        if (clickedCard.classList.contains('collapsed')) {
+             const allCards = functionContent.querySelectorAll('.notification-card-pb3');
+             allCards.forEach(card => { if (card !== clickedCard) card.classList.add('collapsed'); });
+        }
+       
         clickedCard.classList.toggle('collapsed');
     });
 }
@@ -397,7 +439,6 @@ function goToHomePage() {
     loadNotificationsPage();
 }
 
-// === LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
 function initSearchStorePage() {
     const maSTInput = document.getElementById('maSTInput');
     const searchButton = document.getElementById('searchButton');
@@ -470,7 +511,6 @@ function formatStoreSearchResult(data) {
     return `<div class="result-card"><div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}</div></div>`;
 }
 
-// === BẮT ĐẦU LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
 function initSearchHangBKPage() {
     const searchButton = document.getElementById('searchButtonHangBK');
     const clearButton = document.getElementById('clearButtonHangBK');
@@ -480,7 +520,6 @@ function initSearchHangBKPage() {
 }
 
 async function handleSearchHangBK() {
-    // Lấy các element
     const maKhoSelect = document.getElementById('maKhoSelect');
     const maUserInput = document.getElementById('maUserInput');
     const searchButton = document.getElementById('searchButtonHangBK');
@@ -491,11 +530,9 @@ async function handleSearchHangBK() {
     const noResultsMessage = document.getElementById('noResultsMessageHangBK');
     const loadingMessage = document.getElementById('loadingMessageHangBK');
     
-    // Lấy giá trị
     const maKho = maKhoSelect.value;
     const maUser = maUserInput.value.trim();
 
-    // Reset giao diện
     resultTableContainer.style.display = 'none';
     resultTableBody.innerHTML = '';
     errorMessage.textContent = '';
@@ -503,7 +540,6 @@ async function handleSearchHangBK() {
     maKhoSelect.classList.remove('input-error');
     maUserInput.classList.remove('input-error');
 
-    // Kiểm tra điều kiện
     let hasError = false;
     if (!maKho) {
         errorMessage.textContent = 'Vui lòng chọn Mã Kho. ';
@@ -519,7 +555,6 @@ async function handleSearchHangBK() {
         return;
     }
 
-    // Hiển thị trạng thái loading
     searchButton.disabled = true;
     buttonText.textContent = 'Đang tìm...';
     loadingMessage.style.display = 'block';
@@ -565,12 +600,9 @@ function clearSearchHangBK() {
     document.getElementById('maKhoSelect').classList.remove('input-error');
     document.getElementById('maUserInput').classList.remove('input-error');
 }
-// === KẾT THÚC LOGIC CHO TRANG TÌM HÀNG HÓA BACKUP ===
 
-
-// --- CÁC HÀM TIỆN ÍCH KHÁC ---
-function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
-function expandSidebar(sidebarElement) { sidebarElement.classList.remove('collapsed'); }
+function collapseSidebar(sidebarElement) { if(!isMobileView) sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
+function expandSidebar(sidebarElement) { if(!isMobileView) sidebarElement.classList.remove('collapsed'); }
 function hideAllDropdowns() {
     document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
         menu.classList.remove('show');
@@ -591,60 +623,173 @@ function forceLogout(message) {
     window.location.reload();
 }
 
-async function handleAdminLogin() {
+/**
+ * === HÀM ĐĂNG NHẬP ADMIN ĐÃ ĐƯỢC THAY ĐỔI ===
+ * Thay vì gọi API, hàm này sẽ kiểm tra thông tin đăng nhập
+ * với 2 tài khoản được gán cứng trong code.
+ */
+function handleAdminLogin() {
     const username = adminUsername.value.trim();
     const password = adminPassword.value;
-    if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; }
+
+    if (!username || !password) {
+        adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.';
+        return;
+    }
+
     adminLoginSubmit.disabled = true;
     adminLoginSubmit.textContent = 'Đang kiểm tra...';
     adminLoginError.textContent = '';
-    try {
-        const response = await callApi('verifyAdminLogin', { username, password });
-        if (response.success) {
+
+    // Kiểm tra thông tin đăng nhập với tài khoản gán cứng
+    const validCredentials = 
+        (username === 'admin' && password === 'dictionary') || 
+        (username === 'mwang' && password === '1412');
+
+    // Giả lập độ trễ mạng để người dùng thấy trạng thái "Đang kiểm tra..."
+    setTimeout(() => {
+        if (validCredentials) {
             isAdminAuthenticated = true;
             adminLoginModal.style.display = 'none';
             adminUsername.value = '';
             adminPassword.value = '';
-            document.getElementById('btnADMIN').click();
+            // Tự động mở menu admin sau khi đăng nhập thành công
+            document.getElementById('btnADMIN').click(); 
         } else {
             isAdminAuthenticated = false;
-            adminLoginError.textContent = response.message || 'Lỗi không xác định.';
+            adminLoginError.textContent = 'Sai tên đăng nhập hoặc mật khẩu.';
             adminPassword.value = '';
             adminUsername.focus();
         }
-    } catch (error) {
-        isAdminAuthenticated = false;
-        adminLoginError.textContent = 'Lỗi kết nối: ' + error.message;
-    } finally {
+
         adminLoginSubmit.disabled = false;
         adminLoginSubmit.textContent = 'Đăng nhập';
+    }, 500);
+}
+
+function handleMobileWelcomePopup() {
+    const alwaysShowPopup = false; 
+
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const isMobileDevice = window.innerWidth <= 1080 && hasTouch;
+
+    if (!isMobileDevice) {
+        return;
+    }
+
+    let popupElement = null;
+    let countdownInterval;
+    let autoCloseTimeout;
+
+    const closePopup = () => {
+        if (popupElement) {
+            popupElement.classList.remove('show');
+            setTimeout(() => {
+                if (popupElement) popupElement.remove();
+                popupElement = null;
+            }, 300);
+        }
+        clearInterval(countdownInterval);
+        clearTimeout(autoCloseTimeout);
+    };
+
+    const showPopup = () => {
+        const popupHTML = `
+            <div class="mobile-popup-content">
+                <button class="mobile-popup-close">×</button>
+                <p>Đây là giao diện cho di động, chọn chế độ "xem trang web cho máy tính" trên trình duyệt, hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p>
+                <div class="mobile-popup-timer">
+                    Tự động đóng sau <span class="popup-countdown">15</span> giây...
+                </div>
+            </div>
+        `;
+        popupElement = document.createElement('div');
+        popupElement.id = 'mobile-welcome-popup';
+        popupElement.className = 'mobile-popup';
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        setTimeout(() => {
+            if (popupElement) popupElement.classList.add('show');
+        }, 20);
+
+        sessionStorage.setItem('popupShown', 'true');
+
+        const closeBtn = popupElement.querySelector('.mobile-popup-close');
+        const countdownSpan = popupElement.querySelector('.popup-countdown');
+        let countdown = 15;
+
+        closeBtn.addEventListener('click', closePopup);
+
+        countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdownSpan) countdownSpan.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+
+        autoCloseTimeout = setTimeout(closePopup, 15000);
+    };
+
+    const popupHasBeenShown = sessionStorage.getItem('popupShown');
+
+    if (alwaysShowPopup || !popupHasBeenShown) {
+        showPopup();
     }
 }
 
-// === MAIN EXECUTION ===
+
 document.addEventListener('DOMContentLoaded', function() {
     renderLeftMenu();
     renderRightMenu();
     
+    function handleResize() {
+        isMobileView = window.innerWidth <= 1080;
+        if (!isMobileView) {
+            leftSidebarContainer.classList.remove('open');
+            mobileOverlay.classList.remove('show');
+            if (isSidebarPinned) {
+                 expandSidebar(leftSidebarContainer);
+                 expandSidebar(rightSidebarContainer);
+            } else {
+                 collapseSidebar(leftSidebarContainer);
+                 collapseSidebar(rightSidebarContainer);
+            }
+        } else {
+             leftSidebarContainer.classList.add('collapsed');
+        }
+    }
+    
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    sidebarToggleButton.addEventListener('click', () => {
+        if (isMobileView) {
+            leftSidebarContainer.classList.toggle('open');
+            mobileOverlay.classList.toggle('show');
+        } else {
+            isSidebarPinned = !isSidebarPinned;
+            const icon = sidebarToggleButton.querySelector('i');
+            if (isSidebarPinned) {
+                expandSidebar(leftSidebarContainer); expandSidebar(rightSidebarContainer);
+                icon.classList.remove('fa-bars'); icon.classList.add('fa-thumbtack');
+                sidebarToggleButton.title = "Bỏ ghim thanh công cụ";
+            } else {
+                collapseSidebar(leftSidebarContainer); collapseSidebar(rightSidebarContainer);
+                icon.classList.remove('fa-thumbtack'); icon.classList.add('fa-bars');
+                sidebarToggleButton.title = "Ghim thanh công cụ";
+            }
+        }
+    });
+
+    mobileOverlay.addEventListener('click', closeMobileSidebar);
+  
     leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
     leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
     rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
 
-    sidebarToggleButton.addEventListener('click', () => {
-        isSidebarPinned = !isSidebarPinned;
-        const icon = sidebarToggleButton.querySelector('i');
-        if (isSidebarPinned) {
-            expandSidebar(leftSidebarContainer); expandSidebar(rightSidebarContainer);
-            icon.classList.remove('fa-bars'); icon.classList.add('fa-thumbtack');
-            sidebarToggleButton.title = "Bỏ ghim thanh công cụ";
-        } else {
-            collapseSidebar(leftSidebarContainer); collapseSidebar(rightSidebarContainer);
-            icon.classList.remove('fa-thumbtack'); icon.classList.add('fa-bars');
-            sidebarToggleButton.title = "Ghim thanh công cụ";
-        }
-    });
-  
     document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
     
     adminLoginSubmit.addEventListener('click', handleAdminLogin);
@@ -674,6 +819,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     goToHomePage();
     
+    handleMobileWelcomePopup();
+
     ['load', 'mousemove', 'mousedown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => window.addEventListener(evt, startCountdown, true));
     startCountdown();
 });
