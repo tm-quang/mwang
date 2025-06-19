@@ -55,7 +55,7 @@ const leftMenuData = [
         ]
     },
     {
-        title: 'TÀI LIỆU - HƯỚNG DẪN - PHẦN MỀM',
+        title: 'TÀI LIỆU - HƯỚNG DẪN',
         items: [
             { 
                  id: 'btnHuongDanIT', text: 'TÀI LIỆU - HƯỚNG DẪN', icon: 'fas fa-question-circle', isDropdown: true, 
