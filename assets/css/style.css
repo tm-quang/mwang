@@ -705,7 +705,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-100%); /* Di chuyển đúng 1/2 chiều dài (bằng 1 câu) */
+        transform: translateX(-0%); /* Di chuyển đúng 1/2 chiều dài (bằng 1 câu) */
     }
 }
 
