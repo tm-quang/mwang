@@ -2,7 +2,7 @@
 // PHẦN 1: CẤU HÌNH & API
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzfjsLfF1k_vyk9bNuCYz8hfHZq5pnJ9BlwqbuLmBJDZyAxSWK12FBH6pVuyYT_stkZ9A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwYngixrO7jMyLyvYtTgAieHeppH3kL4brU3Oh4VfGYY3jY9bcBqsZo2dUhpxTRsybV0g/exec";
 
 const leftMenuData = [
     {
