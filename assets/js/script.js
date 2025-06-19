@@ -503,11 +503,19 @@ async function handleSearchHangBK() {
     maKhoSelect.classList.remove('input-error');
     maUserInput.classList.remove('input-error');
 
-    // Kiểm tra điều kiện đầu vào
-    if (!maKho && !maUser) {
-        errorMessage.textContent = 'Vui lòng chọn Mã Kho hoặc nhập Mã Nhân Viên.';
-        if (!maKho) maKhoSelect.classList.add('input-error');
-        if (!maUser) maUserInput.classList.add('input-error');
+    // Kiểm tra điều kiện
+    let hasError = false;
+    if (!maKho) {
+        errorMessage.textContent = 'Vui lòng chọn Mã Kho. ';
+        maKhoSelect.classList.add('input-error');
+        hasError = true;
+    }
+    if (!maUser) {
+        errorMessage.textContent += 'Vui lòng nhập hoặc chọn Mã Nhân Viên.';
+        maUserInput.classList.add('input-error');
+        hasError = true;
+    }
+    if (hasError) {
         return;
     }
 
