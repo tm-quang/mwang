@@ -2,10 +2,8 @@
 // PHẦN 1: CẤU HÌNH & API
 // =================================================================================
 
-// DÁN URL CỦA WEB APP BẠN ĐÃ DEPLOY TỪ GOOGLE APPS SCRIPT VÀO ĐÂY
-const API_URL = "https://script.google.com/macros/s/AKfycbwxmJsjhH0J4pGXXKqZHti9W9UDzHD7OGQH4NBYP2AkbzprPm5zbGkpcB7pqUlYUFVc9g/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx_kHpTGftFq8uFMvMMCzbBDt6-9Y28wxIFNosM0T6dH80bnqE8T-im34a63xuaLKGjmQ/exec";
 
-// Cấu hình menu
 const leftMenuData = [
     {
         title: 'ADMIN',
@@ -106,8 +104,6 @@ const leftSidebarContainer = document.getElementById('left-sidebar-container');
 const rightSidebarContainer = document.getElementById('right-sidebar-container');
 const leftSidebarContentWrapper = leftSidebarContainer.querySelector('.sidebar-content-wrapper');
 const rightSidebarContentWrapper = rightSidebarContainer.querySelector('.sidebar-content-wrapper');
-const homeConfirmModal = document.getElementById('homeConfirmModal');
-const customConfirmModal = document.getElementById('customConfirmModal');
 const adminLoginModal = document.getElementById('adminLoginModal');
 const adminUsername = document.getElementById('adminUsername');
 const adminPassword = document.getElementById('adminPassword');
@@ -115,6 +111,8 @@ const adminLoginError = document.getElementById('adminLoginError');
 const adminLoginSubmit = document.getElementById('adminLoginSubmit');
 const adminLoginCancel = document.getElementById('adminLoginCancel');
 const sidebarToggleButton = document.getElementById('sidebar-toggle-btn');
+const customConfirmModal = document.getElementById('customConfirmModal');
+
 
 // State & Timers
 let dropdownTimeout;
@@ -124,24 +122,16 @@ let countdownInterval;
 let countdownSeconds = 3600; 
 let isSidebarPinned = false;
 
-/**
- * Hàm gọi API trung tâm - ĐÃ CHUYỂN SANG DÙNG GET
- * @param {string} action - Tên của hành động
- * @param {object} payload - Dữ liệu gửi đi
- */
 async function callApi(action, payload = {}) {
     try {
         if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
             throw new Error("API_URL chưa được cấu hình trong file script.js.");
         }
         
-        // Xây dựng URL với các tham số
         const url = new URL(API_URL);
         url.searchParams.append('action', action);
-        // Đóng gói payload thành chuỗi JSON để gửi qua URL
         url.searchParams.append('payload', JSON.stringify(payload));
 
-        // Thực hiện yêu cầu GET, không cần body hay method
         const response = await fetch(url, { redirect: 'follow' });
 
         if (!response.ok) {
@@ -155,8 +145,6 @@ async function callApi(action, payload = {}) {
         throw error;
     }
 }
-
-// ... (TOÀN BỘ PHẦN CODE CÒN LẠI GIỮ NGUYÊN NHƯ FILE BẠN GỬI) ...
 
 function updateTimerDisplay() {
     const timerElement = document.getElementById('session-timer');
@@ -207,8 +195,12 @@ function renderLeftMenu() {
                     subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`;
                     subLink.addEventListener('click', (e) => {
                         e.preventDefault();
+                        if (!subItem) {
+                            console.error("Lỗi dữ liệu: subItem không tồn tại.", e.target);
+                            return;
+                        }
                         hideAllDropdowns();
-                        loadFunctionContent(subItem.functionName, subItem.pageTitle);
+                        loadFunctionContent(subItem);
                         if (!isSidebarPinned) {
                             collapseSidebar(leftSidebarContainer);
                         }
@@ -255,8 +247,12 @@ function renderLeftMenu() {
                 a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
+                    if (!item) {
+                        console.error("Lỗi dữ liệu: item không tồn tại.", e.target);
+                        return;
+                    }
                     hideAllDropdowns();
-                    loadFunctionContent(item.functionName, item.pageTitle);
+                    loadFunctionContent(item);
                     if (!isSidebarPinned) {
                         collapseSidebar(leftSidebarContainer);
                     }
@@ -290,13 +286,13 @@ function renderRightMenu() {
     });
 }
 
-// === THAY THẾ HÀM CŨ BẰNG HÀM NÀY ===
+// === HÀM loadFunctionContent ĐÃ SỬA LỖI ===
 async function loadFunctionContent(item) {
-    // Nếu hàm được gọi mà không có item (ví dụ khi nhấn nút home),
-    // thì mặc định chuyển hướng về trang chủ thông báo.
-    if (!item) {
-        goToHomePage();
-        return;
+    // Kiểm tra đầu vào. Nếu item không phải là một object hợp lệ, dừng lại.
+    if (!item || typeof item !== 'object' || !('id' in item)) {
+        console.error("loadFunctionContent được gọi với đối số không hợp lệ:", item);
+        loadingSpinner.style.display = 'none'; // Tắt vòng xoay
+        return; 
     }
 
     functionContent.innerHTML = '';
@@ -305,22 +301,15 @@ async function loadFunctionContent(item) {
 
     try {
         let htmlContent = '';
-        // Ưu tiên tải file HTML local nếu được chỉ định
         if (item.htmlFile) {
             const response = await fetch(item.htmlFile);
-            if (!response.ok) {
-                throw new Error(`Không thể tải file ${item.htmlFile}: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`Không thể tải file ${item.htmlFile}: ${response.statusText}`);
             htmlContent = await response.text();
         } 
-        // Nếu không, gọi API như cũ
         else if (item.functionName) {
             const response = await callApi('getPageContent', { functionName: item.functionName });
-            if (response.success && response.html) {
-                htmlContent = response.html;
-            } else {
-                throw new Error(response.message || 'Không nhận được nội dung hợp lệ từ API.');
-            }
+            if (response.success && response.html) htmlContent = response.html;
+            else throw new Error(response.message || 'Không nhận được nội dung hợp lệ từ API.');
         } else {
             throw new Error('Cấu hình menu không hợp lệ (thiếu htmlFile hoặc functionName).');
         }
@@ -328,30 +317,24 @@ async function loadFunctionContent(item) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = htmlContent;
 
-        // Chạy script khởi tạo cho trang cụ thể sau khi tải xong HTML
         if (item.id === 'btnTimSieuThi') {
             initSearchStorePage();
         }
         
-        // Xử lý các thẻ <script> bên trong HTML được tải từ Google Script (nếu có)
         Array.from(functionContent.querySelectorAll('script')).forEach(oldScript => {
             const newScript = document.createElement('script');
             Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
             newScript.appendChild(document.createTextNode(oldScript.innerHTML));
             oldScript.parentNode.replaceChild(newScript, oldScript);
         });
-
     } catch (error) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải nội dung: ${error.message}</p>`;
     }
 }
 
-// === BẮT ĐẦU PHẦN CODE MỚI ĐỂ HIỂN THỊ THÔNG BÁO ===
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
-    
-    // Kiểm tra nếu có lỗi trả về từ API
     if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
         return;
@@ -361,11 +344,7 @@ function renderNotifications(allNotifications) {
     const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
 
     const createColumnHtml = (title, icon, data) => {
-        let columnHtml = `
-          <div class="content-column">
-            <h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2>
-            <div class="notification-list">`;
-
+        let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
                 const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
@@ -374,24 +353,7 @@ function renderNotifications(allNotifications) {
                 const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
                 const deadlineHtml = item.deadline ? `<span class="deadline-badge"><i class="fas fa-hourglass-half"></i> Deadline: ${item.deadline}</span>` : '';
                 
-                columnHtml += `
-                  <div class="notification-card-pb3 collapsed">
-                    <div class="notification-header-pb3">
-                        <i class="${item.icon} icon"></i>
-                        <h4>${item.title}</h4>
-                        ${typeBadgeHtml}
-                        ${newBadgeHtml}
-                        <i class="fas fa-chevron-down expand-icon"></i>
-                    </div>
-                    <div class="notification-message-pb3">
-                        ${item.message}
-                        <div class="notification-footer-pb3">
-                            <div class="footer-left">${updateDateHtml}</div>
-                            <div class="footer-center">${deadlineHtml}</div>
-                            <div class="footer-right">${linkButtonHtml}</div>
-                        </div>
-                    </div>
-                  </div>`;
+                columnHtml += `<div class="notification-card-pb3 collapsed"><div class="notification-header-pb3"><i class="${item.icon} icon"></i><h4>${item.title}</h4>${typeBadgeHtml}${newBadgeHtml}<i class="fas fa-chevron-down expand-icon"></i></div><div class="notification-message-pb3">${item.message}<div class="notification-footer-pb3"><div class="footer-left">${updateDateHtml}</div><div class="footer-center">${deadlineHtml}</div><div class="footer-right">${linkButtonHtml}</div></div></div></div>`;
             });
         } else {
             columnHtml += '<p>Không có thông báo nào.</p>';
@@ -400,11 +362,7 @@ function renderNotifications(allNotifications) {
         return columnHtml;
     };
     
-    let finalHtml = '<div class="columns-container-pb2">';
-    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData);
-    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData);
-    finalHtml += '</div>';
-
+    let finalHtml = '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
     functionContent.innerHTML = finalHtml;
     setupCollapseListeners();
 }
@@ -413,21 +371,10 @@ function setupCollapseListeners() {
     functionContent.addEventListener('click', function(event) {
         const header = event.target.closest('.notification-header-pb3');
         if (!header) return;
-
         const clickedCard = header.closest('.notification-card-pb3');
-        if (!clickedCard) return;
-
-        if (event.target.closest('a')) {
-            return;
-        }
-        
+        if (!clickedCard || event.target.closest('a')) return;
         const allCards = functionContent.querySelectorAll('.notification-card-pb3');
-        allCards.forEach(card => {
-            if (card !== clickedCard) {
-                card.classList.add('collapsed');
-            }
-        });
-
+        allCards.forEach(card => { if (card !== clickedCard) card.classList.add('collapsed'); });
         clickedCard.classList.toggle('collapsed');
     });
 }
@@ -435,96 +382,59 @@ function setupCollapseListeners() {
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = '';
-    
+    currentPageTitle.textContent = 'TRANG CHỦ - THÔNG BÁO';
     try {
         const response = await callApi('getNotifications');
-        loadingSpinner.style.display = 'none';
         if (response.success && Array.isArray(response.data)) {
             renderNotifications(response.data);
         } else {
-            // Nếu API trả về lỗi nhưng không bị catch, hiển thị message lỗi
             throw new Error(response.message || 'Dữ liệu trả về không hợp lệ.');
         }
     } catch (error) {
-        // Hàm callApi đã xử lý hiển thị lỗi, nên ở đây không cần làm gì thêm
-        // Chỉ cần đảm bảo spinner đã tắt
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải thông báo: ${error.message}</p>`;
+    } finally {
         loadingSpinner.style.display = 'none';
     }
 }
-
-
-// === KẾT THÚC PHẦN CODE MỚI ===
 
 function goToHomePage() {
     loadNotificationsPage();
 }
-// === BẮT ĐẦU LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ (CLIENT-SIDE) ===
 
-// Hàm khởi tạo, được gọi sau khi HTML của trang tìm kiếm được tải vào DOM
+// === BẮT ĐẦU LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ (CLIENT-SIDE) ===
 function initSearchStorePage() {
     const maSTInput = document.getElementById('maSTInput');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-
-    if (!maSTInput || !searchButton || !clearButton) {
-        console.error("Không tìm thấy các thành phần của trang tìm kiếm siêu thị.");
-        return;
-    }
-
+    if (!maSTInput || !searchButton || !clearButton) return;
     maSTInput.addEventListener('input', handleStoreSuggestionInput);
-    maSTInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleSearchStore();
-        }
-    });
-    
+    maSTInput.addEventListener('keypress', (event) => { if (event.key === 'Enter') { event.preventDefault(); handleSearchStore(); } });
     searchButton.addEventListener('click', handleSearchStore);
     clearButton.addEventListener('click', clearStoreSearch);
 }
 
-// Hàm xử lý và hiển thị gợi ý
 async function handleStoreSuggestionInput(event) {
     const maSTInput = event.target;
     const suggestionsBox = document.getElementById('suggestions-box');
     const inputText = maSTInput.value;
-
     if (!suggestionsBox) return;
-
-    if (inputText.length < 2) {
-        suggestionsBox.style.display = 'none';
-        suggestionsBox.innerHTML = '';
-        return;
-    }
-
+    if (inputText.length < 2) { suggestionsBox.style.display = 'none'; suggestionsBox.innerHTML = ''; return; }
     try {
         const response = await callApi('getStoreSuggestions', { partialCode: inputText });
-        
         if (response && response.length > 0) {
             suggestionsBox.innerHTML = '';
             response.forEach(suggestion => {
                 const item = document.createElement('div');
                 item.className = 'suggestion-item';
                 item.innerHTML = `<span class="code">${suggestion.code}</span><span class="name">${suggestion.name}</span>`;
-                item.onclick = () => {
-                    maSTInput.value = suggestion.code;
-                    suggestionsBox.style.display = 'none';
-                    handleSearchStore();
-                };
+                item.onclick = () => { maSTInput.value = suggestion.code; suggestionsBox.style.display = 'none'; handleSearchStore(); };
                 suggestionsBox.appendChild(item);
             });
             suggestionsBox.style.display = 'block';
-        } else {
-            suggestionsBox.style.display = 'none';
-        }
-    } catch (error) {
-        console.error('Lỗi khi lấy gợi ý:', error);
-        suggestionsBox.style.display = 'none';
-    }
+        } else { suggestionsBox.style.display = 'none'; }
+    } catch (error) { console.error('Lỗi khi lấy gợi ý:', error); suggestionsBox.style.display = 'none'; }
 }
 
-// Hàm thực hiện tìm kiếm
 async function handleSearchStore() {
     const maSTInput = document.getElementById('maSTInput');
     const resultOutput = document.getElementById('resultOutput');
@@ -533,93 +443,43 @@ async function handleSearchStore() {
     const searchButton = document.getElementById('searchButton');
     const buttonText = document.getElementById('buttonText');
     const suggestionsBox = document.getElementById('suggestions-box');
-
     const maST = maSTInput.value;
     suggestionsBox.style.display = 'none';
     resultOutput.style.display = 'none';
     errorMessage.textContent = '';
     maSTInput.classList.remove('error');
-
-    if (!maST.trim()) {
-        errorMessage.textContent = 'Vui lòng nhập Mã Siêu Thị để tìm kiếm.';
-        maSTInput.classList.add('error');
-        return;
-    }
-
+    if (!maST.trim()) { errorMessage.textContent = 'Vui lòng nhập Mã Siêu Thị để tìm kiếm.'; maSTInput.classList.add('error'); return; }
     searchButton.disabled = true;
     buttonText.textContent = 'Đang tìm...';
     loadingMessage.style.display = 'block';
-
     try {
-        // Sử dụng callApi để giao tiếp với backend
         const response = await callApi('searchStore', { maST: maST });
-        
-        if (response && response.error) {
-            errorMessage.textContent = response.message;
-            maSTInput.classList.add('error');
-        } else if (response) {
-            resultOutput.innerHTML = formatStoreSearchResult(response);
-            resultOutput.style.display = 'block';
-        } else {
-            errorMessage.textContent = `Không tìm thấy thông tin cho Mã Siêu Thị: "${maST}".`;
-            maSTInput.classList.add('error');
-        }
-    } catch (error) {
-        errorMessage.textContent = 'Lỗi kết nối máy chủ: ' + error.message;
-        maSTInput.classList.add('error');
-    } finally {
-        searchButton.disabled = false;
-        buttonText.textContent = 'Tìm Kiếm';
-        loadingMessage.style.display = 'none';
-    }
+        if (response && response.error) { errorMessage.textContent = response.message; maSTInput.classList.add('error'); } 
+        else if (response) { resultOutput.innerHTML = formatStoreSearchResult(response); resultOutput.style.display = 'block'; } 
+        else { errorMessage.textContent = `Không tìm thấy thông tin cho Mã Siêu Thị: "${maST}".`; maSTInput.classList.add('error'); }
+    } catch (error) { errorMessage.textContent = 'Lỗi kết nối máy chủ: ' + error.message; maSTInput.classList.add('error'); } 
+    finally { searchButton.disabled = false; buttonText.textContent = 'Tìm Kiếm'; loadingMessage.style.display = 'none'; }
 }
 
-// Hàm xóa kết quả tìm kiếm
 function clearStoreSearch() {
     const maSTInput = document.getElementById('maSTInput');
     const resultOutput = document.getElementById('resultOutput');
     const errorMessage = document.getElementById('errorMessage');
     const suggestionsBox = document.getElementById('suggestions-box');
-    
     maSTInput.value = '';
     resultOutput.style.display = 'none';
     errorMessage.textContent = '';
     maSTInput.classList.remove('error');
-    if (suggestionsBox) {
-        suggestionsBox.style.display = 'none';
-    }
+    if (suggestionsBox) suggestionsBox.style.display = 'none';
 }
 
-// Hàm định dạng HTML cho kết quả tìm kiếm
 function formatStoreSearchResult(data) {
-    const createRow = (icon, label, value, delay) => `
-        <div class="result-row" style="animation-delay: ${delay}s;">
-            <i class="fas ${icon} result-icon"></i>
-            <span class="result-label">${label}</span>
-            <span class="result-value">${value || 'N/A'}</span>
-        </div>`;
-    return `
-    <div class="result-card">
-        <div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div>
-        <div class="result-section">
-            <div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>
-            ${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}
-            ${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}
-            ${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}
-            ${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}
-            ${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}
-            ${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}
-        </div>
-        <div class="result-section">
-            <div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>
-            ${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}
-            ${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}
-            ${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}
-        </div>
-    </div>`;
+    const createRow = (icon, label, value, delay) => `<div class="result-row" style="animation-delay: ${delay}s;"><i class="fas ${icon} result-icon"></i><span class="result-label">${label}</span><span class="result-value">${value || 'N/A'}</span></div>`;
+    return `<div class="result-card"><div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}</div><div class="result-section"><div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}</div></div>`;
 }
 // === KẾT THÚC LOGIC CHO TRANG TÌM KIẾM SIÊU THỊ ===
 
+// --- CÁC HÀM TIỆN ÍCH KHÁC ---
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
 function expandSidebar(sidebarElement) { sidebarElement.classList.remove('collapsed'); }
 function hideAllDropdowns() {
@@ -633,12 +493,8 @@ function updateClock() {
     const now = new Date();
     const timeElement = document.getElementById('clock-time');
     const dateElement = document.getElementById('clock-date');
-    if (timeElement) {
-        timeElement.textContent = now.toLocaleTimeString('vi-VN');
-    }
-    if (dateElement) {
-        dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
-    }
+    if (timeElement) timeElement.textContent = now.toLocaleTimeString('vi-VN');
+    if (dateElement) dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
 function forceLogout(message) {
@@ -649,18 +505,12 @@ function forceLogout(message) {
 async function handleAdminLogin() {
     const username = adminUsername.value.trim();
     const password = adminPassword.value;
-    if (!username || !password) {
-        adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.';
-        return;
-    }
+    if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; }
     adminLoginSubmit.disabled = true;
     adminLoginSubmit.textContent = 'Đang kiểm tra...';
     adminLoginError.textContent = '';
-
     try {
         const response = await callApi('verifyAdminLogin', { username, password });
-        adminLoginSubmit.disabled = false;
-        adminLoginSubmit.textContent = 'Đăng nhập';
         if (response.success) {
             isAdminAuthenticated = true;
             adminLoginModal.style.display = 'none';
@@ -674,45 +524,34 @@ async function handleAdminLogin() {
             adminUsername.focus();
         }
     } catch (error) {
-        adminLoginSubmit.disabled = false;
-        adminLoginSubmit.textContent = 'Đăng nhập';
         isAdminAuthenticated = false;
         adminLoginError.textContent = 'Lỗi kết nối: ' + error.message;
+    } finally {
+        adminLoginSubmit.disabled = false;
+        adminLoginSubmit.textContent = 'Đăng nhập';
     }
 }
 
-// === MAIN EXECUTION - SỰ KIỆN CHÍNH KHI TRANG TẢI XONG ===
+// === MAIN EXECUTION ===
 document.addEventListener('DOMContentLoaded', function() {
     renderLeftMenu();
     renderRightMenu();
     
     leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
-    leftSidebarContainer.addEventListener('mouseleave', () => {
-        if (!isSidebarPinned) {
-            collapseSidebar(leftSidebarContainer);
-        }
-    });
+    leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
-    rightSidebarContainer.addEventListener('mouseleave', () => {
-        if (!isSidebarPinned) {
-            collapseSidebar(rightSidebarContainer);
-        }
-    });
+    rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
 
     sidebarToggleButton.addEventListener('click', () => {
         isSidebarPinned = !isSidebarPinned;
         const icon = sidebarToggleButton.querySelector('i');
         if (isSidebarPinned) {
-            expandSidebar(leftSidebarContainer);
-            expandSidebar(rightSidebarContainer);
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-thumbtack');
+            expandSidebar(leftSidebarContainer); expandSidebar(rightSidebarContainer);
+            icon.classList.remove('fa-bars'); icon.classList.add('fa-thumbtack');
             sidebarToggleButton.title = "Bỏ ghim thanh công cụ";
         } else {
-            collapseSidebar(leftSidebarContainer);
-            collapseSidebar(rightSidebarContainer);
-            icon.classList.remove('fa-thumbtack');
-            icon.classList.add('fa-bars');
+            collapseSidebar(leftSidebarContainer); collapseSidebar(rightSidebarContainer);
+            icon.classList.remove('fa-thumbtack'); icon.classList.add('fa-bars');
             sidebarToggleButton.title = "Ghim thanh công cụ";
         }
     });
@@ -733,19 +572,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const supportBtn = document.getElementById('supportContactButton');
     const supportPopup = document.getElementById('supportContactPopup');
     supportBtn.addEventListener('click', () => supportPopup.classList.toggle('show'));
-    
-    document.getElementById('closeSupportPopup').addEventListener('click', () => {
-        supportPopup.classList.remove('show');
-    });
+    document.getElementById('closeSupportPopup').addEventListener('click', () => supportPopup.classList.remove('show'));
     
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.dropdown')) {
-            hideAllDropdowns();
-        }
-        if (!supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
+        if (!e.target.closest('.dropdown')) hideAllDropdowns();
+        if (supportPopup && !supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
             supportPopup.classList.remove('show');
         }
-    });
+    }, true);
     
     updateClock();
     setInterval(updateClock, 1000);
