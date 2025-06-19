@@ -35,16 +35,16 @@ const leftMenuData = [
                  subItems: [
                     { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', htmlFile: 'cv-monitor.html', pageTitle: '', icon: 'fa-solid fa-desktop' },
                     { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', htmlFile: 'cv-cbs.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
-                    { id: 'btnTimSheet', text: 'TÌM KIẾM SHEET CÔNG VIỆC', functionName: 'getTimSheetHtml', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-folder-tree' }
+                    { id: 'btnTimSheet', text: 'TÌM KIẾM SHEET CÔNG VIỆC', htmlFile: 'tai-lieu-tim-sheet.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-folder-tree' }
                 ] 
             },
-             { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', functionName: 'getPage_CvBaotriKiemke', pageTitle: '', icon: 'fas fa-tools' },
+             { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', htmlFile: 'cv-bao-tri-kiem-ke.html', pageTitle: '', icon: 'fas fa-tools' },
             { 
                 id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true, 
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
-                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fas fa-eye' },
+                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fas fa-eye' },
                 ] 
              }
         ]
@@ -55,15 +55,19 @@ const leftMenuData = [
             { 
                  id: 'btnHuongDanIT', text: 'TÀI LIỆU - HƯỚNG DẪN', icon: 'fas fa-question-circle', isDropdown: true, 
                 subItems: [
-                    { id: 'btnTGDD', text: 'TGDD & ĐMX', functionName: 'getTGDDHtml', pageTitle: 'Thế Giới Di Động & Điện Máy Xanh', icon: 'fas fa-mobile-alt' },
-                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', functionName: 'getPage_HuongDanBhx', pageTitle: 'Bách Hóa XANH', icon: 'fas fa-store' },
-                    { id: 'btnAvakid', text: 'AVAKID', functionName: 'getAvakidHtml', pageTitle: 'AvaKID', icon: 'fas fa-child' },
-                    { id: 'btnAnKhang', text: 'AN KHANG', functionName: 'getAnKhangHtml', pageTitle: 'An Khang', icon: 'fas fa-pills' },
-                    { id: 'btnKhoVp', text: 'KHO/VP', functionName: 'getKhoVpHtml', pageTitle: 'Kho/VP', icon: 'fas fa-warehouse' },
+                    { id: 'btnTGDD', text: 'TGDD & ĐMX', htmlFile: 'tai-lieu-tgdd-dmx.html', pageTitle: 'Thế Giới Di Động & Điện Máy Xanh', icon: 'fas fa-mobile-alt' },
+                     { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', htmlFile: 'cv-bach-hoa-xanh.html', pageTitle: '', icon: 'fas fa-store' },
+                    { id: 'btnAvakid', text: 'AVAKID', htmlFile: 'tai-lieu-avakid.html', pageTitle: 'AvaKID', icon: 'fas fa-child' },
+                    { id: 'btnAnKhang', text: 'AN KHANG', htmlFile: 'tai-lieu-an-khang.html', pageTitle: 'An Khang', icon: 'fas fa-pills' },
+                    { id: 'btnKhoVp', text: 'KHO/VP', htmlFile: 'tai-lieu-kho-vp.html', pageTitle: 'Kho/VP', icon: 'fas fa-warehouse' },
                 ] 
             },
-            { id: 'btnphanmem', text: 'PHẦN MỀM', functionName: 'getPage_PhanMemIt', pageTitle: 'DOWNLOAD PHẦN MỀM', icon: 'fas fa-book-open' },
-            { id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', functionName: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt' },
+            { id: 'btnphanmem', text: 'TẢI XUỐNG', icon: 'fa-solid fa-download', isDropdown: true, subItems: [
+                { id: 'btnVPN', text: 'TẢI VPN', htmlFile: 'download-vpn', pageTitle: '', icon: 'fas fa-download' },
+                { id: 'btnDrive', text: 'DRIVE TÀI LIỆU', htmlFile: 'download-drive', pageTitle: '', icon: 'fas fa-download' },
+            ] },
+
+            { id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', htmlFile: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt' },
         ]
     }
 ];
