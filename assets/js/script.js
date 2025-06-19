@@ -3,7 +3,7 @@
 // =================================================================================
 
 // DÁN URL CỦA WEB APP BẠN ĐÃ DEPLOY TỪ GOOGLE APPS SCRIPT VÀO ĐÂY
-const API_URL = "https://script.google.com/macros/s/AKfycbyx_0kcaqShLixhgBtvebIqVte6jbHl3qeZzvn3iL_M8fhSNIyzcRAWnWTIP-VvOx5fhQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwxmJsjhH0J4pGXXKqZHti9W9UDzHD7OGQH4NBYP2AkbzprPm5zbGkpcB7pqUlYUFVc9g/exec";
 
 // Cấu hình menu
 const leftMenuData = [
@@ -125,31 +125,32 @@ let countdownSeconds = 3600;
 let isSidebarPinned = false;
 
 /**
- * Hàm gọi API trung tâm
- * @param {string} action - Tên của hành động (tương ứng tên hàm backend)
+ * Hàm gọi API trung tâm - ĐÃ CHUYỂN SANG DÙNG GET
+ * @param {string} action - Tên của hành động
  * @param {object} payload - Dữ liệu gửi đi
- * @returns {Promise<any>} - Promise với kết quả từ server
  */
 async function callApi(action, payload = {}) {
     try {
-        // === SỬA LẠI ĐIỀU KIỆN KIỂM TRA CHO ĐÚNG ===
         if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
-            throw new Error("API_URL chưa được cấu hình trong file script.js. Vui lòng kiểm tra lại.");
+            throw new Error("API_URL chưa được cấu hình trong file script.js.");
         }
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action, payload }),
-            redirect: 'follow' 
-        });
+        
+        // Xây dựng URL với các tham số
+        const url = new URL(API_URL);
+        url.searchParams.append('action', action);
+        // Đóng gói payload thành chuỗi JSON để gửi qua URL
+        url.searchParams.append('payload', JSON.stringify(payload));
+
+        // Thực hiện yêu cầu GET, không cần body hay method
+        const response = await fetch(url, { redirect: 'follow' });
+
         if (!response.ok) {
             throw new Error(`Lỗi mạng: ${response.statusText}`);
         }
         return await response.json();
     } catch (error) {
         console.error(`Lỗi khi gọi API cho action "${action}":`, error);
-        // Thay đổi thông báo lỗi để hiển thị lỗi thực tế từ `catch`
-        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải thông báo: ${error.message}</p>`;
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải dữ liệu: ${error.message}</p>`;
         loadingSpinner.style.display = 'none';
         throw error;
     }
