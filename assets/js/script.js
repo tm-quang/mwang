@@ -623,34 +623,48 @@ function forceLogout(message) {
     window.location.reload();
 }
 
-async function handleAdminLogin() {
+/**
+ * === HÀM ĐĂNG NHẬP ADMIN ĐÃ ĐƯỢC THAY ĐỔI ===
+ * Thay vì gọi API, hàm này sẽ kiểm tra thông tin đăng nhập
+ * với 2 tài khoản được gán cứng trong code.
+ */
+function handleAdminLogin() {
     const username = adminUsername.value.trim();
     const password = adminPassword.value;
-    if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; }
+
+    if (!username || !password) {
+        adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.';
+        return;
+    }
+
     adminLoginSubmit.disabled = true;
     adminLoginSubmit.textContent = 'Đang kiểm tra...';
     adminLoginError.textContent = '';
-    try {
-        const response = await callApi('verifyAdminLogin', { username, password });
-        if (response.success) {
+
+    // Kiểm tra thông tin đăng nhập với tài khoản gán cứng
+    const validCredentials = 
+        (username === 'admin' && password === 'dictionary') || 
+        (username === 'mwang' && password === '1412');
+
+    // Giả lập độ trễ mạng để người dùng thấy trạng thái "Đang kiểm tra..."
+    setTimeout(() => {
+        if (validCredentials) {
             isAdminAuthenticated = true;
             adminLoginModal.style.display = 'none';
             adminUsername.value = '';
             adminPassword.value = '';
-            document.getElementById('btnADMIN').click();
+            // Tự động mở menu admin sau khi đăng nhập thành công
+            document.getElementById('btnADMIN').click(); 
         } else {
             isAdminAuthenticated = false;
-            adminLoginError.textContent = response.message || 'Lỗi không xác định.';
+            adminLoginError.textContent = 'Sai tên đăng nhập hoặc mật khẩu.';
             adminPassword.value = '';
             adminUsername.focus();
         }
-    } catch (error) {
-        isAdminAuthenticated = false;
-        adminLoginError.textContent = 'Lỗi kết nối: ' + error.message;
-    } finally {
+
         adminLoginSubmit.disabled = false;
         adminLoginSubmit.textContent = 'Đăng nhập';
-    }
+    }, 500);
 }
 
 function handleMobileWelcomePopup() {
