@@ -181,62 +181,93 @@ function startCountdown() {
     }, 1000);
 }
 
-    function renderLeftMenu() {
-        leftSidebarContent.innerHTML = '';
-        leftMenuData.forEach(sectionData => {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'menu-section';
-            sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${sectionData.title}</span></h3>`;
-            
-            sectionData.items.forEach(itemData => {
-                if (itemData.isDropdown) {
-                    const dropdownDiv = document.createElement('div');
-                    dropdownDiv.className = 'dropdown';
-
-                    const button = document.createElement('div');
-                    button.className = 'dropdown-header';
-                    button.innerHTML = `<i class="${itemData.icon} icon"></i><span class="menu-item-text">${itemData.text}</span>`;
-                    
-                    const menu = document.createElement('div');
-                    menu.className = 'dropdown-menu';
-                    itemData.subItems.forEach(subItemData => {
-                        const link = createMenuItem(subItemData);
-                        link.addEventListener('click', (e) => {
-                            if (isMobile()) {
-                                leftSidebar.classList.remove('open');
-                                mobileOverlay.classList.remove('show');
-                                sidebarToggleBtn.classList.remove('open');
-                            }
-                        });
-                        menu.appendChild(link);
-                    });
-                    
-                    dropdownDiv.append(button, menu);
-                    
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const currentlyOpen = dropdownDiv.classList.contains('open');
-                        document.querySelectorAll('#left-sidebar-container .dropdown.open').forEach(d => d.classList.remove('open'));
-                        if (!currentlyOpen) {
-                            dropdownDiv.classList.add('open');
+function renderLeftMenu() {
+    leftSidebarContentWrapper.innerHTML = '';
+    leftMenuData.forEach((section) => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'menu-section';
+        sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${section.title}</span></h3>`;
+        const menuItemsContainer = document.createElement('div');
+        menuItemsContainer.className = 'menu-items-container';
+        section.items.forEach(item => {
+             if (item.isDropdown) {
+                const dropdownDiv = document.createElement('div');
+                dropdownDiv.className = 'dropdown';
+                const dropdownButton = document.createElement('div');
+                dropdownButton.className = `dropdown-button ${item.className || ''}`;
+                dropdownButton.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
+                dropdownButton.id = item.id;
+                const dropdownMenu = document.createElement('div');
+                dropdownMenu.className = 'dropdown-menu';
+                item.subItems.forEach(subItem => {
+                    const subLink = document.createElement('a');
+                    subLink.href = '#';
+                    subLink.id = subItem.id;
+                    subLink.className = `menu-button-sidebar ${subItem.className || ''}`;
+                    subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`;
+                    subLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        hideAllDropdowns();
+                        loadFunctionContent(subItem.functionName, subItem.pageTitle);
+                        if (!isSidebarPinned) {
+                            collapseSidebar(leftSidebarContainer);
                         }
                     });
-                    sectionDiv.appendChild(dropdownDiv);
+                    dropdownMenu.appendChild(subLink);
+                });
+                dropdownDiv.appendChild(dropdownButton);
+                dropdownDiv.appendChild(dropdownMenu);
+                menuItemsContainer.appendChild(dropdownDiv);
+                const showMenu = () => {
+                    hideAllDropdowns();
+                    const rect = dropdownButton.getBoundingClientRect();
+                    dropdownMenu.style.top = rect.top + 'px';
+                    dropdownMenu.style.left = (rect.right + 10) + 'px';
+                    dropdownMenu.classList.add('show');
+                    dropdownButton.classList.add('active');
+                };
+                if (item.isAdmin) {
+                    dropdownButton.style.cursor = 'pointer';
+                    dropdownButton.addEventListener('click', () => {
+                        if (isAdminAuthenticated) {
+                            showMenu();
+                        } else {
+                            hideAllDropdowns();
+                            adminLoginError.textContent = '';
+                            adminLoginModal.style.display = 'flex';
+                            adminUsername.focus();
+                        }
+                    });
+                    dropdownDiv.onmouseleave = () => { dropdownTimeout = setTimeout(() => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); }, 300); };
+                    dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
                 } else {
-                    const link = createMenuItem(itemData);
-                     link.addEventListener('click', () => {
-                        if (isMobile()) {
-                            leftSidebar.classList.remove('open');
-                            mobileOverlay.classList.remove('show');
-                            sidebarToggleBtn.classList.remove('open');
-                        }
-                    });
-                    sectionDiv.appendChild(link);
+                    const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); };
+                    dropdownButton.onmouseenter = () => { clearTimeout(dropdownTimeout); showMenu(); };
+                    dropdownButton.onmouseleave = () => { dropdownTimeout = setTimeout(hideMenu, 300); };
+                    dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
+                    dropdownMenu.onmouseleave = () => { dropdownTimeout = setTimeout(hideMenu, 300); };
                 }
-            });
-            leftSidebarContent.appendChild(sectionDiv);
+            } else {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.id = item.id;
+                a.className = `menu-button-sidebar ${item.className || ''}`;
+                a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    hideAllDropdowns();
+                    loadFunctionContent(item.functionName, item.pageTitle);
+                    if (!isSidebarPinned) {
+                        collapseSidebar(leftSidebarContainer);
+                    }
+                });
+                menuItemsContainer.appendChild(a);
+            }
         });
-    }
+        sectionDiv.appendChild(menuItemsContainer);
+        leftSidebarContentWrapper.appendChild(sectionDiv);
+    });
+}
 
 function renderRightMenu() {
     rightSidebarContentWrapper.innerHTML = '';
@@ -372,7 +403,7 @@ function setupCollapseListeners() {
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = 'THÔNG BÁO CÔNG VIỆC';
+    currentPageTitle.textContent = '';
     
     try {
         const response = await callApi('getNotifications');
