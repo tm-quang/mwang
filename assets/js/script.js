@@ -762,8 +762,8 @@ document.addEventListener('DOMContentLoaded', function() {
     leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
     leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
-    rightSidebarContainer.addEventListener('mouseleave', => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
-  
+    rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
+
     document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
     
     adminLoginSubmit.addEventListener('click', handleAdminLogin);
