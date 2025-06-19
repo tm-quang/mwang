@@ -310,8 +310,123 @@ async function loadFunctionContent(functionName, pageTitle = '') {
     }
 }
 
+// === BẮT ĐẦU PHẦN CODE MỚI ĐỂ HIỂN THỊ THÔNG BÁO ===
+
+/**
+ * Hàm mới để render trang thông báo từ dữ liệu JSON
+ * @param {Array} allNotifications - Mảng dữ liệu thông báo từ API
+ */
+function renderNotifications(allNotifications) {
+    if (!functionContent) return;
+    
+    // Phân loại dữ liệu dựa trên cột "Loại thông báo"
+    const trienKhaiData = allNotifications.filter(item => item.category === 'Triển khai');
+    const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
+
+    // Hàm trợ giúp tạo HTML cho một cột
+    const createColumnHtml = (title, icon, data) => {
+        let columnHtml = `
+          <div class="content-column">
+            <h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2>
+            <div class="notification-list">`;
+
+        if (data.length > 0) {
+            data.forEach(item => {
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
+                const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
+                const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
+                const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
+                const deadlineHtml = item.deadline ? `<span class="deadline-badge"><i class="fas fa-hourglass-half"></i> Deadline: ${item.deadline}</span>` : '';
+                
+                columnHtml += `
+                  <div class="notification-card-pb3 collapsed">
+                    <div class="notification-header-pb3">
+                        <i class="${item.icon} icon"></i>
+                        <h4>${item.title}</h4>
+                        ${typeBadgeHtml}
+                        ${newBadgeHtml}
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="notification-message-pb3">
+                        ${item.message}
+                        <div class="notification-footer-pb3">
+                            <div class="footer-left">${updateDateHtml}</div>
+                            <div class="footer-center">${deadlineHtml}</div>
+                            <div class="footer-right">${linkButtonHtml}</div>
+                        </div>
+                    </div>
+                  </div>`;
+            });
+        } else {
+            columnHtml += '<p>Không có thông báo nào.</p>';
+        }
+        columnHtml += '</div></div>';
+        return columnHtml;
+    };
+    
+    let finalHtml = '<div class="columns-container-pb2">';
+    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData);
+    finalHtml += createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData);
+    finalHtml += '</div>';
+
+    functionContent.innerHTML = finalHtml;
+
+    // Kích hoạt tính năng thu/mở thẻ thông báo
+    setupCollapseListeners();
+}
+
+/**
+ * Hàm mới để quản lý sự kiện click thu/mở thẻ thông báo
+ */
+function setupCollapseListeners() {
+    functionContent.addEventListener('click', function(event) {
+        // Chỉ xử lý nếu click vào header của thẻ
+        const header = event.target.closest('.notification-header-pb3');
+        if (!header) return;
+
+        const clickedCard = header.closest('.notification-card-pb3');
+        if (!clickedCard) return;
+
+        // Nếu click vào một link trong header, không làm gì cả
+        if (event.target.closest('a')) {
+            return;
+        }
+        
+        // Đóng tất cả các thẻ khác
+        const allCards = functionContent.querySelectorAll('.notification-card-pb3');
+        allCards.forEach(card => {
+            if (card !== clickedCard) {
+                card.classList.add('collapsed');
+            }
+        });
+
+        // Mở/đóng thẻ được click
+        clickedCard.classList.toggle('collapsed');
+    });
+}
+/**
+ * Hàm chính để tải trang thông báo
+ */
+async function loadNotificationsPage() {
+    functionContent.innerHTML = '';
+    loadingSpinner.style.display = 'block';
+    currentPageTitle.textContent = 'TRANG CHỦ - THÔNG BÁO';
+    
+    try {
+        const response = await callApi('getNotifications');
+        loadingSpinner.style.display = 'none';
+        if (response.success) {
+            renderNotifications(response.data); // Giả sử API trả về data trong `response.data`
+        } else {
+            throw new Error(response.message || 'Không thể tải dữ liệu thông báo.');
+        }
+    } catch (error) {
+        loadingSpinner.style.display = 'none';
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải thông báo: ${error.message}</p>`;
+    }
+}
 function goToHomePage() {
-    loadFunctionContent('getPage_ThongBao', 'TRANG CHỦ');
+    loadNotificationsPage('getPage_ThongBao', 'TRANG CHỦ');
 }
 
 function collapseSidebar(sidebarElement) { sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
