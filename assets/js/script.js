@@ -25,8 +25,8 @@ const leftMenuData = [
         items: [
             { 
                 id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
-                 subItems: [
-                    { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', functionName: 'getPage_CvTrienKhaiMtay2', pageTitle: '', icon: 'fas fa-map-marked-alt' },
+                  subItems: [
+                    { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'admin-database.html', pageTitle: 'QUẢN LÝ DỮ LIỆU WEBSITE', icon: 'fas fa-database' },
                     { id: 'btnBHXToiUu', text: 'TỐI ƯU BHX 2025', functionName: 'getPage_TkBhxToiUu', pageTitle: '', icon: 'fas fa-cogs' },
                  ] 
             },
