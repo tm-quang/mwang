@@ -91,7 +91,7 @@ const rightMenuData = [
         icon: "fas fa-tools",
         items: [
             { text: "Google Drive", href: "https://drive.google.com/", icon: "fa-solid fa-cloud" , className: "info" },
-            { text: "Google Sheets", href: "https://sheets.google.com/", icon: "fa-solid fa-sheet-plastic" , className: "info" },
+            { text: "Google Sheets", href: "https://sheets.google.com/", icon: "fa-solid fa-file" , className: "info" },
             { text: "Google Meet", href: "https://meet.google.com/", icon: "fa-solid fa-video" , className: "info" },
         ]
     },
@@ -99,7 +99,7 @@ const rightMenuData = [
         title: "GIẢI TRÍ",
         icon: "fas fa-gamepad",
          items: [
-            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "success" },
+            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "danger-color" },
         ]
     }
 ];
