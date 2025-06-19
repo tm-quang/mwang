@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Công việc</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+<body>
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <div id="main-header">
+        <div id="header-left">
+            <button id="sidebar-toggle-btn" title="Ghim/Bỏ ghim thanh công cụ">
+                <i class="fas fa-bars"></i>
+            </button>
+            <span id="btnGoHomeHeader" title="Trang Chủ">
+                <i class="fas fa-home header-icon"></i>
+            </span>
+        </div>
+        <div id="current-page-title"></div>
+        <div id="header-right">
+            <div id="user-controls" class="header-item">
+                <span class="greeting-text">Xin chào</span>
+                <button id="logoutButton" class="header-logout-btn">Đăng xuất</button>
+                
+            </div>
+            <div id="live-clock" class="header-item">
+                <span id="clock-time"></span>
+                <span id="clock-date"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content-area">
+        <div id="left-sidebar-container" class="collapsed">
+            <div class="sidebar-content-wrapper"></div>
+        </div>
+        
+        <div id="content-container">
+            <div id="loadingSpinner"></div>
+            <div id="functionContent"></div>
+        </div>
+
+        <div id="right-sidebar-container" class="collapsed">
+            <div class="sidebar-content-wrapper"></div>
+        </div>
+    </div>
+
+    <button id="supportContactButton" class="floating-button">
+        <i class="fas fa-headset icon"></i>
+    </button>
+    <div id="supportContactPopup" class="popup-container">
+        <div class="popup-header">
+            <h3>Hỗ Trợ</h3>
+            <button class="close-popup-button" id="closeSupportPopup">×</button>
+        </div>
+        <div class="popup-content">
+            <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ:</p>
+            <p><i class="fas fa-phone-alt"></i> Điện thoại: 0933 960 788</p>
+            <p><i class="fas fa-envelope"></i> Email: minhquang030@gmail.com</p>
+            <p><i class="fab fa-facebook-messenger"></i> Messenger: <a href="https://www.facebook.com/minh.quang093" target="_blank">Inbox tại đây</a></p>
+        </div>
+    </div>
+    <div id="homeConfirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <p>Bạn có muốn quay về trang chủ không?</p>
+            <div class="modal-buttons">
+                <button id="confirmHomeYes">Có</button>
+                <button id="confirmHomeNo">Không</button>
+            </div>
+        </div>
+    </div>
+    <div id="customConfirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <p id="modalMessage">Bạn có chắc chắn muốn đăng xuất?</p>
+            <div class="modal-buttons">
+                <button id="confirmBtnYes">OK</button>
+                <button id="confirmBtnNo">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="adminLoginModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Đăng nhập để vào menu quản trị</h3>
+            <h4>Liên hệ: Admin</h4>
+            <p id="adminLoginError"></p>
+            <input type="text" id="adminUsername" placeholder="Tên đăng nhập" autocomplete="off">
+            <input type="password" id="adminPassword" placeholder="Mật khẩu">
+            <div class="modal-buttons">
+                <button id="adminLoginSubmit">Đăng nhập</button>
+                <button id="adminLoginCancel">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js?v=1.2"></script>
+</body>
+</html>
