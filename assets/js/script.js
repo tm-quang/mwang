@@ -132,7 +132,7 @@ let isSidebarPinned = false;
  */
 async function callApi(action, payload = {}) {
     try {
-        if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
+        if (API_URL === "https://script.google.com/macros/s/AKfycbzmTLBBJwY5f680gbHOOoln7kB2lK6sY9DvFKOQD5_DvbM3BtRD-6UcXVrNwyGGBYD3uw/exec") {
             throw new Error("API_URL chưa được cấu hình trong file script.js. Vui lòng kiểm tra lại.");
         }
         const response = await fetch(API_URL, {
