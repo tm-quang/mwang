@@ -378,7 +378,7 @@ function renderNotifications(allNotifications) {
         let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
-                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">MỚI</span>' : '';
                 const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
                 const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
                 const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
