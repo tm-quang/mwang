@@ -318,11 +318,21 @@ async function loadFunctionContent(functionName, pageTitle = '') {
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
     
+    // Kiểm tra nếu có lỗi trả về từ API
+    if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
+        functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
+        return;
+    }
+
     const trienKhaiData = allNotifications.filter(item => item.category === 'Triển khai');
     const noiBoData = allNotifications.filter(item => item.category === 'Nội bộ');
 
     const createColumnHtml = (title, icon, data) => {
-        let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
+        let columnHtml = `
+          <div class="content-column">
+            <h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2>
+            <div class="notification-list">`;
+
         if (data.length > 0) {
             data.forEach(item => {
                 const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
@@ -370,17 +380,21 @@ function setupCollapseListeners() {
     functionContent.addEventListener('click', function(event) {
         const header = event.target.closest('.notification-header-pb3');
         if (!header) return;
+
         const clickedCard = header.closest('.notification-card-pb3');
         if (!clickedCard) return;
+
         if (event.target.closest('a')) {
             return;
         }
+        
         const allCards = functionContent.querySelectorAll('.notification-card-pb3');
         allCards.forEach(card => {
             if (card !== clickedCard) {
                 card.classList.add('collapsed');
             }
         });
+
         clickedCard.classList.toggle('collapsed');
     });
 }
@@ -391,16 +405,21 @@ async function loadNotificationsPage() {
     currentPageTitle.textContent = 'TRANG CHỦ - THÔNG BÁO';
     
     try {
-        // === SỬA LẠI ĐỂ DÙNG TRỰC TIẾP RESPONSE, KHÔNG CÓ .DATA ===
         const response = await callApi('getNotifications');
         loadingSpinner.style.display = 'none';
-        // Giả sử API trả về trực tiếp một mảng notifications
-        renderNotifications(response);
+        if (response.success && Array.isArray(response.data)) {
+            renderNotifications(response.data);
+        } else {
+            // Nếu API trả về lỗi nhưng không bị catch, hiển thị message lỗi
+            throw new Error(response.message || 'Dữ liệu trả về không hợp lệ.');
+        }
     } catch (error) {
+        // Hàm callApi đã xử lý hiển thị lỗi, nên ở đây không cần làm gì thêm
+        // Chỉ cần đảm bảo spinner đã tắt
         loadingSpinner.style.display = 'none';
-        // `callApi` đã xử lý việc hiển thị lỗi rồi, không cần làm lại ở đây
     }
 }
+
 
 // === KẾT THÚC PHẦN CODE MỚI ===
 
