@@ -290,25 +290,50 @@ function renderRightMenu() {
     });
 }
 
-async function loadFunctionContent(functionName, pageTitle = '') {
+// === HÀM loadFunctionContent ĐƯỢC CẬP NHẬT HOÀN TOÀN ===
+async function loadFunctionContent(item) {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = pageTitle;
+    currentPageTitle.textContent = item.pageTitle || '';
 
     try {
-        const response = await callApi('getPageContent', { functionName: functionName });
-        loadingSpinner.style.display = 'none';
-        if (response.success && response.html) {
-            functionContent.innerHTML = response.html;
-            Array.from(functionContent.querySelectorAll('script')).forEach(oldScript => {
-                const newScript = document.createElement('script');
-                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                oldScript.parentNode.replaceChild(newScript, oldScript);
-            });
+        let htmlContent = '';
+        // Ưu tiên tải file HTML local nếu được chỉ định
+        if (item.htmlFile) {
+            const response = await fetch(item.htmlFile);
+            if (!response.ok) {
+                throw new Error(`Không thể tải file ${item.htmlFile}: ${response.statusText}`);
+            }
+            htmlContent = await response.text();
+        } 
+        // Nếu không, gọi API như cũ
+        else if (item.functionName) {
+            const response = await callApi('getPageContent', { functionName: item.functionName });
+            if (response.success && response.html) {
+                htmlContent = response.html;
+            } else {
+                throw new Error(response.message || 'Không nhận được nội dung hợp lệ từ API.');
+            }
         } else {
-            throw new Error(response.message || 'Không nhận được nội dung hợp lệ.');
+            throw new Error('Cấu hình menu không hợp lệ (thiếu htmlFile hoặc functionName).');
         }
+
+        loadingSpinner.style.display = 'none';
+        functionContent.innerHTML = htmlContent;
+
+        // Chạy script khởi tạo cho trang cụ thể sau khi tải xong HTML
+        if (item.id === 'btnTimSieuThi') {
+            initSearchStorePage();
+        }
+        
+        // Xử lý các thẻ <script> bên trong HTML được tải từ Google Script (nếu có)
+        Array.from(functionContent.querySelectorAll('script')).forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+
     } catch (error) {
         loadingSpinner.style.display = 'none';
         functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải nội dung: ${error.message}</p>`;
