@@ -24,21 +24,18 @@ const leftMenuData = [
         title: '2025 - IT MTAY2',
         items: [
             { 
-                id: 'btnWorkLeader', text: 'TRIỂN KHAI IT MTAY2', icon: 'fas fa-laptop-code', isDropdown: true, 
+                id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-people-group', isDropdown: true, 
                   subItems: [
-                    { id: 'btnDeployMTay2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'admin-database.html', pageTitle: 'QUẢN LÝ DỮ LIỆU WEBSITE', icon: 'fas fa-database' },
-                    { id: 'btnBHXToiUu', text: 'TỐI ƯU BHX 2025', functionName: 'getPage_TkBhxToiUu', pageTitle: '', icon: 'fas fa-cogs' },
+                    { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', pageTitle: '', icon: 'fa-solid fa-people-group' },
+                    { id: 'btnBHXToiUu', text: 'BHX - TỐI ƯU THIẾT BỊ', htmlFile: 'cv-trien-khai-bhx.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
                  ] 
             },
             { 
                 id: 'btnDailyWork', text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true, 
                  subItems: [
-                    { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', functionName: 'getPage_CvMonitor', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', functionName: 'getPage_Cvcbs', pageTitle: '', icon: 'fas fa-eye' },
-                     { id: 'btnTEST1', text: 'MENU 1', functionName: 'getPage_TEST1', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST3', text: 'MENU 3', functionName: 'getPage_TEST3', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTimSheet', text: 'TÌM SHEET CÔNG VIỆC', functionName: 'getTimSheetHtml', pageTitle: '', icon: 'fa-solid fa-folder-tree' }
+                    { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', htmlFile: 'cv-monitor.html', pageTitle: '', icon: 'fa-solid fa-desktop' },
+                    { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', htmlFile: 'cv-cbs.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
+                    { id: 'btnTimSheet', text: 'TÌM KIẾM SHEET CÔNG VIỆC', functionName: 'getTimSheetHtml', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-folder-tree' }
                 ] 
             },
              { id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', functionName: 'getPage_CvBaotriKiemke', pageTitle: '', icon: 'fas fa-tools' },
@@ -47,9 +44,7 @@ const leftMenuData = [
                 subItems: [
                     { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
                     { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
-                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST2', text: 'MENU 2', functionName: 'getPage_TEST2', pageTitle: '', icon: 'fas fa-eye' },
-                    { id: 'btnTEST3', text: 'MENU 3', functionName: 'getPage_TEST3', pageTitle: '', icon: 'fas fa-eye' },
+                    { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', functionName: 'getPage_tim-kiem-du-an', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fas fa-eye' },
                 ] 
              }
         ]
