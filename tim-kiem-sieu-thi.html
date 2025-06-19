@@ -5,13 +5,13 @@
         <input type="text" id="maSTInput" placeholder="Nhập mã siêu thị..." autocomplete="off">
         <div id="suggestions-box" class="suggestions-container"></div>
     </div>
-    
+
     <div style="display: flex; gap: 10px;">
-        <button id="searchButton" style="flex-grow: 1;" onclick="searchStore()">
+        <button id="searchButton" style="flex-grow: 1;">
             <i class="fas fa-search"></i>
             <span id="buttonText">Tìm Kiếm</span>
         </button>
-        <button id="clearButton" type="button" onclick="clearSearch()">
+        <button id="clearButton" type="button">
             <i class="fas fa-eraser"></i>
             <span>Xóa</span>
         </button>
@@ -23,156 +23,3 @@
     </div>
     <div id="resultOutput" class="result-box"></div>
 </div>
-
-<script>
-    // --- Toàn bộ script cho chức năng tìm kiếm siêu thị ---
-    const maSTInput = document.getElementById('maSTInput');
-    const searchButton = document.getElementById('searchButton');
-    const buttonText = document.getElementById('buttonText');
-    const resultOutput = document.getElementById('resultOutput');
-    const errorMessage = document.getElementById('errorMessage');
-    const loadingMessage = document.getElementById('loadingMessage');
-    const suggestionsBox = document.getElementById('suggestions-box');
-    
-    let isSearching = false;
-    maSTInput.addEventListener('input', handleSuggestionInput);
-
-    maSTInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            searchStore();
-        }
-    });
-    
-    // Thêm event listener để ẩn box gợi ý khi click ra ngoài
-    document.addEventListener('click', function(event) {
-        const container = document.querySelector('.input-wrapper');
-        if (container && !container.contains(event.target)) {
-            suggestionsBox.style.display = 'none';
-        }
-    });
-
-    function handleSuggestionInput() {
-        if (isSearching) {
-            return;
-        }
-
-        const inputText = maSTInput.value;
-        if (inputText.length < 2) {
-            suggestionsBox.style.display = 'none';
-            suggestionsBox.innerHTML = '';
-            return;
-        }
-
-        // Sử dụng google.script.run để gọi hàm backend
-        google.script.run
-            .withSuccessHandler(suggestions => {
-                if (suggestions && suggestions.length > 0) {
-                    suggestionsBox.innerHTML = '';
-                    suggestions.forEach(suggestion => {
-                        const item = document.createElement('div');
-                        item.className = 'suggestion-item';
-                        item.innerHTML = `<span class="code">${suggestion.code}</span><span class="name">${suggestion.name}</span>`;
-                        item.onclick = () => {
-                            maSTInput.value = suggestion.code;
-                            suggestionsBox.style.display = 'none';
-                            searchStore();
-                        };
-                        suggestionsBox.appendChild(item);
-                    });
-                    suggestionsBox.style.display = 'block';
-                } else {
-                    suggestionsBox.style.display = 'none';
-                }
-            })
-            .getStoreSuggestions(inputText); // Đây là hàm global trong Code.gs
-    }
-    
-    function searchStore() {
-        isSearching = true;
-        const maST = maSTInput.value;
-        suggestionsBox.style.display = 'none';
-        resultOutput.style.display = 'none';
-        errorMessage.textContent = '';
-        maSTInput.classList.remove('error');
-        searchButton.disabled = true;
-        buttonText.textContent = 'Đang tìm...';
-        loadingMessage.style.display = 'block';
-
-        if (!maST.trim()) {
-            errorMessage.textContent = 'Vui lòng nhập Mã Siêu Thị để tìm kiếm.';
-            maSTInput.classList.add('error');
-            resetButtonState();
-            return;
-        }
-
-        // Sử dụng google.script.run để gọi hàm backend
-        google.script.run
-            .withSuccessHandler(function(response) {
-                resetButtonState();
-                if (response && response.error) {
-                    errorMessage.textContent = 'Đã xảy ra lỗi: ' + response.message;
-                    maSTInput.classList.add('error');
-                } 
-                else if (response) {
-                    resultOutput.innerHTML = formatResult(response);
-                    resultOutput.style.display = 'block';
-                } 
-                else {
-                    errorMessage.textContent = 'Không tìm thấy thông tin cho Mã Siêu Thị: "' + maST + '". Vui lòng kiểm tra lại.';
-                    maSTInput.classList.add('error');
-                }
-            })
-            .withFailureHandler(function(error) {
-                resetButtonState();
-                errorMessage.textContent = 'Lỗi kết nối máy chủ: ' + error.message;
-                maSTInput.classList.add('error');
-                console.error("Lỗi nghiêm trọng Apps Script:", error);
-            })
-            .searchStoreByMaST(maST); // Đây là hàm global trong Code.gs
-    }
-    
-    function resetButtonState() {
-        isSearching = false;
-        searchButton.disabled = false;
-        buttonText.textContent = 'Tìm Kiếm';
-        loadingMessage.style.display = 'none';
-    }
-
-    function clearSearch() {
-        maSTInput.value = '';
-        resultOutput.style.display = 'none';
-        errorMessage.textContent = '';
-        maSTInput.classList.remove('error');
-        resetButtonState();
-        suggestionsBox.style.display = 'none';
-    }
-
-    function formatResult(data) {
-        const createRow = (icon, label, value, delay) => `
-            <div class="result-row" style="animation-delay: ${delay}s;">
-                <i class="fas ${icon} result-icon"></i>
-                <span class="result-label">${label}</span>
-                <span class="result-value">${value || 'N/A'}</span>
-            </div>`;
-        return `
-        <div class="result-card">
-            <div class="result-main-title">KẾT QUẢ TÌM KIẾM: ${data.maCN}</div>
-            <div class="result-section">
-                <div class="result-section-title"><i class="fas fa-info-circle"></i> THÔNG TIN SIÊU THỊ</div>
-                ${createRow('fa-barcode', 'Mã CN:', `<strong>${data.maCN}</strong>`, 0.1)}
-                ${createRow('fa-store', 'Tên ST:', `<strong>${data.tenST}</strong>`, 0.2)}
-                ${createRow('fa-calendar-alt', 'Khai Trương:', data.khaiTruong, 0.3)}
-                ${createRow('fa-map-marker-alt', 'Maps:', `<a href="${data.maps}" target="_blank">Xem trên bản đồ</a>`, 0.4)}
-                ${createRow('fa-user-cog', 'IT KV:', data.itKV, 0.5)}
-                ${createRow('fa-user-shield', 'Admin:', data.admin, 0.6)}
-            </div>
-            <div class="result-section">
-                <div class="result-section-title"><i class="fas fa-tools"></i> BẢO TRÌ - KIỂM KÊ</div>
-                ${createRow('fa-calendar-check', 'Ngày BT-KK:', data.ngayBTKK, 0.7)}
-                ${createRow('fa-file-alt', 'BC Bảo Trì:', data.bcBT, 0.8)}
-                ${createRow('fa-clipboard-check', 'BC Kiểm Kê:', data.bcKK, 0.9)}
-            </div>
-        </div>`;
-    }
-</script>
