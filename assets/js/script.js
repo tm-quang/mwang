@@ -348,12 +348,9 @@ function renderNotifications(allNotifications) {
     if (!functionContent) return;
 
     // --- HTML cho dòng chữ chạy (Marquee) ---
-    const marqueeText = "Trang đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng | Liên hệ để báo lỗi hoặc góp ý: 112080 - Trần Minh Quang | ĐT: 039 418 1140 | Cảm ơn!";
     const marqueeHtml = `
         <div class="running-text-marquee">
-            <div class="marquee-inner">
-                <span>${marqueeText}</span>
-            </div>
+            <p>Trang đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng | Liên hệ để báo lỗi hoặc góp ý: 112080 - Trần Minh Quang | ĐT: 039 418 1140 | Cảm ơn!</p>
         </div>
     `;
     // -----------------------------------------
@@ -766,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
     leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
     rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
-  
+
     document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
     
     adminLoginSubmit.addEventListener('click', handleAdminLogin);
