@@ -341,8 +341,20 @@ async function loadFunctionContent(item) {
     }
 }
 
+// ==========================================================
+// === HÀM RENDER THÔNG BÁO (ĐÃ CẬP NHẬT VỚI MARQUEE) ===
+// ==========================================================
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
+
+    // --- HTML cho dòng chữ chạy (Marquee) ---
+    const marqueeHtml = `
+        <div class="running-text-marquee">
+            <p>Phiên bản đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng, liên hệ admin</p>
+        </div>
+    `;
+    // -----------------------------------------
+
     if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
         return;
@@ -355,7 +367,7 @@ function renderNotifications(allNotifications) {
         let columnHtml = `<div class="content-column"><h2 class="column-title"><i class="fas ${icon}"></i> ${title}</h2><div class="notification-list">`;
         if (data.length > 0) {
             data.forEach(item => {
-                const newBadgeHtml = item.isNew ? '<span class="new-badge">Mới</span>' : '';
+                const newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
                 const typeBadgeHtml = item.type ? `<span class="type-badge type-${item.type.toLowerCase().replace(/[\/\\s&]/g, '-')}">${item.type}</span>` : '';
                 const linkButtonHtml = item.link ? `<a href="${item.link}" target="_blank" class="notification-link-btn-pb3"><i class="fas fa-link"></i> Link chi tiết</a>` : '';
                 const updateDateHtml = item.updateDate ? `<span class="update-date-badge"><i class="fas fa-calendar-check"></i> ${item.updateDate}</span>` : '';
@@ -370,7 +382,9 @@ function renderNotifications(allNotifications) {
         return columnHtml;
     };
     
-    let finalHtml = '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
+    // Ghép dòng chữ chạy và các cột thông báo
+    let finalHtml = marqueeHtml + '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
+    
     functionContent.innerHTML = finalHtml;
     setupCollapseListeners();
 }
@@ -627,9 +641,8 @@ async function handleAdminLogin() {
     }
 }
 
-// === LOGIC CHO POPUP THÔNG BÁO DI ĐỘNG (ĐÃ CẬP NHẬT) ===
 function handleMobileWelcomePopup() {
-    const alwaysShowPopup = false;
+    const alwaysShowPopup = false; 
 
     const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     const isMobileDevice = window.innerWidth <= 1080 && hasTouch;
@@ -658,7 +671,7 @@ function handleMobileWelcomePopup() {
         const popupHTML = `
             <div class="mobile-popup-content">
                 <button class="mobile-popup-close">×</button>
-                <p>Đây là giao diện cho di động, chọn chế độ "xem trang cho máy tính", hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p>
+                <p>Đây là giao diện cho di động, chọn chế độ "xem trang web cho máy tính" trên trình duyệt, hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p>
                 <div class="mobile-popup-timer">
                     Tự động đóng sau <span class="popup-countdown">15</span> giây...
                 </div>
@@ -749,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function() {
     leftSidebarContainer.addEventListener('mouseenter', () => expandSidebar(leftSidebarContainer));
     leftSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(leftSidebarContainer); });
     rightSidebarContainer.addEventListener('mouseenter', () => expandSidebar(rightSidebarContainer));
-    rightSidebarContainer.addEventListener('mouseleave', () => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
+    rightSidebarContainer.addEventListener('mouseleave', => { if (!isSidebarPinned) collapseSidebar(rightSidebarContainer); });
   
     document.getElementById('btnGoHomeHeader').addEventListener('click', goToHomePage);
     
