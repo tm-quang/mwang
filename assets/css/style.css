@@ -221,7 +221,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 }
 
 /* Chỉ dành cho điện thoại (màn hình hẹp hơn 768px) */
-@media (max-width: 768px) {
+@media (max-width: 1080px) {
     #main-header { padding: 10px 15px; }
     #header-right { gap: 10px; }
     
@@ -264,6 +264,17 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
      .button-container-hang-bk {
         flex-direction: column;
     }
+        /* ================================================= */
+    /* === THÊM ĐOẠN CODE MỚI CỦA BẠN VÀO ĐÂY === */
+    .notification-message-pb3 {
+        font-size: 0.80rem; /* Kích thước chữ nhỏ hơn cho di động */
+        line-height: 1.6;   /* Giảm nhẹ khoảng cách dòng cho dễ đọc */
+    }
+        /* === THÊM TIẾP ĐOẠN NÀY VÀO ĐỂ CHỈNH TIÊU ĐỀ === */
+    .notification-header-pb3 h4 {
+        font-size: 1rem; /* Chỉnh kích thước tiêu đề cho di động */
+    }
+    /* ================================================= */
 }
 
 /* ======================================================= */
