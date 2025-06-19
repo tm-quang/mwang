@@ -99,7 +99,7 @@ const rightMenuData = [
         title: "GIẢI TRÍ",
         icon: "fas fa-gamepad",
          items: [
-            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "danger-color" },
+            { text: "YouTube", href: "https://youtube.com", icon: "fab fa-youtube" , className: "youtube" },
         ]
     }
 ];
