@@ -672,37 +672,47 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
         box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
     }
 /* ======================================================= */
-/* === CSS CHO DÒNG CHỮ CHẠY (MARQUEE) (MỚI THÊM) === */
+/* === CSS CHO DÒNG CHỮ CHẠY (MARQUEE) (ĐÃ TỐI ƯU) === */
 /* ======================================================= */
 .running-text-marquee {
-    padding: 5px 0;
     overflow: hidden;
-    margin-bottom: 10px; /* Khoảng cách với nội dung bên dưới */
-    font-size: 0.95rem; /* Cỡ chữ bằng nội dung thông báo trên desktop */
-    white-space: nowrap; /* Đảm bảo chữ không xuống dòng */
-    box-shadow: var(--shadow-sm);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    padding: 5px 0;
 }
 
-.running-text-marquee p {
+/* Bọc ngoài để chứa animation */
+.marquee-inner {
     display: inline-block;
-    margin: 0;
-    padding-left: 100%; /* Bắt đầu ở bên ngoài lề phải */
-    color: #c00000; /* Chữ màu đỏ */
+    white-space: nowrap;
+    color: #c00000;
     font-weight: 500;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* Tạo hiệu ứng highlight nhẹ cho chữ */
-    animation: marquee-scroll 25s linear infinite;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+    /* Áp dụng animation tại đây */
+    animation: seamless-marquee 20s linear infinite;
 }
 
-/* Animation cho chữ chạy từ phải qua trái */
-@keyframes marquee-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-200%); } /* Di chuyển một khoảng đủ dài để chữ biến mất hẳn */
+/* Nội dung thực tế, được nhân đôi */
+.marquee-inner span {
+    display: inline-block;
+    padding: 0 2rem; /* Tạo một khoảng nhỏ giữa 2 câu lặp lại */
+}
+
+/* Animation chạy liền mạch */
+@keyframes seamless-marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Di chuyển đúng 1/2 chiều dài (bằng 1 câu) */
+    }
 }
 
 /* Tinh chỉnh cỡ chữ trên di động */
 @media (max-width: 768px) {
     .running-text-marquee {
-        font-size: 0.85rem; /* Cỡ chữ bằng nội dung thông báo trên di động */
+        font-size: 0.85rem;
     }
-}   
+}
     
