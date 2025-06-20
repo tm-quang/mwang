@@ -42,7 +42,7 @@
                 <div id="loginTab" class="tab-content active">
                     <form id="loginForm" onsubmit="handleLogin(event)">
                         <div class="form-group">
-                            <input type="text" id="loginUsername" name="username" required placeholder="Tên đăng nhập" autocomplete="off">
+                            <input type="text" id="loginUsername" name="username" required placeholder="Tên đăng nhập">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="form-group">
@@ -59,7 +59,7 @@
                 <div id="signupTab" class="tab-content">
                     <form id="signupForm" onsubmit="handleSignup(event)">
                         <div class="form-group">
-                            <input type="text" id="signupUsername" placeholder="Tên đăng nhập" name="username" required autocomplete="off">
+                            <input type="text" id="signupUsername" placeholder="Tên đăng nhập" name="username" required>
                             <i class="fa-solid fa-user-plus"></i>
                         </div>
                         <div class="form-group">
@@ -100,6 +100,7 @@
         <span id="successAlertMessage-login"></span>
     </div>
 
+
     <div class="support-widget" id="supportWidget">
         <div class="support-info-box" id="supportInfoBox">
             <div class="support-header">
@@ -121,7 +122,7 @@
     <div id="loadingIndicator-login"><div class="spinner"></div></div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/1mQHusZ3I_siMxl97VkF3HYTjpPGWYMxLmRXhzJZVMIw/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwYngixrO7jMyLyvYtTgAieHeppH3kL4brU3Oh4VfGYY3jY9bcBqsZo2dUhpxTRsybV0g/exec";
 
         document.addEventListener('DOMContentLoaded', () => {
             showTab('login');
@@ -141,7 +142,6 @@
             });
         });
 
-        // --- CÁC HÀM HIỂN THỊ THÔNG BÁO ---
         let errorAlertTimeout;
         function showErrorAlert(message) {
             const alertBox = document.getElementById('errorAlert-login');
@@ -166,13 +166,13 @@
             }, 4000);
         }
 
-        // --- CÁC HÀM TIỆN ÍCH KHÁC ---
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
             document.getElementById(tabName + 'Tab').classList.add('active');
             document.getElementById(tabName + '-tab-button').classList.add('active');
         }
+
         function showLoadingIndicator() { document.getElementById('loadingIndicator-login').style.display = 'flex'; }
         function hideLoadingIndicator() { document.getElementById('loadingIndicator-login').style.display = 'none'; }
         function clearForm(formId) {
@@ -180,30 +180,13 @@
             if (form) form.reset();
         }
 
-        // --- CÁC HÀM XỬ LÝ SỰ KIỆN ---
-        async function callApi(action, payload = {}) {
+        async function callApiLogin(action, payload = {}) {
             const url = new URL(API_URL);
             url.searchParams.append('action', action);
             url.searchParams.append('payload', JSON.stringify(payload));
             const response = await fetch(url, { redirect: 'follow' });
             if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
             return await response.json();
-        }
-
-        async function logActivity(action, username) {
-            try {
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                const ipAddress = ipData.ip || 'Không lấy được IP';
-                
-                await callApi('logUserActivity', {
-                    username: username,
-                    action: action,
-                    ipAddress: ipAddress
-                });
-            } catch (error) {
-                console.error('Lỗi khi ghi log hoạt động:', error);
-            }
         }
         
         async function handleLogin(event) {
@@ -213,15 +196,13 @@
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const response = await callApi('handleLogin', { username, password });
+                const response = await callApiLogin('handleLogin', { username, password });
+                hideLoadingIndicator();
                 if (response.success) {
-                    await logActivity('Login', response.fullName);
-
                     sessionStorage.setItem('isAuthenticated', 'true');
                     sessionStorage.setItem('userName', response.fullName);
                     sessionStorage.setItem('userMode', 'user');
                     
-                    hideLoadingIndicator();
                     showSuccessAlert('Đăng nhập thành công, đang chuyển trang...');
                     
                     setTimeout(() => {
@@ -229,7 +210,6 @@
                     }, 2000);
 
                 } else {
-                    hideLoadingIndicator();
                     showErrorAlert(response.message);
                 }
             } catch (error) {
@@ -254,8 +234,8 @@
             const phone = document.getElementById('signupPhone').value;
             
             try {
-                const response = await callApi('handleRegister', { username, password, fullName, phone });
-                hideLoadingIndicator();
+                const response = await callApiLogin('handleRegister', { username, password, fullName, phone });
+                 hideLoadingIndicator();
                 if (response.success) {
                     document.getElementById('signupForm').reset();
                     showSuccessAlert(response.message);
@@ -273,7 +253,6 @@
             sessionStorage.setItem('isAuthenticated', 'true');
             sessionStorage.setItem('userName', 'Khách');
             sessionStorage.setItem('userMode', 'guest');
-            logActivity('Guest Access', 'Guest');
             window.location.href = 'trang-chu.html';
         }
     </script>
