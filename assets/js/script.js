@@ -63,7 +63,7 @@ function showGuestPopup() {
 // PHẦN 1: CẤU HÌNH & API (GIỮ NGUYÊN)
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwhNPrsMsn3GWmo1ezHVZPLJGYTbXRZh1Fu8Lgdjqz02MbxAOJ19Q43wKX5XZGvkgX9Yw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxvo6KRy5ih7NTh_-8K3ss4z5MPohM4t6rc4jGiur-860uswdWbDixeRl9Y2iDEvcuPKw/exec";
 
 const leftMenuData = [
     {
