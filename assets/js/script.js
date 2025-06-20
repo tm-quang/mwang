@@ -1,29 +1,64 @@
 // =================================================================================
-// PHẦN 0: LOGIC KIỂM TRA ĐĂNG NHẬP (GATEKEEPER)
+// PHẦN 0: LOGIC KIỂM TRA ĐĂNG NHẬP (GATEKEEPER) & GUEST MODE
 // =================================================================================
-// Logic này phải được chạy đầu tiên để bảo vệ trang chính.
 (function() {
     // Chỉ thực hiện trên trang chính, không chạy trên trang đăng nhập (index.html)
-    // Giả sử trang chính của bạn sau khi đổi tên là "trang-chu.html"
-    if (window.location.pathname.endsWith('trang-chu.html')) {
+    if (window.location.pathname.includes('trang-chu.html')) {
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
 
         if (isAuthenticated !== 'true') {
             // Nếu chưa đăng nhập, chuyển hướng về trang login (index.html)
             window.location.href = 'index.html';
-        } else {
-            // Nếu đã đăng nhập, hiển thị tên người dùng và làm trang web hiện ra
-            const userName = sessionStorage.getItem('userName');
-            const greetingText = document.querySelector('.greeting-text');
-
-            if (userName && greetingText) {
-                greetingText.textContent = `Xin chào, ${userName}`;
-            }
-            // Hiển thị nội dung trang chính sau khi đã xác thực
-            document.body.style.visibility = 'visible';
+            return; 
         }
+
+        // Nếu đã xác thực, tiếp tục xử lý
+        const userName = sessionStorage.getItem('userName') || 'User';
+        const userMode = sessionStorage.getItem('userMode');
+        const greetingText = document.querySelector('.greeting-text');
+
+        if (greetingText) {
+            greetingText.textContent = `Xin chào, ${userName}`;
+        }
+        
+        if (userMode === 'guest') {
+            document.body.classList.add('guest-mode');
+            showGuestPopup();
+        }
+
+        // Luôn hiển thị body sau khi kiểm tra xong
+        document.body.style.visibility = 'visible';
     }
 })();
+
+function showGuestPopup() {
+    if (document.getElementById('guest-popup-container')) return;
+
+    const popupHTML = `
+        <div class="guest-popup-header">
+            <h4>Thông Báo</h4>
+            <button class="guest-popup-close-btn">×</button>
+        </div>
+        <div class="guest-popup-body">
+            Bạn đang sử dụng tài khoản khách, đăng nhập hoặc đăng ký để sử dụng đầy đủ chức năng.
+        </div>
+        <div class="guest-popup-timer-bar"></div>
+    `;
+    const popup = document.createElement('div');
+    popup.id = 'guest-popup-container';
+    popup.innerHTML = popupHTML;
+    document.body.appendChild(popup);
+
+    const closePopup = () => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 500);
+    };
+
+    setTimeout(() => popup.classList.add('show'), 100);
+    setTimeout(closePopup, 15000);
+
+    popup.querySelector('.guest-popup-close-btn').addEventListener('click', closePopup);
+}
 
 
 // =================================================================================
@@ -135,8 +170,7 @@ const rightMenuData = [
 // =================================================================================
 // PHẦN 2: LOGIC GIAO DIỆN (GIỮ NGUYÊN VÀ CẬP NHẬT)
 // =================================================================================
-
-// DOM Elements
+// (Các hàm và biến còn lại giữ nguyên như cũ)
 const functionContent = document.getElementById('functionContent');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const currentPageTitle = document.getElementById('current-page-title');
@@ -154,8 +188,6 @@ const sidebarToggleButton = document.getElementById('sidebar-toggle-btn');
 const customConfirmModal = document.getElementById('customConfirmModal');
 const mobileOverlay = document.getElementById('mobile-overlay');
 
-
-// State & Timers
 let dropdownTimeout;
 const HIDE_DELAY = 300;
 let isAdminAuthenticated = false; 
@@ -381,19 +413,14 @@ async function loadFunctionContent(item) {
     }
 }
 
-// ==========================================================
-// === HÀM RENDER THÔNG BÁO (ĐÃ CẬP NHẬT VỚI MARQUEE) ===
-// ==========================================================
 function renderNotifications(allNotifications) {
     if (!functionContent) return;
 
-    // --- HTML cho dòng chữ chạy (Marquee) ---
     const marqueeHtml = `
         <div class="running-text-marquee">
             <p>Trang đang được hoàn thiện, nếu có lỗi trong quá trình sử dụng | Liên hệ để báo lỗi hoặc góp ý: 112080 - Trần Minh Quang | ĐT: 039 418 1140 | Cảm ơn!</p>
         </div>
     `;
-    // -----------------------------------------
 
     if (allNotifications.length === 1 && allNotifications[0].category === 'Lỗi') {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">${allNotifications[0].message}</p>`;
@@ -422,7 +449,6 @@ function renderNotifications(allNotifications) {
         return columnHtml;
     };
     
-    // Ghép dòng chữ chạy và các cột thông báo
     let finalHtml = marqueeHtml + '<div class="columns-container-pb2">' + createColumnHtml('THÔNG BÁO CÔNG VIỆC TRIỂN KHAI', 'fa-bullhorn', trienKhaiData) + createColumnHtml('THÔNG BÁO CÔNG VIỆC MTAY2', 'fa-users', noiBoData) + '</div>';
     
     functionContent.innerHTML = finalHtml;
@@ -647,10 +673,9 @@ function updateClock() {
 }
 
 function forceLogout(message) {
-    sessionStorage.removeItem('isAuthenticated');
-    sessionStorage.removeItem('userName');
+    sessionStorage.clear();
     alert(message);
-    window.location.href = 'index.html'; // Chuyển về trang đăng nhập
+    window.location.href = 'index.html';
 }
 
 function handleAdminLogin() {
@@ -763,8 +788,7 @@ function handleMobileWelcomePopup() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Chỉ thực thi logic của trang chính nếu đây là trang-chu.html
-    if (window.location.pathname.endsWith('trang-chu.html')) {
+    if (window.location.pathname.includes('trang-chu.html')) {
         renderLeftMenu();
         renderRightMenu();
         
