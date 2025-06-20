@@ -2,14 +2,17 @@
 // PHẦN 0: LOGIC KIỂM TRA ĐĂNG NHẬP (GATEKEEPER) & GUEST MODE
 // =================================================================================
 (function() {
+    // Chỉ thực hiện trên trang chính, không chạy trên trang đăng nhập (index.html)
     if (window.location.pathname.includes('trang-chu.html')) {
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
 
         if (isAuthenticated !== 'true') {
+            // Nếu chưa đăng nhập, chuyển hướng về trang login (index.html)
             window.location.href = 'index.html';
             return; 
         }
 
+        // Nếu đã xác thực, tiếp tục xử lý
         const userName = sessionStorage.getItem('userName') || 'User';
         const userMode = sessionStorage.getItem('userMode');
         const greetingText = document.querySelector('.greeting-text');
@@ -23,6 +26,7 @@
             showGuestPopup();
         }
 
+        // Luôn hiển thị body sau khi kiểm tra xong
         document.body.style.visibility = 'visible';
     }
 })();
@@ -55,11 +59,13 @@ function showGuestPopup() {
 
     popup.querySelector('.guest-popup-close-btn').addEventListener('click', closePopup);
 }
+
+
 // =================================================================================
-// PHẦN 1: CẤU HÌNH & API (GIỮ NGUYÊN)
+// PHẦN 1: CẤU HÌNH & API
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxSyjzg8iyGV1nv3ZfERJ-bEtBjkTxlBDpR7Rd8N0E07tJbQ-TrFu4vp4y9pu-IKviPFw/exec";
+const API_URL = "https://script.google.com/macros/s/1mQHusZ3I_siMxl97VkF3HYTjpPGWYMxLmRXhzJZVMIw/exec";
 
 const leftMenuData = [
     {
@@ -162,9 +168,9 @@ const rightMenuData = [
 ];
 
 // =================================================================================
-// PHẦN 2: LOGIC GIAO DIỆN (GIỮ NGUYÊN VÀ CẬP NHẬT)
+// PHẦN 2: LOGIC GIAO DIỆN
 // =================================================================================
-// (Các hàm và biến còn lại giữ nguyên như cũ)
+
 const functionContent = document.getElementById('functionContent');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const currentPageTitle = document.getElementById('current-page-title');
@@ -192,10 +198,6 @@ let isMobileView = window.innerWidth <= 1080;
 
 async function callApi(action, payload = {}) {
     try {
-        if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
-            throw new Error("API_URL chưa được cấu hình trong file script.js.");
-        }
-        
         const url = new URL(API_URL);
         url.searchParams.append('action', action);
         url.searchParams.append('payload', JSON.stringify(payload));
@@ -211,6 +213,22 @@ async function callApi(action, payload = {}) {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải dữ liệu: ${error.message}</p>`;
         loadingSpinner.style.display = 'none';
         throw error;
+    }
+}
+
+async function logActivity(action, username) {
+    try {
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const ipAddress = ipData.ip || 'Không lấy được IP';
+
+        await callApi('logUserActivity', {
+            username: username,
+            action: action,
+            ipAddress: ipAddress
+        });
+    } catch (error) {
+        console.error('Lỗi khi ghi log hoạt động:', error);
     }
 }
 
@@ -308,7 +326,7 @@ function renderLeftMenu() {
                 } else {
                     const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); };
                     dropdownButton.onmouseenter = () => { if(!isMobileView) { clearTimeout(dropdownTimeout); showMenu(); } };
-                    dropdownButton.onclick = () => { if(isMobileView) { showMenu(); } }; // For touch devices
+                    dropdownButton.onclick = () => { if(isMobileView) { showMenu(); } };
                     dropdownButton.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
                     dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
                     dropdownMenu.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
@@ -468,7 +486,7 @@ function setupCollapseListeners() {
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = '';
+    currentPageTitle.textContent = 'TRANG CHỦ';
     try {
         const response = await callApi('getNotifications');
         if (response.success && Array.isArray(response.data)) {
@@ -629,7 +647,6 @@ async function handleSearchHangBK() {
         }
     } catch (error) {
         errorMessage.textContent = 'Đã xảy ra lỗi: ' + error.message;
-        console.error("Lỗi gọi API tìm hàng BK:", error);
     } finally {
         searchButton.disabled = false;
         buttonText.textContent = 'Tìm Kiếm';
@@ -666,7 +683,6 @@ function updateClock() {
     if (dateElement) dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-// HÀM forceLogout được cập nhật để xóa sessionStorage
 function forceLogout(message) {
     sessionStorage.clear();
     alert(message);
@@ -780,21 +796,7 @@ function handleMobileWelcomePopup() {
         showPopup();
     }
 }
-async function logActivity(action, username) {
-    try {
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipResponse.json();
-        const ipAddress = ipData.ip || 'Không lấy được IP';
 
-        await callApi('logUserActivity', {
-            username: username,
-            action: action,
-            ipAddress: ipAddress
-        });
-    } catch (error) {
-        console.error('Lỗi khi ghi log hoạt động:', error);
-    }
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname.includes('trang-chu.html')) {
@@ -855,13 +857,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('logoutButton').addEventListener('click', () => { customConfirmModal.style.display = 'flex'; });
         document.getElementById('confirmBtnNo').addEventListener('click', () => { customConfirmModal.style.display = 'none'; });
+        
         document.getElementById('confirmBtnYes').addEventListener('click', async () => {
             customConfirmModal.style.display = 'none';
-            
-            // Ghi log hành động đăng xuất trước
             await logActivity('Logout', sessionStorage.getItem('userName'));
-            
-            // Sau đó mới thực hiện đăng xuất
             forceLogout('Bạn đã đăng xuất.');
         });
 
