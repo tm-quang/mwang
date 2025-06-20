@@ -63,9 +63,8 @@ function showGuestPopup() {
 // PHẦN 1: CẤU HÌNH & LOGIC GỌI API CHUNG
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxvo6KRy5ih7NTh_-8K3ss4z5MPohM4t6rc4jGiur-860uswdWbDixeRl9Y2iDEvcuPKw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwlVVQPNrt1CrUek0Wum5pt_Jd1G-qTjQYwNhkGo6lwf5Pf73CL32di1zYguwr0TkcsoA/exec";
 
-// SỬA LỖI: Di chuyển khai báo biến lên đầu để tránh lỗi "initialization"
 let errorAlertTimeout;
 let successAlertTimeout;
 
@@ -237,13 +236,10 @@ function handleGuestLogin() {
 // =================================================================================
 
 async function handleLogout(message) {
-    const username = sessionStorage.getItem('loginUsername') || 'N/A';
-    const userMode = sessionStorage.getItem('userMode');
-
-    if (userMode !== 'guest') {
+    const username = sessionStorage.getItem('loginUsername');
+    if (username && sessionStorage.getItem('userMode') !== 'guest') {
         try {
-            const ipAddress = await getUserIP();
-            callApi('logLogout', { username: username, ipAddress: ipAddress });
+            await callApi('logLogout', { username: username });
         } catch (error) {
             console.error("Không thể ghi log đăng xuất:", error);
         }
@@ -253,6 +249,29 @@ async function handleLogout(message) {
     alert(message);
     window.location.href = 'index.html';
 }
+
+/**
+ * CẬP NHẬT MỚI: Tự động đăng xuất khi người dùng tắt trang web.
+ * Sử dụng navigator.sendBeacon để đảm bảo yêu cầu được gửi đi một cách đáng tin cậy.
+ */
+window.addEventListener('unload', function() {
+    // Chỉ thực hiện khi người dùng đã đăng nhập và không phải là khách
+    if (sessionStorage.getItem('isAuthenticated') === 'true') {
+        const username = sessionStorage.getItem('loginUsername');
+        if (username && sessionStorage.getItem('userMode') !== 'guest') {
+            
+            // Tạo URL và payload cho beacon
+            const beaconPayload = JSON.stringify({ username: username });
+            const beaconURL = new URL(API_URL);
+            beaconURL.searchParams.append('action', 'logLogout');
+            beaconURL.searchParams.append('payload', beaconPayload);
+
+            // Gửi tín hiệu đến server
+            navigator.sendBeacon(beaconURL);
+        }
+    }
+});
+
 
 // --- Các hàm và event listeners cho trang chủ ---
 document.addEventListener('DOMContentLoaded', function() {
@@ -971,6 +990,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (supportWidget && supportWidget.classList.contains('open')) {
                 supportWidget.classList.remove('open');
             }
+        });
+        
+        // Logic cho icon hiện mật khẩu
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const passwordInput = this.previousElementSibling;
+                if (passwordInput && (passwordInput.type === 'password' || passwordInput.type === 'text')) {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                }
+            });
         });
     }
 });
