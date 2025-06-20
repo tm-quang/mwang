@@ -1,4 +1,4 @@
-/* GIAO DIỆN TRANG CHÍNH */
+/* GIAO DIỆN TRANG CHÍNH (GIỮ NGUYÊN) */
 :root {
     --primary-color: #0066ff;
     --primary-hover: #3527cf;
@@ -329,7 +329,16 @@ body.login-page-body {
 .login-page-body .tab-button.active { background-color: #fff; color: #0056b3; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 .login-page-body .form-group { margin-bottom: 20px; position: relative; }
 .login-page-body .form-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; transition: color 0.3s ease; }
-.login-page-body .form-group input { width: 100%; padding: 14px 14px 14px 45px; border: 1px solid #ddd; border-radius: 8px; font-size: 1em; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+.login-page-body .form-group input { 
+    width: 100%; 
+    padding: 12px 14px 12px 45px; /* *** ĐÃ SỬA LẠI PADDING Ở ĐÂY *** */
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    font-size: 1em; 
+    font-family: 'Poppins', sans-serif; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+    box-sizing: border-box; /* Thêm để tính toán kích thước nhất quán */
+}
 .login-page-body .form-group input:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); }
 .login-page-body .form-group input:focus + i { color: #007bff; }
 
