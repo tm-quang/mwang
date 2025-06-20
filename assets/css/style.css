@@ -30,7 +30,6 @@
 }
 body { margin: 0; padding: 0; font-family: var(--font-family); background-color: var(--bg-main); color: var(--text-primary); display: flex; flex-direction: column; height: 100vh; overflow: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-/* Các style chung khác của trang chính... (Giữ nguyên) */
 #main-header { background-color: #0056b3; color: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); border-bottom: 1px solid var(--border-color); flex-shrink: 0; z-index: 10; }
 #header-left { display: flex; align-items: center; gap: 16px; font-size: 1rem; font-weight: 500; }
 #header-left span { cursor: pointer; display: flex; align-items: center; gap: 8px; color: white; transition: color 0.2s ease; }
