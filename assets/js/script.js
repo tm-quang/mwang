@@ -993,14 +993,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Logic cho icon hiện mật khẩu
-        document.querySelectorAll('.toggle-password').forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const passwordInput = this.previousElementSibling;
-                if (passwordInput && (passwordInput.type === 'password' || passwordInput.type === 'text')) {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
+document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                // Tìm đến thẻ cha .form-group
+                const parent = e.currentTarget.closest('.form-group');
+                if (parent) {
+                    // Tìm thẻ input bên trong thẻ cha đó
+                    const passwordInput = parent.querySelector('input');
+                    if (passwordInput) {
+                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordInput.setAttribute('type', type);
+                        
+                        // Đổi icon
+                        this.classList.toggle('fa-eye');
+                        this.classList.toggle('fa-eye-slash');
+                    }
                 }
             });
         });
