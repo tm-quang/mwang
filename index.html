@@ -91,18 +91,16 @@
         </div>
     </div>
     
-    <div id="popupOverlay-login" class="popup-overlay">
-        <div id="popupContainer-login" class="popup-container">
-            <div id="popupIcon-login" class="popup-icon"></div>
-            <h3 id="popupTitle-login" class="popup-title"></h3>
-            <p id="popupMessage-login" class="popup-message"></p>
-            <button id="popupCloseBtn-login" class="popup-close-btn">Đóng</button>
-        </div>
-    </div>
-    <div id="errorAlert-login">
+    <div id="errorAlert-login" class="alert-toast">
         <i class="fas fa-exclamation-circle"></i>
         <span id="errorAlertMessage-login"></span>
     </div>
+    <div id="successAlert-login" class="alert-toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="successAlertMessage-login"></span>
+    </div>
+
+
     <div class="support-widget" id="supportWidget">
         <div class="support-info-box" id="supportInfoBox">
             <div class="support-header">
@@ -128,11 +126,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             showTab('login');
-            const popupOverlay = document.getElementById('popupOverlay-login');
-            popupOverlay.addEventListener('click', (event) => {
-                if (event.target === popupOverlay) { hidePopup(); }
-            });
-            document.getElementById('popupCloseBtn-login').addEventListener('click', hidePopup);
             const supportWidget = document.getElementById('supportWidget');
             const supportBubble = document.getElementById('supportBubble');
             supportBubble.addEventListener('click', (event) => {
@@ -149,33 +142,6 @@
             });
         });
 
-        function showPopup(titleText, messageText, type, callback) {
-            const overlay = document.getElementById('popupOverlay-login');
-            const container = document.getElementById('popupContainer-login');
-            const icon = document.getElementById('popupIcon-login');
-            const title = document.getElementById('popupTitle-login');
-            const msg = document.getElementById('popupMessage-login');
-            const closeBtn = document.getElementById('popupCloseBtn-login');
-            
-            document.getElementById('supportWidget').style.zIndex = '1501';
-            
-            title.textContent = titleText;
-            msg.textContent = messageText;
-            container.className = `popup-container ${type}`;
-            icon.innerHTML = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
-            overlay.classList.add('show');
-
-            closeBtn.onclick = () => {
-                hidePopup();
-                if (callback) callback();
-            };
-        }
-
-        function hidePopup() {
-            document.getElementById('popupOverlay-login').classList.remove('show');
-            document.getElementById('supportWidget').style.zIndex = '100';
-        }
-        
         let errorAlertTimeout;
         function showErrorAlert(message) {
             const alertBox = document.getElementById('errorAlert-login');
@@ -184,6 +150,18 @@
             alertBox.classList.add('show');
             clearTimeout(errorAlertTimeout);
             errorAlertTimeout = setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 4000);
+        }
+
+        let successAlertTimeout;
+        function showSuccessAlert(message) {
+            const alertBox = document.getElementById('successAlert-login');
+            const msgSpan = document.getElementById('successAlertMessage-login');
+            if(msgSpan) msgSpan.textContent = message;
+            alertBox.classList.add('show');
+            clearTimeout(successAlertTimeout);
+            successAlertTimeout = setTimeout(() => {
                 alertBox.classList.remove('show');
             }, 4000);
         }
@@ -225,18 +203,18 @@
                     sessionStorage.setItem('userName', response.fullName);
                     sessionStorage.setItem('userMode', 'user');
                     
-                    showPopup('Đăng nhập thành công!', 'Bạn sẽ được chuyển hướng trong giây lát...', 'success');
+                    showSuccessAlert('Đăng nhập thành công, đang chuyển trang...');
                     
                     setTimeout(() => {
                          window.location.href = 'trang-chu.html';
-                    }, 2000); // Tự động chuyển trang sau 2 giây
+                    }, 2000);
 
                 } else {
                     showErrorAlert(response.message);
                 }
             } catch (error) {
                 hideLoadingIndicator();
-                showPopup('Lỗi hệ thống', error.message, 'error');
+                showErrorAlert('Lỗi hệ thống: ' + error.message);
             }
         }
 
@@ -260,15 +238,14 @@
                  hideLoadingIndicator();
                 if (response.success) {
                     document.getElementById('signupForm').reset();
-                    showPopup('Đăng ký thành công!', response.message, 'success', () => {
-                        showTab('login');
-                    });
+                    showSuccessAlert(response.message);
+                    showTab('login');
                 } else {
-                    showPopup('Đăng ký thất bại', response.message, 'error');
+                    showErrorAlert(response.message);
                 }
             } catch (error) {
                 hideLoadingIndicator();
-                showPopup('Lỗi hệ thống', error.message, 'error');
+                showErrorAlert('Lỗi hệ thống: ' + error.message);
             }
         }
 
