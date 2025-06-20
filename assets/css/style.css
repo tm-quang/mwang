@@ -552,33 +552,34 @@ body.login-page-body {
     from { width: 100%; }
     to { width: 0%; }
 }
-/* --- CSS CHO ICON HIỆN/ẨN MẬT KHẨU --- */
-.form-group {
-    position: relative;
+
+/* ======================================================= */
+/* === SỬA LỖI HIỂN THỊ ICON MẬT KHẨU (Bản sửa cuối) === */
+/* ======================================================= */
+
+/* Định vị lại icon bên trái (khóa, user,...) một cách chính xác */
+.login-page-body .form-group > i:not(.toggle-password) {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    z-index: 2;
 }
 
-.toggle-password {
+/* Định vị lại icon con mắt bên phải */
+.login-page-body .form-group .toggle-password {
     position: absolute;
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
     color: #aaa;
     cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.toggle-password:hover {
-    color: var(--primary-color);
-}
-/* SỬA LỖI: Tăng khoảng đệm bên phải cho các ô mật khẩu để có chỗ cho icon con mắt */
-.login-page-body .form-group input[type="password"],
-.login-page-body .form-group input[type="text"][id*="Password"] /* Áp dụng khi mật khẩu đang hiện */
-{
-    padding-right: 45px; /* Tăng khoảng đệm phải */
-}
-
-/* Điều chỉnh vị trí icon ổ khóa để không bị ảnh hưởng */
-.login-page-body .form-group .fa-lock,
-.login-page-body .form-group .fa-key {
     z-index: 2;
+}
+
+/* Thêm khoảng đệm bên phải cho các ô input có icon con mắt */
+.login-page-body .form-group input[type="password"],
+.login-page-body .form-group input[type="text"][id*="Password"] {
+    padding-right: 45px !important; /* Thêm !important để đảm bảo được áp dụng */
 }
