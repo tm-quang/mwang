@@ -62,10 +62,10 @@ function showGuestPopup() {
 
 
 // =================================================================================
-// PHẦN 1: CẤU HÌNH & API
+// PHẦN 1: CẤU HÌNH & API (GIỮ NGUYÊN)
 // =================================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxT8huipsWW2yZ2RL6f45rWhnt9hiXSzAbQTxzM1HAXojZgK1ZduyaiZPzEfSS8mo5LaQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwYngixrO7jMyLyvYtTgAieHeppH3kL4brU3Oh4VfGYY3jY9bcBqsZo2dUhpxTRsybV0g/exec";
 
 const leftMenuData = [
     {
@@ -168,9 +168,9 @@ const rightMenuData = [
 ];
 
 // =================================================================================
-// PHẦN 2: LOGIC GIAO DIỆN
+// PHẦN 2: LOGIC GIAO DIỆN (GIỮ NGUYÊN VÀ CẬP NHẬT)
 // =================================================================================
-
+// (Các hàm và biến còn lại giữ nguyên như cũ)
 const functionContent = document.getElementById('functionContent');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const currentPageTitle = document.getElementById('current-page-title');
@@ -198,6 +198,10 @@ let isMobileView = window.innerWidth <= 1080;
 
 async function callApi(action, payload = {}) {
     try {
+        if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
+            throw new Error("API_URL chưa được cấu hình trong file script.js.");
+        }
+        
         const url = new URL(API_URL);
         url.searchParams.append('action', action);
         url.searchParams.append('payload', JSON.stringify(payload));
@@ -213,22 +217,6 @@ async function callApi(action, payload = {}) {
         functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải dữ liệu: ${error.message}</p>`;
         loadingSpinner.style.display = 'none';
         throw error;
-    }
-}
-
-async function logActivity(action, username) {
-    try {
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipResponse.json();
-        const ipAddress = ipData.ip || 'Không lấy được IP';
-
-        await callApi('logUserActivity', {
-            username: username,
-            action: action,
-            ipAddress: ipAddress
-        });
-    } catch (error) {
-        console.error('Lỗi khi ghi log hoạt động:', error);
     }
 }
 
@@ -326,7 +314,7 @@ function renderLeftMenu() {
                 } else {
                     const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); };
                     dropdownButton.onmouseenter = () => { if(!isMobileView) { clearTimeout(dropdownTimeout); showMenu(); } };
-                    dropdownButton.onclick = () => { if(isMobileView) { showMenu(); } };
+                    dropdownButton.onclick = () => { if(isMobileView) { showMenu(); } }; // For touch devices
                     dropdownButton.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
                     dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout);
                     dropdownMenu.onmouseleave = () => { if(!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } };
@@ -486,7 +474,7 @@ function setupCollapseListeners() {
 async function loadNotificationsPage() {
     functionContent.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    currentPageTitle.textContent = 'TRANG CHỦ';
+    currentPageTitle.textContent = '';
     try {
         const response = await callApi('getNotifications');
         if (response.success && Array.isArray(response.data)) {
@@ -647,6 +635,7 @@ async function handleSearchHangBK() {
         }
     } catch (error) {
         errorMessage.textContent = 'Đã xảy ra lỗi: ' + error.message;
+        console.error("Lỗi gọi API tìm hàng BK:", error);
     } finally {
         searchButton.disabled = false;
         buttonText.textContent = 'Tìm Kiếm';
@@ -857,10 +846,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('logoutButton').addEventListener('click', () => { customConfirmModal.style.display = 'flex'; });
         document.getElementById('confirmBtnNo').addEventListener('click', () => { customConfirmModal.style.display = 'none'; });
-        
-        document.getElementById('confirmBtnYes').addEventListener('click', async () => {
+        document.getElementById('confirmBtnYes').addEventListener('click', () => {
             customConfirmModal.style.display = 'none';
-            await logActivity('Logout', sessionStorage.getItem('userName'));
             forceLogout('Bạn đã đăng xuất.');
         });
 
