@@ -48,6 +48,7 @@
                         <div class="form-group">
                             <input type="password" id="loginPassword" name="password" required placeholder="Mật khẩu">
                             <i class="fa-solid fa-lock"></i>
+                            <i class="fa-solid fa-eye-slash toggle-password"></i>
                         </div>
                         <div class="button-group">
                            <button type="submit" class="btn">Đăng nhập</button>
@@ -65,10 +66,12 @@
                         <div class="form-group">
                             <input type="password" id="signupPassword" placeholder="Mật khẩu" name="password" required>
                             <i class="fa-solid fa-lock"></i>
+                             <i class="fa-solid fa-eye-slash toggle-password"></i>
                         </div>
                         <div class="form-group">
                             <input type="password" id="signupConfirmPassword" placeholder="Xác nhận mật khẩu" required>
                             <i class="fa-solid fa-key"></i>
+                             <i class="fa-solid fa-eye-slash toggle-password"></i>
                         </div>
                         <div class="form-group">
                             <input type="text" id="signupFullName" placeholder="Tên đầy đủ của bạn" name="fullName" required>
@@ -101,22 +104,7 @@
     </div>
 
     <div class="support-widget" id="supportWidget">
-        <div class="support-info-box" id="supportInfoBox">
-            <div class="support-header">
-                <h4>Liên Hệ Hỗ Trợ:</h4>
-                <button class="close-support-btn" id="closeSupportBox">×</button>
-            </div>
-            <div class="support-body">
-                <p>112080 - Trần Minh Quang</p>
-                <a href="mailto:minhquang030@gmail.com">minhquang030@gmail.com</a>
-                <p style="margin-top: 10px;">Hotline:</p>
-                <strong>0933960788</strong>
-            </div>
         </div>
-        <button class="support-bubble" id="supportBubble">
-            <i class="fas fa-headset"></i>
-        </button>
-    </div>
 
     <div id="loadingIndicator-login"><div class="spinner"></div></div>
 
