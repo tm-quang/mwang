@@ -552,3 +552,21 @@ body.login-page-body {
     from { width: 100%; }
     to { width: 0%; }
 }
+/* --- CSS CHO ICON HIỆN/ẨN MẬT KHẨU --- */
+.form-group {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: var(--primary-color);
+}
