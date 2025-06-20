@@ -2,17 +2,14 @@
 // PHẦN 0: LOGIC KIỂM TRA ĐĂNG NHẬP (GATEKEEPER) & GUEST MODE
 // =================================================================================
 (function() {
-    // Chỉ thực hiện trên trang chính, không chạy trên trang đăng nhập (index.html)
     if (window.location.pathname.includes('trang-chu.html')) {
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
 
         if (isAuthenticated !== 'true') {
-            // Nếu chưa đăng nhập, chuyển hướng về trang login (index.html)
             window.location.href = 'index.html';
             return; 
         }
 
-        // Nếu đã xác thực, tiếp tục xử lý
         const userName = sessionStorage.getItem('userName') || 'User';
         const userMode = sessionStorage.getItem('userMode');
         const greetingText = document.querySelector('.greeting-text');
@@ -26,7 +23,6 @@
             showGuestPopup();
         }
 
-        // Luôn hiển thị body sau khi kiểm tra xong
         document.body.style.visibility = 'visible';
     }
 })();
@@ -59,8 +55,6 @@ function showGuestPopup() {
 
     popup.querySelector('.guest-popup-close-btn').addEventListener('click', closePopup);
 }
-
-
 // =================================================================================
 // PHẦN 1: CẤU HÌNH & API (GIỮ NGUYÊN)
 // =================================================================================
@@ -672,6 +666,7 @@ function updateClock() {
     if (dateElement) dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
+// HÀM forceLogout được cập nhật để xóa sessionStorage
 function forceLogout(message) {
     sessionStorage.clear();
     alert(message);
@@ -785,7 +780,21 @@ function handleMobileWelcomePopup() {
         showPopup();
     }
 }
+async function logActivity(action, username) {
+    try {
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const ipAddress = ipData.ip || 'Không lấy được IP';
 
+        await callApi('logUserActivity', {
+            username: username,
+            action: action,
+            ipAddress: ipAddress
+        });
+    } catch (error) {
+        console.error('Lỗi khi ghi log hoạt động:', error);
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname.includes('trang-chu.html')) {
@@ -846,8 +855,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('logoutButton').addEventListener('click', () => { customConfirmModal.style.display = 'flex'; });
         document.getElementById('confirmBtnNo').addEventListener('click', () => { customConfirmModal.style.display = 'none'; });
-        document.getElementById('confirmBtnYes').addEventListener('click', () => {
+        document.getElementById('confirmBtnYes').addEventListener('click', async () => {
             customConfirmModal.style.display = 'none';
+            
+            // Ghi log hành động đăng xuất trước
+            await logActivity('Logout', sessionStorage.getItem('userName'));
+            
+            // Sau đó mới thực hiện đăng xuất
             forceLogout('Bạn đã đăng xuất.');
         });
 
