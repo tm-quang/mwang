@@ -570,3 +570,15 @@ body.login-page-body {
 .toggle-password:hover {
     color: var(--primary-color);
 }
+/* SỬA LỖI: Tăng khoảng đệm bên phải cho các ô mật khẩu để có chỗ cho icon con mắt */
+.login-page-body .form-group input[type="password"],
+.login-page-body .form-group input[type="text"][id*="Password"] /* Áp dụng khi mật khẩu đang hiện */
+{
+    padding-right: 45px; /* Tăng khoảng đệm phải */
+}
+
+/* Điều chỉnh vị trí icon ổ khóa để không bị ảnh hưởng */
+.login-page-body .form-group .fa-lock,
+.login-page-body .form-group .fa-key {
+    z-index: 2;
+}
