@@ -1,4 +1,4 @@
-/* GIAO DIỆN TRANG CHÍNH (GIỮ NGUYÊN) */
+/* GIAO DIỆN TRANG CHÍNH */
 :root {
     --primary-color: #0066ff;
     --primary-hover: #3527cf;
@@ -331,13 +331,13 @@ body.login-page-body {
 .login-page-body .form-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; transition: color 0.3s ease; }
 .login-page-body .form-group input { 
     width: 100%; 
-    padding: 12px 14px 12px 45px; /* *** ĐÃ SỬA LẠI PADDING Ở ĐÂY *** */
+    padding: 12px 14px 12px 45px;
     border: 1px solid #ddd; 
     border-radius: 8px; 
     font-size: 1em; 
     font-family: 'Poppins', sans-serif; 
     transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-    box-sizing: border-box; /* Thêm để tính toán kích thước nhất quán */
+    box-sizing: border-box;
 }
 .login-page-body .form-group input:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); }
 .login-page-body .form-group input:focus + i { color: #007bff; }
@@ -388,21 +388,37 @@ body.login-page-body {
 #loadingIndicator-login { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); justify-content: center; align-items: center; z-index: 2000; }
 .login-page-body .spinner { border: 8px solid #f3f3f3; border-top: 8px solid #007bff; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
 
-.login-page-body .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1500; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
-.login-page-body .popup-overlay.show { opacity: 1; pointer-events: auto; }
-.login-page-body .popup-container { background: #fff; color: #333; padding: 30px 40px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); text-align: center; width: 90%; max-width: 380px; transform: scale(0.9); transition: transform 0.3s ease-in-out; }
-.login-page-body .popup-overlay.show .popup-container { transform: scale(1); }
-.login-page-body .popup-icon { font-size: 4rem; margin-bottom: 15px; }
-.login-page-body .popup-container.success .popup-icon { color: var(--success-color); }
-.login-page-body .popup-container.error .popup-icon { color: var(--danger-color); }
-.login-page-body .popup-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
-.login-page-body .popup-message { font-size: 1rem; color: #666; margin-bottom: 25px; }
-.login-page-body .popup-close-btn { background: #007bff; color: white; padding: 10px 30px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
-.login-page-body .popup-close-btn:hover { background: #0056b3; }
+/* CSS cho Alert Toast ở góc màn hình */
+.alert-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2500;
+    opacity: 0;
+    transform: translateX(calc(100% + 20px));
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.alert-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.alert-toast i {
+    font-size: 1.2rem;
+}
+#errorAlert-login {
+    background-color: var(--danger-color);
+}
+#successAlert-login {
+    background-color: var(--success-color);
+}
 
-#errorAlert-login { position: fixed; bottom: 20px; right: 20px; background-color: var(--danger-color); color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; z-index: 1600; opacity: 0; transform: translateX(calc(100% + 20px)); transition: opacity 0.4s ease, transform 0.4s ease; }
-#errorAlert-login.show { opacity: 1; transform: translateX(0); }
-#errorAlert-login i { font-size: 1.2rem; }
 
 .login-page-body .support-widget { position: fixed; bottom: 20px; right: 20px; z-index: 100; transition: z-index 0.1s linear; }
 .login-page-body .support-bubble { width: 60px; height: 60px; background: #007bff; color: #fff; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease, background-color 0.2s ease; }
