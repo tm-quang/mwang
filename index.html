@@ -149,12 +149,13 @@
             });
         });
 
-        function showPopup(titleText, messageText, type) {
+        function showPopup(titleText, messageText, type, callback) {
             const overlay = document.getElementById('popupOverlay-login');
             const container = document.getElementById('popupContainer-login');
             const icon = document.getElementById('popupIcon-login');
             const title = document.getElementById('popupTitle-login');
             const msg = document.getElementById('popupMessage-login');
+            const closeBtn = document.getElementById('popupCloseBtn-login');
             
             document.getElementById('supportWidget').style.zIndex = '1501';
             
@@ -163,6 +164,11 @@
             container.className = `popup-container ${type}`;
             icon.innerHTML = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
             overlay.classList.add('show');
+
+            closeBtn.onclick = () => {
+                hidePopup();
+                if (callback) callback();
+            };
         }
 
         function hidePopup() {
@@ -173,7 +179,8 @@
         let errorAlertTimeout;
         function showErrorAlert(message) {
             const alertBox = document.getElementById('errorAlert-login');
-            document.getElementById('errorAlertMessage-login').textContent = message;
+            const msgSpan = document.getElementById('errorAlertMessage-login');
+            if(msgSpan) msgSpan.textContent = message;
             alertBox.classList.add('show');
             clearTimeout(errorAlertTimeout);
             errorAlertTimeout = setTimeout(() => {
@@ -218,11 +225,12 @@
                     sessionStorage.setItem('userName', response.fullName);
                     sessionStorage.setItem('userMode', 'user');
                     
-                    showPopup('Đăng nhập thành công!', 'Đăng nhập thành công!', 'success');
+                    showPopup('Đăng nhập thành công!', 'Bạn sẽ được chuyển hướng trong giây lát...', 'success');
                     
-                    document.getElementById('popupCloseBtn-login').onclick = () => {
-                        window.location.href = 'trang-chu.html';
-                    };
+                    setTimeout(() => {
+                         window.location.href = 'trang-chu.html';
+                    }, 2000); // Tự động chuyển trang sau 2 giây
+
                 } else {
                     showErrorAlert(response.message);
                 }
@@ -252,11 +260,9 @@
                  hideLoadingIndicator();
                 if (response.success) {
                     document.getElementById('signupForm').reset();
-                    showPopup('Đăng ký thành công!', response.message, 'success');
-                    document.getElementById('popupCloseBtn-login').onclick = () => {
-                        hidePopup();
+                    showPopup('Đăng ký thành công!', response.message, 'success', () => {
                         showTab('login');
-                    };
+                    });
                 } else {
                     showPopup('Đăng ký thất bại', response.message, 'error');
                 }
