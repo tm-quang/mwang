@@ -42,7 +42,7 @@
                 <div id="loginTab" class="tab-content active">
                     <form id="loginForm" onsubmit="handleLogin(event)">
                         <div class="form-group">
-                            <input type="text" id="loginUsername" name="username" required placeholder="Tên đăng nhập">
+                            <input type="text" id="loginUsername" name="username" required placeholder="Tên đăng nhập" autocomplete="off">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="form-group">
@@ -59,7 +59,7 @@
                 <div id="signupTab" class="tab-content">
                     <form id="signupForm" onsubmit="handleSignup(event)">
                         <div class="form-group">
-                            <input type="text" id="signupUsername" placeholder="Tên đăng nhập" name="username" required>
+                            <input type="text" id="signupUsername" placeholder="Tên đăng nhập" name="username" required autocomplete="off">
                             <i class="fa-solid fa-user-plus"></i>
                         </div>
                         <div class="form-group">
@@ -190,17 +190,12 @@
             return await response.json();
         }
 
-        /**
-         * HÀM MỚI: Gửi thông tin hoạt động về backend
-         */
         async function logActivity(action, username) {
             try {
-                // Lấy IP từ dịch vụ bên thứ 3
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
                 const ipAddress = ipData.ip || 'Không lấy được IP';
-
-                // Gọi backend để ghi log
+                
                 await callApi('logUserActivity', {
                     username: username,
                     action: action,
@@ -208,7 +203,6 @@
                 });
             } catch (error) {
                 console.error('Lỗi khi ghi log hoạt động:', error);
-                // Không làm gián đoạn luồng của người dùng nếu ghi log thất bại
             }
         }
         
@@ -221,7 +215,6 @@
             try {
                 const response = await callApi('handleLogin', { username, password });
                 if (response.success) {
-                    // Ghi log hành động đăng nhập
                     await logActivity('Login', response.fullName);
 
                     sessionStorage.setItem('isAuthenticated', 'true');
@@ -280,7 +273,6 @@
             sessionStorage.setItem('isAuthenticated', 'true');
             sessionStorage.setItem('userName', 'Khách');
             sessionStorage.setItem('userMode', 'guest');
-            // Ghi log khách truy cập
             logActivity('Guest Access', 'Guest');
             window.location.href = 'trang-chu.html';
         }
