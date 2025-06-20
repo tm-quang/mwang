@@ -7,12 +7,10 @@
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
 
         if (isAuthenticated !== 'true') {
-            // Nếu chưa đăng nhập, chuyển hướng về trang login (index.html)
             window.location.href = 'index.html';
             return; 
         }
 
-        // Nếu đã xác thực, tiếp tục xử lý
         const userName = sessionStorage.getItem('userName') || 'User';
         const userMode = sessionStorage.getItem('userMode');
         const greetingText = document.querySelector('.greeting-text');
@@ -26,10 +24,10 @@
             showGuestPopup();
         }
 
-        // Luôn hiển thị body sau khi kiểm tra xong
         document.body.style.visibility = 'visible';
     }
 })();
+
 
 function showGuestPopup() {
     if (document.getElementById('guest-popup-container')) return;
@@ -196,6 +194,17 @@ let countdownSeconds = 3600;
 let isSidebarPinned = false;
 let isMobileView = window.innerWidth <= 1080;
 
+// HÀM MỚI: Lấy địa chỉ IP của người dùng
+async function getUserIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Không thể lấy địa chỉ IP:', error);
+        return 'N/A'; // Trả về 'Không có' nếu có lỗi
+    }
+}
 async function callApi(action, payload = {}) {
     try {
         if (API_URL === "DÁN_URL_WEB_APP_CỦA_BẠN_VÀO_ĐÂY") {
@@ -218,6 +227,134 @@ async function callApi(action, payload = {}) {
         loadingSpinner.style.display = 'none';
         throw error;
     }
+}
+// CẬP NHẬT: Hàm xử lý đăng nhập (cho file index.html)
+async function handleLogin(event) {
+    if(event) event.preventDefault();
+    showLoadingIndicator();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        // Lấy IP trước khi gọi API
+        const ipAddress = await getUserIP();
+        
+        // Gửi thông tin đăng nhập KÈM địa chỉ IP
+        const response = await callApi('handleLogin', { username, password, ipAddress });
+        hideLoadingIndicator();
+        
+        if (response.success) {
+            sessionStorage.setItem('isAuthenticated', 'true');
+            sessionStorage.setItem('loginUsername', username); // Lưu username để dùng khi logout
+            sessionStorage.setItem('userName', response.fullName);
+            sessionStorage.setItem('userMode', 'user');
+            
+            showSuccessAlert('Đăng nhập thành công, đang chuyển trang...');
+            
+            setTimeout(() => {
+                 window.location.href = 'trang-chu.html';
+            }, 2000);
+
+        } else {
+            showErrorAlert(response.message);
+        }
+    } catch (error) {
+        hideLoadingIndicator();
+        showErrorAlert('Lỗi hệ thống: ' + error.message);
+    }
+}
+async function handleSignup(event) {
+    if(event) event.preventDefault();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    if (password !== confirmPassword) {
+        showErrorAlert('Mật khẩu xác nhận không khớp!');
+        return;
+    }
+    showLoadingIndicator();
+    const username = document.getElementById('signupUsername').value;
+    const fullName = document.getElementById('signupFullName').value;
+    const phone = document.getElementById('signupPhone').value;
+    try {
+        const response = await callApi('handleRegister', { username, password, fullName, phone });
+         hideLoadingIndicator();
+        if (response.success) {
+            document.getElementById('signupForm').reset();
+            showSuccessAlert(response.message);
+            showTab('login');
+        } else {
+            showErrorAlert(response.message);
+        }
+    } catch (error) {
+        hideLoadingIndicator();
+        showErrorAlert('Lỗi hệ thống: ' + error.message);
+    }
+}
+function handleGuestLogin() {
+    sessionStorage.setItem('isAuthenticated', 'true');
+    sessionStorage.setItem('userName', 'Khách');
+    sessionStorage.setItem('userMode', 'guest');
+    sessionStorage.setItem('loginUsername', 'guest');
+    window.location.href = 'trang-chu.html';
+}
+function showTab(tabName) {
+    if(document.getElementById(tabName + 'Tab')) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+        document.getElementById(tabName + 'Tab').classList.add('active');
+        document.getElementById(tabName + '-tab-button').classList.add('active');
+    }
+}
+function showLoadingIndicator() { if(document.getElementById('loadingIndicator-login')) document.getElementById('loadingIndicator-login').style.display = 'flex'; }
+function hideLoadingIndicator() { if(document.getElementById('loadingIndicator-login')) document.getElementById('loadingIndicator-login').style.display = 'none'; }
+function clearForm(formId) { const form = document.getElementById(formId); if (form) form.reset(); }
+let errorAlertTimeout;
+function showErrorAlert(message) {
+    const alertBox = document.getElementById('errorAlert-login');
+    const msgSpan = document.getElementById('errorAlertMessage-login');
+    if(msgSpan && alertBox) {
+        msgSpan.textContent = message;
+        alertBox.classList.add('show');
+        clearTimeout(errorAlertTimeout);
+        errorAlertTimeout = setTimeout(() => { alertBox.classList.remove('show'); }, 4000);
+    }
+}
+let successAlertTimeout;
+function showSuccessAlert(message) {
+    const alertBox = document.getElementById('successAlert-login');
+    const msgSpan = document.getElementById('successAlertMessage-login');
+    if(msgSpan && alertBox) {
+        msgSpan.textContent = message;
+        alertBox.classList.add('show');
+        clearTimeout(successAlertTimeout);
+        successAlertTimeout = setTimeout(() => { alertBox.classList.remove('show'); }, 4000);
+    }
+}
+// =================================================================================
+// PHẦN 2: LOGIC GIAO DIỆN TRANG CHÍNH (trang-chu.html)
+// =================================================================================
+
+// CẬP NHẬT: Hàm xử lý đăng xuất
+async function handleLogout(message) {
+    // Lấy username đã lưu từ sessionStorage
+    const username = sessionStorage.getItem('loginUsername') || 'N/A';
+    const userMode = sessionStorage.getItem('userMode');
+
+    // Không ghi log cho tài khoản khách
+    if (userMode !== 'guest') {
+        try {
+            const ipAddress = await getUserIP();
+            // Gọi API để ghi log logout, không cần đợi kết quả để tránh làm chậm người dùng
+            callApi('logLogout', { username: username, ipAddress: ipAddress });
+        } catch (error) {
+            console.error("Không thể ghi log đăng xuất:", error);
+        }
+    }
+    
+    // Xóa toàn bộ session và chuyển hướng
+    sessionStorage.clear();
+    alert(message);
+    window.location.href = 'index.html';
 }
 
 function updateTimerDisplay() {
