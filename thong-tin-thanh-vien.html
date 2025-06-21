@@ -2,80 +2,66 @@
 
 <div class="profile-page-container">
     <div class="profile-card">
-        <h2 class="profile-title">Thông Tin Thành Viên</h2>
-        <p class="profile-subtitle">Xem và chỉnh sửa thông tin cá nhân của bạn.</p>
+        <div class="profile-header-info">
+            <h2 id="profileFullNameDisplay" class="profile-main-name">Tên người dùng</h2>
+            <p id="profileUsernameDisplay" class="profile-main-username">@username</p>
+        </div>
 
-        <div class="profile-content-grid">
-            <div class="profile-avatar-section">
-                <div class="avatar-container">
-                    <img id="profileAvatarPreview" src="https://i.imgur.com/SufwT3v.png" alt="Avatar">
-                    <label for="avatarUploadInput" class="avatar-upload-label">
-                        <i class="fas fa-camera"></i>
-                    </label>
-                    <input type="file" id="avatarUploadInput" accept="image/png, image/jpeg">
+        <form id="profileForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fullName">Họ và Tên</label>
+                    <input type="text" id="fullName" placeholder="Nhập họ và tên của bạn" required>
                 </div>
-                <h3 id="profileFullNameDisplay" class="avatar-name">Tên người dùng</h3>
-                <p id="profileUsernameDisplay" class="avatar-username">@username</p>
+                <div class="form-group">
+                    <label for="itUserID">User IT (Mã nhân viên)</label>
+                    <input type="text" id="itUserID" placeholder="Nhập mã nhân viên">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập (Không thể đổi)</label>
+                    <input type="text" id="username" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" placeholder="Nhập số điện thoại" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address">Địa chỉ</label>
+                <textarea id="address" rows="3" placeholder="Nhập địa chỉ của bạn"></textarea>
             </div>
 
-            <div class="profile-form-section">
-                <form id="profileForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="fullName">Họ và Tên</label>
-                            <input type="text" id="fullName" placeholder="Nhập họ và tên của bạn" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="itUserID">User IT (Mã nhân viên)</label>
-                            <input type="text" id="itUserID" placeholder="Nhập mã nhân viên">
-                        </div>
+            <div class="password-change-section">
+                <h4>Đổi mật khẩu</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" id="currentPassword" placeholder="Để trống nếu không đổi">
                     </div>
-                    <div class="form-row">
+                </div>
+                <div class="form-row">
                         <div class="form-group">
-                            <label for="username">Tên đăng nhập (Không thể đổi)</label>
-                            <input type="text" id="username" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Số điện thoại</label>
-                            <input type="tel" id="phone" placeholder="Nhập số điện thoại" required>
-                        </div>
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input type="password" id="newPassword" placeholder="Để trống nếu không đổi">
                     </div>
                     <div class="form-group">
-                        <label for="address">Địa chỉ</label>
-                        <textarea id="address" rows="3" placeholder="Nhập địa chỉ của bạn"></textarea>
+                        <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
                     </div>
-
-                    <div class="password-change-section">
-                        <h4>Đổi mật khẩu</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="currentPassword">Mật khẩu hiện tại</label>
-                                <input type="password" id="currentPassword" placeholder="Để trống nếu không đổi">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                             <div class="form-group">
-                                <label for="newPassword">Mật khẩu mới</label>
-                                <input type="password" id="newPassword" placeholder="Để trống nếu không đổi">
-                            </div>
-                            <div class="form-group">
-                                <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
-                                <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="profileMessage" class="profile-message"></div>
-
-                    <div class="form-actions">
-                        <button type="submit" id="saveProfileButton" class="profile-btn-save">
-                            <span class="btn-text">Lưu Thay Đổi</span>
-                            <div class="spinner-sm" style="display: none;"></div>
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div id="profileFormMessage" class="form-message-placeholder"></div>
+
+            <div class="form-actions">
+                <button type="submit" id="saveProfileButton" class="profile-btn-save">
+                    <span class="btn-text">Lưu Thay Đổi</span>
+                    <div class="spinner-sm" style="display: none;"></div>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -83,74 +69,55 @@
 document.addEventListener('DOMContentLoaded', () => {
     const username = sessionStorage.getItem('loginUsername');
     if (!username) {
-        document.getElementById('profile-page-container').innerHTML = '<p>Lỗi: Không tìm thấy thông tin đăng nhập.</p>';
+        document.querySelector('.profile-page-container').innerHTML = '<p>Lỗi: Không tìm thấy thông tin đăng nhập.</p>';
         return;
     }
 
-    const form = {
+    const formElements = {
         fullName: document.getElementById('fullName'),
         itUserID: document.getElementById('itUserID'),
         username: document.getElementById('username'),
         phone: document.getElementById('phone'),
         address: document.getElementById('address'),
-        avatarPreview: document.getElementById('profileAvatarPreview'),
         fullNameDisplay: document.getElementById('profileFullNameDisplay'),
         usernameDisplay: document.getElementById('profileUsernameDisplay'),
-        avatarUploadInput: document.getElementById('avatarUploadInput'),
         profileForm: document.getElementById('profileForm'),
         saveButton: document.getElementById('saveProfileButton'),
-        profileMessage: document.getElementById('profileMessage'),
+        formMessage: document.getElementById('profileFormMessage'),
         currentPassword: document.getElementById('currentPassword'),
         newPassword: document.getElementById('newPassword'),
         confirmNewPassword: document.getElementById('confirmNewPassword')
     };
-
-    let newAvatarData = null;
 
     // 1. Tải thông tin người dùng
     async function loadUserProfile() {
         const response = await callApi('getUserProfile', { username: username });
         if (response.success && response.data) {
             const data = response.data;
-            form.fullName.value = data.fullName;
-            form.itUserID.value = data.itUserID;
-            form.username.value = data.username;
-            form.phone.value = data.phone;
-            form.address.value = data.address;
-            form.fullNameDisplay.textContent = data.fullName;
-            form.usernameDisplay.textContent = `@${data.username}`;
-            if (data.profilePictureURL) {
-                form.avatarPreview.src = data.profilePictureURL;
-            }
+            formElements.fullName.value = data.fullName;
+            formElements.itUserID.value = data.itUserID;
+            formElements.username.value = data.username;
+            formElements.phone.value = data.phone;
+            formElements.address.value = data.address;
+            
+            // Sửa lỗi hiển thị tên
+            formElements.fullNameDisplay.textContent = data.fullName;
+            formElements.usernameDisplay.textContent = `@${data.username}`;
         } else {
-            showMessage(response.message || 'Không thể tải thông tin người dùng.', 'error');
+            showInlineMessage(response.message || 'Không thể tải thông tin người dùng.', 'error');
         }
     }
 
-    // 2. Xử lý khi người dùng chọn ảnh mới
-    form.avatarUploadInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                form.avatarPreview.src = e.target.result;
-                newAvatarData = e.target.result; // Lưu dữ liệu base64
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // 3. Xử lý khi nhấn nút Lưu
-    form.profileForm.addEventListener('submit', async (event) => {
+    // 2. Xử lý khi nhấn nút Lưu
+    formElements.profileForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        // Validation
-        if (form.newPassword.value !== form.confirmNewPassword.value) {
-            showMessage('Mật khẩu mới không khớp.', 'error');
+        if (formElements.newPassword.value !== formElements.confirmNewPassword.value) {
+            showInlineMessage('Mật khẩu mới không khớp.', 'error');
             return;
         }
-        if (form.newPassword.value && !form.currentPassword.value) {
-            showMessage('Vui lòng nhập mật khẩu hiện tại để đổi mật khẩu mới.', 'error');
+        if (formElements.newPassword.value && !formElements.currentPassword.value) {
+            showInlineMessage('Vui lòng nhập mật khẩu hiện tại để đổi mật khẩu mới.', 'error');
             return;
         }
 
@@ -158,45 +125,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const payload = {
             username: username,
-            fullName: form.fullName.value,
-            phone: form.phone.value,
-            itUserID: form.itUserID.value,
-            address: form.address.value,
-            currentPassword: form.currentPassword.value,
-            newPassword: form.newPassword.value,
-            profilePictureData: newAvatarData // Gửi dữ liệu base64 nếu có
+            fullName: formElements.fullName.value,
+            phone: formElements.phone.value,
+            itUserID: formElements.itUserID.value,
+            address: formElements.address.value,
+            currentPassword: formElements.currentPassword.value,
+            newPassword: formElements.newPassword.value
         };
 
-        const response = await callApi('updateUserProfile', payload);
+        // Dùng POST để gửi dữ liệu
+        const response = await callApi('updateUserProfile', payload, 'POST');
         
         if(response.success){
-            showMessage(response.message, 'success');
+            // Gọi popup trượt mới
+            showSlidingPopup('Đã cập nhật thông tin thành công!', 'success');
+            
             // Cập nhật lại tên trên header nếu có thay đổi
             sessionStorage.setItem('userName', payload.fullName);
             document.querySelector('.greeting-text').textContent = `Xin chào, ${payload.fullName}`;
-            newAvatarData = null; // Reset sau khi upload thành công
+            formElements.fullNameDisplay.textContent = payload.fullName;
+
+            // Xoá các ô mật khẩu
+            formElements.currentPassword.value = '';
+            formElements.newPassword.value = '';
+            formElements.confirmNewPassword.value = '';
+            
         } else {
-            showMessage(response.message, 'error');
+            showInlineMessage(response.message, 'error');
         }
 
         setLoading(false);
     });
 
-    // Hàm tiện ích
-    function showMessage(msg, type = 'error') {
-        form.profileMessage.textContent = msg;
-        form.profileMessage.className = `profile-message ${type}`;
+    // Hàm hiển thị thông báo lỗi ngay dưới form
+    function showInlineMessage(msg, type = 'error') {
+        formElements.formMessage.textContent = msg;
+        formElements.formMessage.className = `profile-message ${type}`;
     }
 
     function setLoading(isLoading) {
-        const btnText = form.saveButton.querySelector('.btn-text');
-        const spinner = form.saveButton.querySelector('.spinner-sm');
+        const btnText = formElements.saveButton.querySelector('.btn-text');
+        const spinner = formElements.saveButton.querySelector('.spinner-sm');
         if(isLoading){
-            form.saveButton.disabled = true;
+            formElements.saveButton.disabled = true;
             btnText.style.display = 'none';
             spinner.style.display = 'inline-block';
         } else {
-            form.saveButton.disabled = false;
+            formElements.saveButton.disabled = false;
             btnText.style.display = 'inline-block';
             spinner.style.display = 'none';
         }
