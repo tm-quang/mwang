@@ -362,14 +362,25 @@ body.login-page-body {
 }
 .login-page-body .form-wrapper { width: 100%; max-width: 380px; margin: 0 auto; }
 .login-page-body .logo { text-align: center; margin-bottom: 25px; }
-.login-page-body .logo img { max-width: 80px; height: auto; margin-bottom: 10px; }
+.login-page-body .logo img {
+    max-width: 80px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 50%; /* Bo tròn để hiệu ứng đẹp hơn */
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    /* Áp dụng animation phát sáng */
+    animation: glowing-border 4s ease-in-out infinite;
+}
 .login-page-body .logo h3 { font-size: 1.6rem; font-weight: 600; margin: 0; color: var(--text-primary); }
 
 /* Các style còn lại của form giữ nguyên */
 .login-page-body .tab-buttons { display: flex; justify-content: stretch; margin-bottom: 30px; background: #f0f3f8; border-radius: 10px; padding: 5px; }
 .login-page-body .tab-button { background: none; border: none; padding: 12px; font-size: 0.95em; font-weight: 600; color: #5a6a85; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; border-radius: 8px; }
 .login-page-body .tab-button.active { background-color: #fff; color: #0056b3; box-shadow: 0 2px 10px rgba(0, 92, 193, 0.15); }
-.login-page-body .form-group { margin-bottom: 22px; position: relative; }
+.login-page-body .form-group {
+    margin-bottom: 18px; /* Giảm từ 22px xuống 18px */
+    position: relative;
+}
 .login-page-body .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: #43526c; margin-bottom: 8px; }
 .login-page-body .input-icon-wrapper { position: relative; }
 .login-page-body .form-group input { width: 100%; padding: 12px 15px 12px 45px; border: 1px solid #dce4f2; border-radius: 8px; font-size: 1em; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; background-color: #f7f9fc; }
@@ -379,9 +390,36 @@ body.login-page-body {
 .login-page-body .form-icon-right.toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #98a7c0; cursor: pointer; transition: color 0.2s ease; z-index: 2; }
 .login-page-body .form-icon-right.toggle-password:hover { color: var(--primary-color); }
 .login-page-body .button-group { margin-top: 10px; margin-bottom: 20px; }
-.login-page-body .btn { padding: 14px 25px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; }
+.login-page-body .btn {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative; /* Thêm position relative */
+    overflow: hidden; /* Thêm overflow hidden */
+}
+.login-page-body .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; /* Bắt đầu từ bên ngoài bên trái */
+    width: 75%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.7s ease-in-out;
+}
+.login-page-body .btn:hover::before {
+    left: 100%;
+}
 .login-page-body .btn.btn-primary { background: linear-gradient(45deg, #0069cc, #007bff); color: white; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); }
-.login-page-body .btn.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3); }
+.login-page-body .btn.btn-primary:hover {
+    transform: translateY(0); /* Bỏ hiệu ứng nhấc lên */
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); /* Giữ lại shadow */
+}
 .login-page-body .guest-login-divider { text-align: center; margin-bottom: 20px; color: #a0aec0; font-size: 0.9rem; text-transform: uppercase; display: flex; align-items: center; }
 .login-page-body .guest-login-divider::before, .login-page-body .guest-login-divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
 .login-page-body .guest-login-divider:not(:empty)::before { margin-right: .5em; }
@@ -389,7 +427,12 @@ body.login-page-body {
 .login-page-body .btn-guest { width: 100%; background-color: #f7f9fc; color: #4a5568; border: 1px solid #dce4f2; }
 .login-page-body .btn-guest:hover { background-color: #eef2f7; border-color: #cbd5e0; }
 .login-page-body .tab-content { display: none; animation: fade-in-form 0.5s ease-in-out; }
-
+/* 2. Thêm hiệu ứng phát sáng cho logo */
+@keyframes glowing-border {
+    0% { box-shadow: 0 0 5px #007bff, 0 0 10px #007bff, 0 0 15px #ffffff; }
+    50% { box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 25px #007bff; }
+    100% { box-shadow: 0 0 5px #007bff, 0 0 10px #007bff, 0 0 15px #ffffff; }
+}
 @keyframes fade-in-form { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; translateY(0); } }
 .login-page-body .tab-content.active { display: block; }
 /* Responsive cho trang Login */
