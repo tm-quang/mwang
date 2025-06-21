@@ -116,7 +116,27 @@ let searchableMenuItems = [], dropdownTimeout, countdownInterval, isSidebarPinne
 // --- Các hàm cho trang đăng nhập (index.html) ---
 function showErrorAlert(message) { const alertBox = document.getElementById('errorAlert-login'), msgSpan = document.getElementById('errorAlertMessage-login'); if (msgSpan && alertBox) { msgSpan.textContent = message; alertBox.classList.add('show'); clearTimeout(errorAlertTimeout); errorAlertTimeout = setTimeout(() => { alertBox.classList.remove('show'); }, 4000); } }
 function showSuccessAlert(message) { const alertBox = document.getElementById('successAlert-login'), msgSpan = document.getElementById('successAlertMessage-login'); if (msgSpan && alertBox) { msgSpan.textContent = message; alertBox.classList.add('show'); clearTimeout(successAlertTimeout); successAlertTimeout = setTimeout(() => { alertBox.classList.remove('show'); }, 4000); } }
-function showTab(tabName) { const tab = document.getElementById(tabName + 'Tab'); if (tab) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); tab.classList.add('active'); document.getElementById(tabName + '-tab-button').classList.add('active'); } }
+function showTab(tabName) {
+    const tab = document.getElementById(tabName + 'Tab');
+    // Thêm dòng lấy phần đăng nhập khách
+    const guestLoginSection = document.getElementById('guestLoginSection');
+
+    if (tab) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tabName + '-tab-button').classList.add('active');
+
+        // Thêm logic ẩn/hiện nút đăng nhập khách
+        if (guestLoginSection) {
+            if (tabName === 'login') {
+                guestLoginSection.style.display = 'block';
+            } else {
+                guestLoginSection.style.display = 'none';
+            }
+        }
+    }
+}
 function showLoadingIndicator() { const indicator = document.getElementById('loadingIndicator-login'); if (indicator) indicator.style.display = 'flex'; }
 function hideLoadingIndicator() { const indicator = document.getElementById('loadingIndicator-login'); if (indicator) indicator.style.display = 'none'; }
 function clearForm(formId) { const form = document.getElementById(formId); if (form) form.reset(); }
