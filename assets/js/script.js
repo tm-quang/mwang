@@ -36,7 +36,14 @@ const leftMenuData = [{
             { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', htmlFile: 'admin-thong-bao.html', icon: 'fa-regular fa-newspaper', isAdmin: true },
         ]
     }]
-}, {
+}, 
+    {
+        title: 'TÀI KHOẢN',
+        items: [
+            { id: 'btnProfile', text: 'THÔNG TIN THÀNH VIÊN', htmlFile: 'thong-tin-thanh-vien.html', icon: 'fas fa-user-circle' },
+        ]
+    },
+{
     title: '2025 - IT MTAY2',
     items: [{
         id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-user-group', isDropdown: true,
