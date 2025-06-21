@@ -180,7 +180,9 @@ function handleHeaderSearch(event) {
     const suggestionsContainer = document.getElementById('header-search-suggestions');
     const query = input.value.trim().toLowerCase();
 
+    // Luôn xóa gợi ý cũ trước khi bắt đầu
     suggestionsContainer.innerHTML = '';
+
     if (query.length === 0) {
         suggestionsContainer.style.display = 'none';
         return;
@@ -193,25 +195,27 @@ function handleHeaderSearch(event) {
         filteredItems.forEach(item => {
             const div = document.createElement('div');
             div.className = 'suggestion-item-header';
-            
+
             const icon = document.createElement('i');
             icon.className = `${item.icon} icon`;
-            
+
             const span = document.createElement('span');
             span.textContent = item.text;
-            
+
             div.appendChild(icon);
             div.appendChild(span);
 
+            // Gắn sự kiện click
             div.addEventListener('click', () => {
-                // KIỂM TRA: Nếu là khách thì không thực hiện hành động
+                // *** SỬA LỖI TẠI ĐÂY ***
+                // Nếu người dùng là khách, không làm gì cả khi click.
                 if (isGuest) {
                     return; 
                 }
-                
-                // Nếu không phải khách, thực hiện như bình thường
+
+                // Nếu không phải khách, thực hiện hành động như bình thường
                 checkAdminAccessAndLoad(item);
-                input.value = '';
+                input.value = ''; // Xóa nội dung ô tìm kiếm
                 suggestionsContainer.style.display = 'none';
                 document.getElementById('header-search-container').classList.remove('mobile-search-active');
             });
@@ -220,6 +224,7 @@ function handleHeaderSearch(event) {
         });
         suggestionsContainer.style.display = 'block';
     } else {
+        // Hiển thị thông báo khi không có kết quả
         suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>';
         suggestionsContainer.style.display = 'block';
     }
