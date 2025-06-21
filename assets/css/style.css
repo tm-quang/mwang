@@ -891,3 +891,12 @@ body.login-page-body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/* === CSS CHO GUEST MODE - VÔ HIỆU HÓA GỢI Ý TÌM KIẾM === */
+.guest-mode #header-search-suggestions .suggestion-item-header {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.guest-mode #header-search-suggestions .suggestion-item-header:hover {
+    background-color: inherit; /* Vô hiệu hóa hiệu ứng hover */
+}
