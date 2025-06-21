@@ -327,28 +327,86 @@ body.login-page-body {
     width: 100%;
     height: 100%;
     z-index: 1;
+    overflow: hidden; /* Đảm bảo các chấm không tràn ra ngoài */
 }
+
+/* Định dạng chung cho mỗi "chấm" */
 .shape {
     position: absolute;
     list-style: none;
     display: block;
-    background: rgba(255, 255, 255, 0.15);
-    animation: float 25s linear infinite;
-    bottom: -200px; /* Bắt đầu từ dưới màn hình */
+    background: rgba(255, 255, 255, 0.2); /* Màu trắng mờ */
+    border-radius: 50%; /* Biến hình vuông thành hình tròn */
+    animation: move-dots 25s linear infinite;
+    bottom: -150px; /* Bắt đầu từ bên dưới */
 }
 
-@keyframes float {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
-    100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; border-radius: 50%; }
+/* Animation cho các chấm di chuyển từ dưới lên trên */
+@keyframes move-dots {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-120vh); /* Di chuyển lên trên và ra khỏi màn hình */
+        opacity: 0;
+    }
 }
 
-.shape1 { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
-.shape2 { left: 20%; width: 30px; height: 30px; animation-delay: 1.5s; animation-duration: 15s; }
-.shape3 { left: 25%; width: 100px; height: 100px; animation-delay: 5.5s; }
-.shape4 { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
-.shape5 { left: 65%; width: 20px; height: 20px; animation-delay: 2s; }
-.shape6 { left: 85%; width: 120px; height: 120px; animation-delay: 3.5s; }
-
+/* Tùy biến cho từng chấm để tạo sự ngẫu nhiên */
+.shape1 { 
+    left: 25%; 
+    width: 80px; 
+    height: 80px; 
+    animation-delay: 0s; 
+}
+.shape2 { 
+    left: 10%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 2s; 
+    animation-duration: 12s; 
+}
+.shape3 { 
+    left: 70%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 4s; 
+}
+.shape4 { 
+    left: 40%; 
+    width: 60px; 
+    height: 60px; 
+    animation-delay: 0s; 
+    animation-duration: 18s; 
+}
+.shape5 { 
+    left: 65%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 0s; 
+}
+.shape6 { 
+    left: 75%; 
+    width: 110px; 
+    height: 110px; 
+    animation-delay: 3s; 
+    opacity: 0.1; /* Mờ hơn */
+}
+.shape7 { /* Đổi tên từ shape8 để dễ quản lý */
+    left: 35%; 
+    width: 150px; 
+    height: 150px; 
+    animation-delay: 7s; 
+    opacity: 0.08; /* Rất mờ */
+}
+.shape8 { /* Đổi tên từ shape5 cũ */
+    left: 50%; 
+    width: 25px; 
+    height: 25px; 
+    animation-delay: 15s; 
+    animation-duration: 45s; 
+}
 
 /* === Phần Form bên phải (1/3) === */
 .login-page-body .form-panel { 
