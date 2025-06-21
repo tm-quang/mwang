@@ -25,7 +25,7 @@
 // =================================================================================
 // PHẦN 1: CẤU HÌNH & DỮ LIỆU TOÀN CỤC
 // =================================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbwqeiJME8uxIO2C4S1emKTI-Ag3fipCZQInoVhNm2ObDC4vjlOq2KtdZ4Zb8Fj-A93czw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwCCmPkDSpdcFnaa3jthssQmIZgavWYhYdSP7j0wD9rxYY_w53UTebjxSZvHB1xpGbGkQ/exec";
 const leftMenuData = [{
     title: 'ADMIN',
     items: [{
@@ -185,7 +185,38 @@ function updateClock() { const now = new Date, timeElement = document.getElement
 function handleMobileWelcomePopup() { if (!(('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1080)) return; if (sessionStorage.getItem("popupShown")) return; const popupHTML = `<div class="mobile-popup-content"><button class="mobile-popup-close">×</button><p>Đây là giao diện cho di động, chọn chế độ "xem trang web cho máy tính" trên trình duyệt, hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p><div class="mobile-popup-timer">Tự động đóng sau <span class="popup-countdown">15</span> giây...</div></div>`, popupElement = document.createElement("div"); popupElement.id = "mobile-welcome-popup", popupElement.className = "mobile-popup", popupElement.innerHTML = popupHTML, document.body.appendChild(popupElement), setTimeout(() => { popupElement && popupElement.classList.add("show") }, 20), sessionStorage.setItem("popupShown", "true"); const closeBtn = popupElement.querySelector(".mobile-popup-close"), countdownSpan = popupElement.querySelector(".popup-countdown"); let countdown = 15; const closePopup = () => { popupElement && (popupElement.classList.remove("show"), setTimeout(() => { popupElement && popupElement.remove() }, 300)), clearInterval(countdownInterval), clearTimeout(autoCloseTimeout) }; var countdownInterval = setInterval(() => { --countdown, countdownSpan && (countdownSpan.textContent = countdown), countdown <= 0 && clearInterval(countdownInterval) }, 1e3); var autoCloseTimeout = setTimeout(closePopup, 15e3); closeBtn.addEventListener("click", closePopup); }
 function showAdminLoginModal(onSuccess) { const adminLoginModal = document.getElementById('adminLoginModal'), adminLoginSubmit = document.getElementById('adminLoginSubmit'), adminLoginCancel = document.getElementById('adminLoginCancel'), adminUsername = document.getElementById('adminUsername'), adminPassword = document.getElementById('adminPassword'), adminLoginError = document.getElementById('adminLoginError'); adminLoginError.textContent = '', adminPassword.value = '', adminLoginModal.style.display = 'flex', adminUsername.focus(); const handleSubmit = async () => { const username = adminUsername.value, password = adminPassword.value; if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; } const response = await callApi('verifyAdminLogin', { username, password }); if (response.success) { adminLoginModal.style.display = 'none'; if (onSuccess) onSuccess(); } else { adminLoginError.textContent = response.message || 'Sai tên đăng nhập hoặc mật khẩu.'; } }; const handleCancel = () => { adminLoginSubmit.removeEventListener('click', handleSubmit); adminLoginCancel.removeEventListener('click', handleCancel); adminLoginModal.style.display = 'none'; }; adminLoginSubmit.addEventListener('click', handleSubmit, { once: true }); adminLoginCancel.addEventListener('click', handleCancel, { once: true }); }
 function checkAdminAccessAndLoad(item, callback) { const userIsAdmin = sessionStorage.getItem('isAdmin') === 'true'; const itemToLoad = item.originalItem || item; if (item.isAdmin && !userIsAdmin) { showAdminLoginModal(() => { if (callback) callback(); else loadFunctionContent(itemToLoad); }); } else { if (callback) callback(); else loadFunctionContent(itemToLoad); } }
+function showSlidingPopup(message, type = 'success', duration = 5000) {
+    if (document.getElementById('sliding-popup')) {
+        document.getElementById('sliding-popup').remove();
+    }
 
+    const popupIcon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+    const iconColorClass = type === 'success' ? 'icon-success' : 'icon-error';
+
+    const popupHTML = `
+        <div class="sliding-popup-header">
+            <h4><i class="fas ${popupIcon} ${iconColorClass}"></i>Thông Báo</h4>
+            <button class="sliding-popup-close-btn">&times;</button>
+        </div>
+        <div class="sliding-popup-body">${message}</div>
+        <div class="sliding-popup-timer-bar" style="--duration: ${duration}ms"></div>
+    `;
+
+    const popup = document.createElement('div');
+    popup.id = 'sliding-popup';
+    popup.className = 'sliding-popup-container';
+    popup.innerHTML = popupHTML;
+    document.body.appendChild(popup);
+
+    const closePopup = () => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 500);
+    };
+    
+    setTimeout(() => popup.classList.add('show'), 100);
+    setTimeout(closePopup, duration);
+    popup.querySelector('.sliding-popup-close-btn').addEventListener('click', closePopup);
+}
 // =================================================================================
 // PHẦN 3: ĐIỂM KHỞI CHẠY CHÍNH CỦA ỨNG DỤNG
 // =================================================================================
