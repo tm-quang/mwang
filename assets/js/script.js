@@ -344,8 +344,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         subItems: [
                             { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', pageTitle: '', icon: 'fas fa-store-alt' },
                             { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', pageTitle: '', icon: 'fas fa-box-open' },
+                            { id: 'btnTraCuuFTTH', text: 'TRA CỨU FTTH', htmlFile: 'tra-cuu-ftth.html', pageTitle: '', icon: 'fa-solid fa-circle-check' },
                             { id: 'btnTaiLieu', text: 'TÌM TÀI LIỆU | LINK', htmlFile: 'tim-kiem-tai-lieu.html', pageTitle: '', icon: 'fa-solid fa-file' },
-                            { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-circle-check' },
+                            { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-circle-check' },
                         ] 
                      }
                 ]
