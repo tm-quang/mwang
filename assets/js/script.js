@@ -25,7 +25,7 @@
 // =================================================================================
 // PHẦN 1: CẤU HÌNH & DỮ LIỆU TOÀN CỤC
 // =================================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbxuToPjnoenKuBltKPTwN6GMbYxwbjkl-XlRy5PXP-r-rKQ37g3KNq4XnL4ZQX4S8hOSA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxARzekifkZbZb0Uzw149eS4WgnXc7uI04ML5VYdUWH2QfsXwR9euI-vHgFa7V9j08VzQ/exec";
 const leftMenuData = [{
     title: 'ADMIN',
     items: [{
@@ -165,7 +165,34 @@ async function handleLogin(event) {
         hideLoadingIndicator();
     }
 }
-async function handleSignup(event) { if (event) event.preventDefault(); const password = document.getElementById('signupPassword').value, confirmPassword = document.getElementById('signupConfirmPassword').value; if (password !== confirmPassword) { showErrorAlert('Mật khẩu xác nhận không khớp!'); return; } showLoadingIndicator(); const username = document.getElementById('signupUsername').value, fullName = document.getElementById('signupFullName').value, phone = document.getElementById('signupPhone').value; try { const response = await callApi('handleRegister', { username, password, fullName, phone }); hideLoadingIndicator(); if (response.success) { document.getElementById('signupForm').reset(); showSuccessAlert(response.message); showTab('login'); } else { showErrorAlert(response.message); } } catch (error) { hideLoadingIndicator(); } }
+async function handleSignup(event) {
+    if (event) event.preventDefault();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    if (password !== confirmPassword) {
+        showErrorAlert('Mật khẩu xác nhận không khớp!');
+        return;
+    }
+    showLoadingIndicator();
+    const username = document.getElementById('signupUsername').value;
+    // ĐÃ THAY ĐỔI THEO YÊU CẦU
+    const itUserID = document.getElementById('signupItUserID').value; 
+    
+    try {
+        // Cập nhật payload gửi đi, không còn fullName và phone
+        const response = await callApi('handleRegister', { username, password, itUserID }); 
+        hideLoadingIndicator();
+        if (response.success) {
+            document.getElementById('signupForm').reset();
+            showSuccessAlert(response.message);
+            showTab('login');
+        } else {
+            showErrorAlert(response.message);
+        }
+    } catch (error) {
+        hideLoadingIndicator();
+    }
+}
 function handleGuestLogin() { sessionStorage.setItem('isAuthenticated', 'true'); sessionStorage.setItem('userName', 'Khách'); sessionStorage.setItem('userMode', 'guest'); sessionStorage.setItem('loginUsername', 'guest'); sessionStorage.setItem('isAdmin', false); window.location.href = 'trang-chu.html'; }
 
 // --- Các hàm chung và cho trang chính (trang-chu.html) ---
