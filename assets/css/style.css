@@ -645,3 +645,124 @@ body.login-page-body {
 .login-page-body .form-group input[type="text"][id*="Password"] {
     padding-right: 45px !important; /* Thêm !important để đảm bảo được áp dụng */
 }
+/* File: mwang/assets/css/style.css */
+
+/* === CSS CHO KHUNG TÌM KIẾM MỚI TRÊN HEADER === */
+#header-search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+#header-search-wrapper {
+    position: relative;
+}
+
+#header-search-input {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    color: white;
+    padding: 6px 15px 6px 35px; /* Thêm khoảng trống cho icon */
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    width: 220px;
+}
+
+#header-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#header-search-input:focus {
+    background-color: white;
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#header-search-icon-input {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s ease;
+}
+
+#header-search-input:focus + #header-search-icon-input {
+    color: var(--text-secondary);
+}
+
+#header-search-icon-mobile {
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: none; /* Mặc định ẩn trên desktop */
+    padding: 5px;
+}
+
+#header-search-suggestions {
+    display: none;
+    position: absolute;
+    top: 115%;
+    left: 0;
+    width: 100%;
+    min-width: 300px;
+    background-color: var(--bg-content);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 1100;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.suggestion-item-header {
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.suggestion-item-header:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item-header:hover {
+    background-color: #f3f4f6;
+}
+
+.suggestion-item-header .icon {
+    color: var(--primary-color);
+}
+
+/* Responsive cho ô tìm kiếm */
+@media (max-width: 768px) {
+    #header-search-wrapper {
+        display: none; /* Ẩn ô nhập liệu trên di động */
+    }
+    #header-search-container.mobile-search-active #header-search-wrapper {
+        display: block;
+        position: absolute;
+        top: 50px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+    }
+    #header-search-container.mobile-search-active #header-search-input {
+        width: 100%;
+        background-color: white;
+        color: var(--text-primary);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+     #header-search-container.mobile-search-active #header-search-icon-input {
+        color: var(--text-secondary);
+    }
+    #header-search-icon-mobile {
+        display: block; /* Hiện icon trên di động */
+    }
+}
