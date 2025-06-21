@@ -25,7 +25,7 @@
 // =================================================================================
 // PHẦN 1: CẤU HÌNH & DỮ LIỆU TOÀN CỤC
 // =================================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbzly8Pbwvp0N4cWR8sb9MAuWPL32jzY4ZfkSPb-_L4QoFSeBoCEhOUsuf3NULBkV27e_w/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxuToPjnoenKuBltKPTwN6GMbYxwbjkl-XlRy5PXP-r-rKQ37g3KNq4XnL4ZQX4S8hOSA/exec";
 const leftMenuData = [{
     title: 'ADMIN',
     items: [{
