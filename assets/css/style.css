@@ -319,7 +319,6 @@ body.login-page-body {
 }
 
 
-/* === Hiệu ứng nền động === */
 .animated-shapes {
     position: absolute;
     top: 0;
@@ -327,85 +326,76 @@ body.login-page-body {
     width: 100%;
     height: 100%;
     z-index: 1;
-    overflow: hidden; /* Đảm bảo các chấm không tràn ra ngoài */
+    overflow: hidden;
+    /* Thêm bộ lọc để làm mờ và hòa trộn các đốm sáng */
+    filter: blur(40px);
 }
 
-/* Định dạng chung cho mỗi "chấm" */
+/* Định dạng chung cho mỗi "đốm sáng" (blob) */
 .shape {
     position: absolute;
     list-style: none;
     display: block;
-    background: rgba(255, 255, 255, 0.2); /* Màu trắng mờ */
-    border-radius: 50%; /* Biến hình vuông thành hình tròn */
-    animation: move-dots 25s linear infinite;
-    bottom: -150px; /* Bắt đầu từ bên dưới */
+    border-radius: 50%; /* Luôn là hình tròn */
+    opacity: 0.6;
+    animation: move-blob 20s ease-in-out infinite alternate; /* Di chuyển qua lại */
 }
 
-/* Animation cho các chấm di chuyển từ dưới lên trên */
-@keyframes move-dots {
+/* Keyframes cho chuyển động mượt mà, ngẫu nhiên */
+@keyframes move-blob {
     0% {
-        transform: translateY(0);
-        opacity: 1;
+        transform: translate(-10%, -10%);
+    }
+    25% {
+        transform: translate(calc(100% - 90%), calc(100% - 90%));
+    }
+    50% {
+        transform: translate(calc(100% - 40%), -20%);
+    }
+    75% {
+        transform: translate(-20%, calc(100% - 40%));
     }
     100% {
-        transform: translateY(-120vh); /* Di chuyển lên trên và ra khỏi màn hình */
-        opacity: 0;
+        transform: translate(-10%, -10%);
     }
 }
 
-/* Tùy biến cho từng chấm để tạo sự ngẫu nhiên */
+/* Tùy biến cho từng đốm sáng:
+  - Kích thước lớn hơn
+  - Màu sắc khác nhau để hòa trộn
+  - Thời gian và độ trễ animation khác nhau
+*/
+
 .shape1 { 
-    left: 25%; 
-    width: 80px; 
-    height: 80px; 
-    animation-delay: 0s; 
+    left: 10%; 
+    top: 10%;
+    width: 350px; 
+    height: 350px; 
+    background-color: #ff3cac; /* Màu hồng */
+    animation-duration: 22s;
 }
 .shape2 { 
-    left: 10%; 
-    width: 20px; 
-    height: 20px; 
-    animation-delay: 2s; 
-    animation-duration: 12s; 
+    right: 10%; 
+    top: 0%;
+    width: 300px; 
+    height: 300px; 
+    background-color: #7f5af0; /* Màu tím */
+    animation-duration: 25s;
+    animation-delay: 3s;
 }
 .shape3 { 
-    left: 70%; 
-    width: 20px; 
-    height: 20px; 
-    animation-delay: 4s; 
+    left: 20%; 
+    bottom: 5%;
+    width: 250px; 
+    height: 250px; 
+    background-color: #2cb67d; /* Màu xanh lá */
+    animation-duration: 18s;
+    animation-delay: 5s;
 }
-.shape4 { 
-    left: 40%; 
-    width: 60px; 
-    height: 60px; 
-    animation-delay: 0s; 
-    animation-duration: 18s; 
-}
-.shape5 { 
-    left: 65%; 
-    width: 20px; 
-    height: 20px; 
-    animation-delay: 0s; 
-}
-.shape6 { 
-    left: 75%; 
-    width: 110px; 
-    height: 110px; 
-    animation-delay: 3s; 
-    opacity: 0.1; /* Mờ hơn */
-}
-.shape7 { /* Đổi tên từ shape8 để dễ quản lý */
-    left: 35%; 
-    width: 150px; 
-    height: 150px; 
-    animation-delay: 7s; 
-    opacity: 0.08; /* Rất mờ */
-}
-.shape8 { /* Đổi tên từ shape5 cũ */
-    left: 50%; 
-    width: 25px; 
-    height: 25px; 
-    animation-delay: 15s; 
-    animation-duration: 45s; 
+
+/* Ẩn các shape không dùng đến để hiệu ứng gọn gàng hơn */
+.shape4, .shape5, .shape6, .shape7, .shape8 {
+    display: none;
 }
 
 /* === Phần Form bên phải (1/3) === */
