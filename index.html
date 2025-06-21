@@ -94,49 +94,42 @@
                 </div>
 
                 <div id="signupTab" class="tab-content">
-                    <form id="signupForm" onsubmit="handleSignup(event)">
-                        <div class="form-group">
-                            <label for="signupUsername">Tên đăng nhập</label>
-                            <div class="input-icon-wrapper">
-                                <i class="fa-solid fa-user-plus form-icon-left"></i>
-                                <input type="text" id="signupUsername" name="username" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="signupPassword">Mật khẩu</label>
-                            <div class="input-icon-wrapper">
-                                <i class="fa-solid fa-lock form-icon-left"></i>
-                                <input type="password" id="signupPassword" name="password" required>
-                                <i class="fa-solid fa-eye-slash toggle-password form-icon-right"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                             <label for="signupConfirmPassword">Xác nhận mật khẩu</label>
-                            <div class="input-icon-wrapper">
-                                <i class="fa-solid fa-key form-icon-left"></i>
-                                <input type="password" id="signupConfirmPassword" required>
-                                <i class="fa-solid fa-eye-slash toggle-password form-icon-right"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="signupFullName">Tên đầy đủ</label>
-                             <div class="input-icon-wrapper">
-                                <i class="fa-solid fa-id-card form-icon-left"></i>
-                                <input type="text" id="signupFullName" name="fullName" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="signupPhone">Số điện thoại</label>
-                            <div class="input-icon-wrapper">
-                                <i class="fa-solid fa-phone form-icon-left"></i>
-                                <input type="tel" id="signupPhone" name="phone" required>
-                            </div>
-                        </div>
-                        <div class="button-group">
-                            <button type="submit" class="btn btn-primary">Đăng ký</button>
-                        </div>
-                    </form>
-                </div>
+    <form id="signupForm" onsubmit="handleSignup(event)">
+        <div class="form-group">
+            <label for="signupUsername">Tên đăng nhập</label>
+            <div class="input-icon-wrapper">
+                <i class="fa-solid fa-user-plus form-icon-left"></i>
+                <input type="text" id="signupUsername" name="username" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="signupPassword">Mật khẩu</label>
+            <div class="input-icon-wrapper">
+                <i class="fa-solid fa-lock form-icon-left"></i>
+                <input type="password" id="signupPassword" name="password" required>
+                <i class="fa-solid fa-eye-slash toggle-password form-icon-right"></i>
+            </div>
+        </div>
+        <div class="form-group">
+                <label for="signupConfirmPassword">Xác nhận mật khẩu</label>
+            <div class="input-icon-wrapper">
+                <i class="fa-solid fa-key form-icon-left"></i>
+                <input type="password" id="signupConfirmPassword" required>
+                <i class="fa-solid fa-eye-slash toggle-password form-icon-right"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="signupItUserID">User của bạn</label>
+                <div class="input-icon-wrapper">
+                <i class="fa-solid fa-id-card form-icon-left"></i>
+                <input type="text" id="signupItUserID" name="itUserID" required>
+            </div>
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Đăng ký</button>
+        </div>
+    </form>
+</div>
                 
 <div id="guestLoginSection">
     <div class="guest-login-divider">
