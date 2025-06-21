@@ -768,34 +768,47 @@ body.login-page-body {
 @keyframes shrink { from { width: 100%; } to { width: 0%; }}
 /*
 =====================================================================
-=== CSS BỔ SUNG CHO HÌNH ẢNH VÀ TIÊU ĐỀ BÊN TRÁI ===
+=== CSS MỚI: CHỮ TRÊN ẢNH, CÓ KHOẢNG CÁCH, GIỮ HIỆU ỨNG PHÁT SÁNG ===
 =====================================================================
 */
 
-/* Định dạng cho tiêu đề "TEAM IT MTÂY 2" */
+/* Định dạng lại cho tiêu đề */
 .login-page-body .info-title {
+    color: white;
     font-size: 2.8rem;
     font-weight: 700;
-    margin-bottom: 30px; /* Khoảng cách giữa tiêu đề và hình ảnh */
-    text-shadow: 0px 2px 5px rgba(0,0,0,0.25);
     text-transform: uppercase;
     letter-spacing: 2px;
+    margin: 0 0 30px 0; /* Tạo khoảng cách 30px với ảnh ở dưới */
+    text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Định dạng cho hình ảnh */
+/* Định dạng lại cho hình ảnh */
 .login-page-body .info-image {
     display: block;
-    width: 33.33%; /* Kích thước bằng 1/3 khối chứa nó */
+    width: 70%; /* Kích thước bằng 1/3 khối */
     height: auto;
-    margin: 0 auto; /* Tự động căn giữa theo chiều ngang */
+    margin: 0 auto; /* Căn giữa ảnh */
     border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: none;
 }
 
-/* Xóa nội dung văn bản cũ để không bị đè lên */
+/* Hiệu ứng phát sáng cho ảnh */
+@keyframes glowing-image {
+    0% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
+    50% { box-shadow: 0 0 16px rgba(255,255,255,0.7), 0 0 24px rgba(255,255,255,0.7), 0 10px 30px rgba(0, 0, 0, 0.2); }
+    100% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
+}
+
+.login-page-body .info-image {
+    animation: glowing-image 5s ease-in-out infinite;
+}
+
+/* Xóa các quy tắc CSS không cần thiết từ lần trước */
+.login-page-body .image-container {
+    /* Không cần nữa */
+}
 .login-page-body .info-panel p {
     display: none;
 }
