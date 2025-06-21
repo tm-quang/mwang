@@ -175,7 +175,55 @@ async function callApi(action, payload = {}) { try { if (!API_URL.startsWith("ht
 async function handleLogout(message) { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { try { await callApi('logLogout', { username: username }); } catch (error) { console.error("Không thể ghi log đăng xuất:", error); } } sessionStorage.clear(); alert(message); window.location.href = 'index.html'; }
 window.addEventListener('unload', function () { if (sessionStorage.getItem('isAuthenticated') === 'true') { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { const beaconPayload = JSON.stringify({ username: username }); const beaconURL = new URL(API_URL); beaconURL.searchParams.append('action', 'logLogout'); beaconURL.searchParams.append('payload', beaconPayload); navigator.sendBeacon(beaconURL); } } });
 function createSearchableMenu() { searchableMenuItems = []; const ignoredIds = ['btnADMIN', 'btnWorkLeader', 'btnDailyWork', 'btnTimKiem', 'btnHuongDanIT', 'btnphanmem']; function flattenMenu(items, parentIsAdmin = false) { items.forEach(item => { const isAdmin = item.isAdmin || parentIsAdmin; if (item.isDropdown) { if (item.subItems) { flattenMenu(item.subItems, isAdmin); } } else if (!ignoredIds.includes(item.id)) { searchableMenuItems.push({ text: item.text, icon: item.icon, isAdmin: isAdmin, originalItem: item }); } }); } leftMenuData.forEach(section => { flattenMenu(section.items); }); }
-function handleHeaderSearch(event) { const input = event.target; const suggestionsContainer = document.getElementById('header-search-suggestions'); const query = input.value.trim().toLowerCase(); suggestionsContainer.innerHTML = ''; if (query.length === 0) { suggestionsContainer.style.display = 'none'; return; } const filteredItems = searchableMenuItems.filter(item => item.text.toLowerCase().includes(query)); if (filteredItems.length > 0) { filteredItems.forEach(item => { const div = document.createElement('div'); div.className = 'suggestion-item-header'; const icon = document.createElement('i'); icon.className = `${item.icon} icon`; const span = document.createElement('span'); span.textContent = item.text; div.appendChild(icon); div.appendChild(span); div.addEventListener('click', () => { checkAdminAccessAndLoad(item); input.value = ''; suggestionsContainer.style.display = 'none'; document.getElementById('header-search-container').classList.remove('mobile-search-active'); }); suggestionsContainer.appendChild(div); }); suggestionsContainer.style.display = 'block'; } else { suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>'; suggestionsContainer.style.display = 'block'; } }
+function handleHeaderSearch(event) {
+    const input = event.target;
+    const suggestionsContainer = document.getElementById('header-search-suggestions');
+    const query = input.value.trim().toLowerCase();
+
+    suggestionsContainer.innerHTML = '';
+    if (query.length === 0) {
+        suggestionsContainer.style.display = 'none';
+        return;
+    }
+
+    const isGuest = sessionStorage.getItem('userMode') === 'guest';
+    const filteredItems = searchableMenuItems.filter(item => item.text.toLowerCase().includes(query));
+
+    if (filteredItems.length > 0) {
+        filteredItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item-header';
+            
+            const icon = document.createElement('i');
+            icon.className = `${item.icon} icon`;
+            
+            const span = document.createElement('span');
+            span.textContent = item.text;
+            
+            div.appendChild(icon);
+            div.appendChild(span);
+
+            div.addEventListener('click', () => {
+                // KIỂM TRA: Nếu là khách thì không thực hiện hành động
+                if (isGuest) {
+                    return; 
+                }
+                
+                // Nếu không phải khách, thực hiện như bình thường
+                checkAdminAccessAndLoad(item);
+                input.value = '';
+                suggestionsContainer.style.display = 'none';
+                document.getElementById('header-search-container').classList.remove('mobile-search-active');
+            });
+
+            suggestionsContainer.appendChild(div);
+        });
+        suggestionsContainer.style.display = 'block';
+    } else {
+        suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>';
+        suggestionsContainer.style.display = 'block';
+    }
+}
 function updateTimerDisplay(countdownSeconds) { const timerElement = document.getElementById('session-timer'); if (timerElement) { const minutes = Math.floor(countdownSeconds / 60); const seconds = countdownSeconds % 60; timerElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}` } }
 function startCountdown() { clearInterval(countdownInterval); let countdownSeconds = 3600; updateTimerDisplay(countdownSeconds); countdownInterval = setInterval(() => { countdownSeconds--; updateTimerDisplay(countdownSeconds); if (countdownSeconds <= 0) { clearInterval(countdownInterval); handleLogout('Phiên đã hết hạn. Vui lòng đăng nhập lại.'); } }, 1000); }
 function closeMobileSidebar() { const leftSidebarContainer = document.getElementById('left-sidebar-container'); const mobileOverlay = document.getElementById('mobile-overlay'); if (isMobileView) { leftSidebarContainer.classList.remove('open'); mobileOverlay.classList.remove('show'); } }
