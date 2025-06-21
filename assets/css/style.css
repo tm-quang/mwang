@@ -1000,3 +1000,69 @@ body.login-page-body {
         grid-template-columns: 1fr;
     }
 }
+/* === CSS CHO POPUP TRƯỢT THÔNG BÁO (MỚI THÊM) === */
+.sliding-popup-container {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    transform: translateX(110%);
+    background-color: var(--bg-content);
+    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    border-right: none;
+    z-index: 9999;
+    transition: transform 0.4s ease-in-out;
+    width: 320px;
+    max-width: 90%;
+}
+
+.sliding-popup-container.show {
+    transform: translateX(0);
+}
+
+.sliding-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sliding-popup-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sliding-popup-header .icon-success { color: var(--success-color); }
+.sliding-popup-header .icon-error { color: var(--danger-color); }
+
+.sliding-popup-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.sliding-popup-body {
+    padding: 15px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.sliding-popup-timer-bar {
+    height: 4px;
+    background-color: var(--primary-color);
+    width: 100%;
+    animation: shrink var(--duration) linear forwards;
+}
+
+@keyframes shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+}
