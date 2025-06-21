@@ -367,7 +367,7 @@ body.login-page-body {
     height: auto;
     margin-bottom: 10px;
     border-radius: 50%; /* Bo tròn để hiệu ứng đẹp hơn */
-    border: 5px solid rgba(255, 255, 255, 0.7);
+    border: 3px solid rgba(255, 255, 255, 0.7);
     /* Áp dụng animation phát sáng */
     animation: glowing-border 4s ease-in-out infinite;
 }
@@ -766,3 +766,36 @@ body.login-page-body {
 .sliding-popup-body { padding: 15px; font-size: 0.95rem; line-height: 1.5; }
 .sliding-popup-timer-bar { height: 4px; background-color: var(--primary-color); width: 100%; animation: shrink var(--duration, 5000ms) linear forwards; }
 @keyframes shrink { from { width: 100%; } to { width: 0%; }}
+/*
+=====================================================================
+=== CSS BỔ SUNG CHO HÌNH ẢNH VÀ TIÊU ĐỀ BÊN TRÁI ===
+=====================================================================
+*/
+
+/* Định dạng cho tiêu đề "TEAM IT MTÂY 2" */
+.login-page-body .info-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 30px; /* Khoảng cách giữa tiêu đề và hình ảnh */
+    text-shadow: 0px 2px 5px rgba(0,0,0,0.25);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Định dạng cho hình ảnh */
+.login-page-body .info-image {
+    display: block;
+    width: 33.33%; /* Kích thước bằng 1/3 khối chứa nó */
+    height: auto;
+    margin: 0 auto; /* Tự động căn giữa theo chiều ngang */
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Xóa nội dung văn bản cũ để không bị đè lên */
+.login-page-body .info-panel p {
+    display: none;
+}
