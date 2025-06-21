@@ -318,128 +318,57 @@ body.login-page-body {
     opacity: 0.9;
 }
 
-/*
-=====================================================================
-=== CSS MỚI: HIỆU ỨNG MẠCH ĐIỆN TỬ (AI CIRCUIT) ===
-=====================================================================
-*/
+/* Container chứa các chấm, nằm ở lớp nền */
 .animated-shapes {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
     overflow: hidden;
+    z-index: 1;
 }
-/* Định dạng chung cho mỗi "đường mạch" */
+
+/* Định dạng chung cho mỗi chấm (particle) */
 .shape {
     position: absolute;
-    background: rgba(0, 191, 255, 0.15); /* Màu nền mờ của đường mạch */
-    box-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
-    border-radius: 2px;
+    bottom: -20px; /* Bắt đầu từ bên dưới */
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    opacity: 0;
+    animation: rise-up 10s infinite linear;
 }
 
-/* Tạo xung năng lượng chạy trên mạch bằng pseudo-element ::before */
-.shape::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #7DF9FF; /* Màu xanh ngọc cho xung năng lượng */
-    box-shadow: 0 0 10px #7DF9FF, 0 0 20px #7DF9FF, 0 0 30px #7DF9FF;
-    border-radius: 2px;
-    animation: pulse-circuit linear infinite;
-}
-
-/* Animation cho xung năng lượng chạy dọc theo đường mạch */
-@keyframes pulse-circuit {
+/* Animation cho các chấm bay lên */
+@keyframes rise-up {
     0% {
-        transform: scaleX(0);
-        transform-origin: left;
+        transform: translateY(0);
+        opacity: 0;
     }
-    45% {
-        transform: scaleX(1);
-        transform-origin: left;
+    10% {
+        opacity: 1; /* Hiện ra sau khi bắt đầu bay */
     }
-    55% {
-        transform: scaleX(1);
-        transform-origin: right;
+    90% {
+        opacity: 1; /* Giữ nguyên độ mờ trong quá trình bay */
     }
     100% {
-        transform: scaleX(0);
-        transform-origin: right;
+        transform: translateY(-110vh); /* Bay ra khỏi đỉnh màn hình */
+        opacity: 0;
     }
 }
 
-/* Tùy biến vị trí, kích thước, và hướng của từng đường mạch */
-.shape1 { 
-    width: 2px;
-    height: 40%;
-    top: -50px;
-    left: 20%;
-}
-.shape1::before { animation-duration: 3s; animation-delay: 1s; }
-
-.shape2 { 
-    width: 25%; 
-    height: 2px; 
-    top: 30%; 
-    left: -50px;
-}
-.shape2::before { animation-duration: 2.5s; animation-delay: 0s; }
-
-.shape3 { 
-    width: 2px; 
-    height: 35%; 
-    bottom: -50px;
-    right: 25%;
-}
-.shape3::before { animation-duration: 4s; animation-delay: 2s; }
-
-.shape4 { 
-    width: 30%; 
-    height: 2px;
-    top: 70%; 
-    right: -50px;
-}
-.shape4::before { animation-duration: 3.5s; animation-delay: 1.5s; }
-
-.shape5 {
-    width: 2px;
-    height: 20%;
-    top: 10%;
-    left: 50%;
-    transform: rotate(45deg);
-}
-.shape5::before { animation-duration: 5s; animation-delay: 0.5s; }
-
-.shape6 {
-    width: 2px;
-    height: 25%;
-    bottom: 15%;
-    left: 35%;
-    transform: rotate(-30deg);
-}
-.shape6::before { animation-duration: 3.8s; animation-delay: 2.5s; }
-
-.shape7 {
-    width: 15%;
-    height: 2px;
-    top: 50%;
-    left: 5%;
-    transform: rotate(10deg);
-}
-.shape7::before { animation-duration: 2.8s; animation-delay: 3s; }
-
-.shape8 {
-    width: 10%;
-    height: 2px;
-    top: 80%;
-    right: 10%;
-    transform: rotate(-15deg);
-}
-.shape8::before { animation-duration: 4.5s; animation-delay: 4s; }
+/*
+  Sử dụng nth-child để tạo sự ngẫu nhiên cho từng chấm.
+  Mỗi chấm sẽ có vị trí, kích thước, và thời gian animation khác nhau.
+*/
+.shape:nth-child(1) { left: 10%; width: 5px; height: 5px; animation-duration: 12s; animation-delay: 0s; }
+.shape:nth-child(2) { left: 20%; width: 8px; height: 8px; animation-duration: 9s; animation-delay: 1s; }
+.shape:nth-child(3) { left: 30%; width: 4px; height: 4px; animation-duration: 15s; animation-delay: 2s; }
+.shape:nth-child(4) { left: 40%; width: 6px; height: 6px; animation-duration: 8s; animation-delay: 3s; }
+.shape:nth-child(5) { left: 50%; width: 5px; height: 5px; animation-duration: 11s; animation-delay: 0.5s; }
+.shape:nth-child(6) { left: 60%; width: 7px; height: 7px; animation-duration: 13s; animation-delay: 1.5s; }
+.shape:nth-child(7) { left: 70%; width: 4px; height: 4px; animation-duration: 10s; animation-delay: 4s; }
+.shape:nth-child(8) { left: 80%; width: 8px; height: 8px; animation-duration: 7s; animation-delay: 2.5s; }
 
 /* === Phần Form bên phải (1/3) === */
 .login-page-body .form-panel { 
