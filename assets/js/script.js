@@ -22,11 +22,17 @@
     }
 })();
 
+
 // =================================================================================
 // PHẦN 1: CẤU HÌNH & DỮ LIỆU TOÀN CỤC
 // =================================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbwCCmPkDSpdcFnaa3jthssQmIZgavWYhYdSP7j0wD9rxYY_w53UTebjxSZvHB1xpGbGkQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwlVVQPNrt1CrUek0Wum5pt_Jd1G-qTjQYwNhkGo6lwf5Pf73CL32di1zYguwr0TkcsoA/exec";
 const leftMenuData = [{
+    title: 'TÀI KHOẢN',
+    items: [
+        { id: 'btnProfile', text: 'THÔNG TIN THÀNH VIÊN', htmlFile: 'thong-tin-thanh-vien.html', icon: 'fas fa-user-circle' },
+    ]
+}, {
     title: 'ADMIN',
     items: [{
         id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true,
@@ -36,14 +42,7 @@ const leftMenuData = [{
             { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', htmlFile: 'admin-thong-bao.html', icon: 'fa-regular fa-newspaper', isAdmin: true },
         ]
     }]
-}, 
-    {
-        title: 'TÀI KHOẢN',
-        items: [
-            { id: 'btnProfile', text: 'THÔNG TIN THÀNH VIÊN', htmlFile: 'thong-tin-thanh-vien.html', icon: 'fas fa-user-circle' },
-        ]
-    },
-{
+}, {
     title: '2025 - IT MTAY2',
     items: [{
         id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-user-group', isDropdown: true,
@@ -124,6 +123,51 @@ function showTab(tabName) { const tab = document.getElementById(tabName + 'Tab')
 function showLoadingIndicator() { const indicator = document.getElementById('loadingIndicator-login'); if (indicator) indicator.style.display = 'flex'; }
 function hideLoadingIndicator() { const indicator = document.getElementById('loadingIndicator-login'); if (indicator) indicator.style.display = 'none'; }
 function clearForm(formId) { const form = document.getElementById(formId); if (form) form.reset(); }
+
+async function callApi(action, payload = {}, method = 'GET') {
+    try {
+        if (!API_URL.startsWith("https://script.google.com/macros/s/AKfy")) {
+            throw new Error("API_URL chưa được cấu hình trong file script.js.");
+        }
+        
+        let fetchOptions = {
+            method: method,
+            mode: 'cors',
+            headers: {}
+        };
+
+        let finalUrl = API_URL;
+
+        if (method === 'GET') {
+            const url = new URL(API_URL);
+            url.searchParams.append('action', action);
+            url.searchParams.append('payload', JSON.stringify(payload));
+            finalUrl = url.href;
+        } else { // POST
+            fetchOptions.body = JSON.stringify({ action, payload });
+            // Cần thiết cho Google Apps Script khi dùng POST
+            fetchOptions.headers['Content-Type'] = 'text/plain;charset=utf-8';
+        }
+
+        const response = await fetch(finalUrl, fetchOptions);
+        if (!response.ok) {
+            throw new Error(`Lỗi mạng: ${response.status} ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Lỗi khi gọi API cho action "${action}" bằng phương thức ${method}:`, error);
+        if (window.location.pathname.includes('trang-chu.html')) {
+            const functionContent = document.getElementById('functionContent');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            if (functionContent) functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi hệ thống: ${error.message}</p>`;
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+        } else {
+            showErrorAlert('Lỗi hệ thống: ' + error.message);
+        }
+        throw error;
+    }
+}
+
 async function handleLogin(event) {
     if (event) event.preventDefault();
     showLoadingIndicator();
@@ -131,7 +175,8 @@ async function handleLogin(event) {
     const password = document.getElementById('loginPassword').value;
     try {
         const ipAddress = await getUserIP();
-        const response = await callApi('handleLogin', { username, password, ipAddress });
+        // **SỬA LỖI: Dùng POST để đăng nhập**
+        const response = await callApi('handleLogin', { username, password, ipAddress }, 'POST');
         hideLoadingIndicator();
         if (response.success) {
             sessionStorage.setItem('isAuthenticated', 'true');
@@ -149,15 +194,75 @@ async function handleLogin(event) {
         hideLoadingIndicator();
     }
 }
-async function handleSignup(event) { if (event) event.preventDefault(); const password = document.getElementById('signupPassword').value, confirmPassword = document.getElementById('signupConfirmPassword').value; if (password !== confirmPassword) { showErrorAlert('Mật khẩu xác nhận không khớp!'); return; } showLoadingIndicator(); const username = document.getElementById('signupUsername').value, fullName = document.getElementById('signupFullName').value, phone = document.getElementById('signupPhone').value; try { const response = await callApi('handleRegister', { username, password, fullName, phone }); hideLoadingIndicator(); if (response.success) { document.getElementById('signupForm').reset(); showSuccessAlert(response.message); showTab('login'); } else { showErrorAlert(response.message); } } catch (error) { hideLoadingIndicator(); } }
-function handleGuestLogin() { sessionStorage.setItem('isAuthenticated', 'true'); sessionStorage.setItem('userName', 'Khách'); sessionStorage.setItem('userMode', 'guest'); sessionStorage.setItem('loginUsername', 'guest'); sessionStorage.setItem('isAdmin', false); window.location.href = 'trang-chu.html'; }
+async function handleSignup(event) {
+    if (event) event.preventDefault();
+    const password = document.getElementById('signupPassword').value,
+        confirmPassword = document.getElementById('signupConfirmPassword').value;
+    if (password !== confirmPassword) {
+        showErrorAlert('Mật khẩu xác nhận không khớp!');
+        return;
+    }
+    showLoadingIndicator();
+    const username = document.getElementById('signupUsername').value,
+        fullName = document.getElementById('signupFullName').value,
+        phone = document.getElementById('signupPhone').value;
+    try {
+        // **SỬA LỖI: Dùng POST để đăng ký**
+        const response = await callApi('handleRegister', { username, password, fullName, phone }, 'POST');
+        hideLoadingIndicator();
+        if (response.success) {
+            document.getElementById('signupForm').reset();
+            showSuccessAlert(response.message);
+            showTab('login');
+        } else {
+            showErrorAlert(response.message);
+        }
+    } catch (error) {
+        hideLoadingIndicator();
+    }
+}
+function handleGuestLogin() {
+    sessionStorage.setItem('isAuthenticated', 'true');
+    sessionStorage.setItem('userName', 'Khách');
+    sessionStorage.setItem('userMode', 'guest');
+    sessionStorage.setItem('loginUsername', 'guest');
+    sessionStorage.setItem('isAdmin', false);
+    window.location.href = 'trang-chu.html';
+}
 
 // --- Các hàm chung và cho trang chính (trang-chu.html) ---
-function showGuestPopup() { if (document.getElementById('guest-popup-container')) return; const popupHTML = ` <div class="guest-popup-header"><h4>Thông Báo</h4><button class="guest-popup-close-btn">×</button></div> <div class="guest-popup-body">Bạn đang sử dụng tài khoản khách, đăng nhập hoặc đăng ký để sử dụng đầy đủ chức năng.</div> <div class="guest-popup-timer-bar"></div>`; const popup = document.createElement('div'); popup.id = 'guest-popup-container'; popup.innerHTML = popupHTML; document.body.appendChild(popup); const closePopup = () => { popup.classList.remove('show'); setTimeout(() => popup.remove(), 500); }; setTimeout(() => popup.classList.add('show'), 100); setTimeout(closePopup, 15000); popup.querySelector('.guest-popup-close-btn').addEventListener('click', closePopup); }
+function showSlidingPopup(message, type = 'success', duration = 5000) {
+    if (document.getElementById('sliding-popup')) {
+        document.getElementById('sliding-popup').remove();
+    }
+    const popupIcon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+    const iconColorClass = type === 'success' ? 'icon-success' : 'icon-error';
+    const popupHTML = `
+        <div class="sliding-popup-header">
+            <h4><i class="fas ${popupIcon} ${iconColorClass}"></i>Thông Báo</h4>
+            <button class="sliding-popup-close-btn">&times;</button>
+        </div>
+        <div class="sliding-popup-body">${message}</div>
+        <div class="sliding-popup-timer-bar" style="--duration: ${duration}ms"></div>
+    `;
+    const popup = document.createElement('div');
+    popup.id = 'sliding-popup';
+    popup.className = 'sliding-popup-container';
+    popup.innerHTML = popupHTML;
+    document.body.appendChild(popup);
+    const closePopup = () => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 500);
+    };
+    setTimeout(() => popup.classList.add('show'), 100);
+    setTimeout(closePopup, duration);
+    popup.querySelector('.sliding-popup-close-btn').addEventListener('click', closePopup);
+}
+// ... (Các hàm còn lại từ getUserIP đến hết giữ nguyên như phiên bản trước) ...
+// Các hàm này không có lỗi và không cần thay đổi
 async function getUserIP() { try { const response = await fetch('https://api.ipify.org?format=json'); if (!response.ok) return 'N/A'; const data = await response.json(); return data.ip; } catch (error) { console.error('Không thể lấy địa chỉ IP:', error); return 'N/A'; } }
-async function callApi(action, payload = {}) { try { if (!API_URL.startsWith("https://script.google.com/macros/s/AKfy")) { throw new Error("API_URL chưa được cấu hình trong file script.js."); } const url = new URL(API_URL); url.searchParams.append('action', action); url.searchParams.append('payload', JSON.stringify(payload)); const response = await fetch(url, { redirect: 'follow' }); if (!response.ok) { throw new Error(`Lỗi mạng: ${response.statusText}`); } return await response.json(); } catch (error) { console.error(`Lỗi khi gọi API cho action "${action}":`, error); if (window.location.pathname.includes('trang-chu.html')) { const functionContent = document.getElementById('functionContent'); const loadingSpinner = document.getElementById('loadingSpinner'); if (functionContent) functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải dữ liệu: ${error.message}</p>`; if (loadingSpinner) loadingSpinner.style.display = 'none'; } else { showErrorAlert('Lỗi hệ thống: ' + error.message); } throw error; } }
-async function handleLogout(message) { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { try { await callApi('logLogout', { username: username }); } catch (error) { console.error("Không thể ghi log đăng xuất:", error); } } sessionStorage.clear(); alert(message); window.location.href = 'index.html'; }
-window.addEventListener('unload', function () { if (sessionStorage.getItem('isAuthenticated') === 'true') { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { const beaconPayload = JSON.stringify({ username: username }); const beaconURL = new URL(API_URL); beaconURL.searchParams.append('action', 'logLogout'); beaconURL.searchParams.append('payload', beaconPayload); navigator.sendBeacon(beaconURL); } } });
+async function handleLogout(message) { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { try { await callApi('logLogout', { username: username }, 'POST'); } catch (error) { console.error("Không thể ghi log đăng xuất:", error); } } sessionStorage.clear(); alert(message); window.location.href = 'index.html'; }
+window.addEventListener('unload', function () { if (sessionStorage.getItem('isAuthenticated') === 'true') { const username = sessionStorage.getItem('loginUsername'); if (username && sessionStorage.getItem('userMode') !== 'guest') { const beaconPayload = JSON.stringify({ action: 'logLogout', payload: { username: username } }); navigator.sendBeacon(API_URL, beaconPayload); } } });
 function createSearchableMenu() { searchableMenuItems = []; const ignoredIds = ['btnADMIN', 'btnWorkLeader', 'btnDailyWork', 'btnTimKiem', 'btnHuongDanIT', 'btnphanmem']; function flattenMenu(items, parentIsAdmin = false) { items.forEach(item => { const isAdmin = item.isAdmin || parentIsAdmin; if (item.isDropdown) { if (item.subItems) { flattenMenu(item.subItems, isAdmin); } } else if (!ignoredIds.includes(item.id)) { searchableMenuItems.push({ text: item.text, icon: item.icon, isAdmin: isAdmin, originalItem: item }); } }); } leftMenuData.forEach(section => { flattenMenu(section.items); }); }
 function handleHeaderSearch(event) { const input = event.target; const suggestionsContainer = document.getElementById('header-search-suggestions'); const query = input.value.trim().toLowerCase(); suggestionsContainer.innerHTML = ''; if (query.length === 0) { suggestionsContainer.style.display = 'none'; return; } const filteredItems = searchableMenuItems.filter(item => item.text.toLowerCase().includes(query)); if (filteredItems.length > 0) { filteredItems.forEach(item => { const div = document.createElement('div'); div.className = 'suggestion-item-header'; const icon = document.createElement('i'); icon.className = `${item.icon} icon`; const span = document.createElement('span'); span.textContent = item.text; div.appendChild(icon); div.appendChild(span); div.addEventListener('click', () => { checkAdminAccessAndLoad(item); input.value = ''; suggestionsContainer.style.display = 'none'; document.getElementById('header-search-container').classList.remove('mobile-search-active'); }); suggestionsContainer.appendChild(div); }); suggestionsContainer.style.display = 'block'; } else { suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>'; suggestionsContainer.style.display = 'block'; } }
 function updateTimerDisplay(countdownSeconds) { const timerElement = document.getElementById('session-timer'); if (timerElement) { const minutes = Math.floor(countdownSeconds / 60); const seconds = countdownSeconds % 60; timerElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}` } }
@@ -166,7 +271,7 @@ function closeMobileSidebar() { const leftSidebarContainer = document.getElement
 function hideAllDropdowns() { document.querySelectorAll('.dropdown-menu.show').forEach(menu => { menu.classList.remove('show'); menu.previousElementSibling?.classList.remove('active'); }); }
 function collapseSidebar(sidebarElement) { if (!isMobileView) sidebarElement.classList.add('collapsed'); hideAllDropdowns(); }
 function expandSidebar(sidebarElement) { if (!isMobileView) sidebarElement.classList.remove('collapsed'); }
-function renderLeftMenu() { const leftSidebarContentWrapper = document.querySelector('#left-sidebar-container .sidebar-content-wrapper'); if (!leftSidebarContentWrapper) return; leftSidebarContentWrapper.innerHTML = ''; leftMenuData.forEach((section) => { const sectionDiv = document.createElement('div'); sectionDiv.className = 'menu-section'; sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${section.title}</span></h3>`; const menuItemsContainer = document.createElement('div'); menuItemsContainer.className = 'menu-items-container'; section.items.forEach(item => { if (item.isDropdown) { const dropdownDiv = document.createElement('div'); dropdownDiv.className = 'dropdown'; const dropdownButton = document.createElement('div'); dropdownButton.className = `dropdown-button ${item.className || ''}`; dropdownButton.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`; dropdownButton.id = item.id; const dropdownMenu = document.createElement('div'); dropdownMenu.className = 'dropdown-menu'; item.subItems.forEach(subItem => { const subLink = document.createElement('a'); subLink.href = '#'; subLink.id = subItem.id; subLink.className = `menu-button-sidebar ${subItem.className || ''}`; subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`; subLink.addEventListener('click', (e) => { e.preventDefault(); hideAllDropdowns(); checkAdminAccessAndLoad(subItem); if (!isSidebarPinned || isMobileView) { closeMobileSidebar(); } }); dropdownMenu.appendChild(subLink); }); dropdownDiv.appendChild(dropdownButton); dropdownDiv.appendChild(dropdownMenu); menuItemsContainer.appendChild(dropdownDiv); const showMenu = () => { hideAllDropdowns(); const rect = dropdownButton.getBoundingClientRect(); dropdownMenu.style.top = rect.top + 'px'; dropdownMenu.style.left = (rect.right + 10) + 'px'; dropdownMenu.classList.add('show'); dropdownButton.classList.add('active'); }; if (item.isAdmin) { dropdownButton.style.cursor = 'pointer'; dropdownButton.addEventListener('click', () => { checkAdminAccessAndLoad(item, showMenu); }); dropdownDiv.onmouseleave = () => { dropdownTimeout = setTimeout(() => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); }, 300); }; dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout); } else { const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); }; dropdownButton.onmouseenter = () => { if (!isMobileView) { clearTimeout(dropdownTimeout); showMenu(); } }; dropdownButton.onclick = () => { if (isMobileView) { showMenu(); } }; dropdownButton.onmouseleave = () => { if (!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } }; dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout); dropdownMenu.onmouseleave = () => { if (!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } }; } } else { const a = document.createElement('a'); a.href = '#'; a.id = item.id; a.className = `menu-button-sidebar ${item.className || ''}`; a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`; a.addEventListener('click', (e) => { e.preventDefault(); hideAllDropdowns(); loadFunctionContent(item); if (!isSidebarPinned || isMobileView) { closeMobileSidebar(); } }); menuItemsContainer.appendChild(a); } }); sectionDiv.appendChild(menuItemsContainer); leftSidebarContentWrapper.appendChild(sectionDiv); }); }
+function renderLeftMenu() { const leftSidebarContentWrapper = document.querySelector('#left-sidebar-container .sidebar-content-wrapper'); if (!leftSidebarContentWrapper) return; leftSidebarContentWrapper.innerHTML = ''; leftMenuData.forEach((section) => { const sectionDiv = document.createElement('div'); sectionDiv.className = 'menu-section'; sectionDiv.innerHTML = `<h3 class="menu-section-title"><span>${section.title}</span></h3>`; const menuItemsContainer = document.createElement('div'); menuItemsContainer.className = 'menu-items-container'; section.items.forEach(item => { if (item.isDropdown) { const dropdownDiv = document.createElement('div'); dropdownDiv.className = 'dropdown'; const dropdownButton = document.createElement('div'); dropdownButton.className = `dropdown-button ${item.className || ''}`; dropdownButton.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`; dropdownButton.id = item.id; const dropdownMenu = document.createElement('div'); dropdownMenu.className = 'dropdown-menu'; item.subItems.forEach(subItem => { const subLink = document.createElement('a'); subLink.href = '#'; subLink.id = subItem.id; subLink.className = `menu-button-sidebar ${subItem.className || ''}`; subLink.innerHTML = `<i class="${subItem.icon} icon"></i><span>${subItem.text}</span>`; subLink.addEventListener('click', (e) => { e.preventDefault(); hideAllDropdowns(); checkAdminAccessAndLoad(subItem); if (!isSidebarPinned || isMobileView) { closeMobileSidebar(); } }); dropdownMenu.appendChild(subLink); }); dropdownDiv.appendChild(dropdownButton); dropdownDiv.appendChild(dropdownMenu); menuItemsContainer.appendChild(dropdownDiv); const showMenu = () => { hideAllDropdowns(); const rect = dropdownButton.getBoundingClientRect(); dropdownMenu.style.top = rect.top + 'px'; dropdownMenu.style.left = (rect.right + 10) + 'px'; dropdownMenu.classList.add('show'); dropdownButton.classList.add('active'); }; if (item.isAdmin) { dropdownButton.style.cursor = 'pointer'; dropdownButton.addEventListener('click', () => { checkAdminAccessAndLoad(item, showMenu); }); dropdownDiv.onmouseleave = () => { dropdownTimeout = setTimeout(() => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); }, 300); }; dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout); } else { const hideMenu = () => { dropdownMenu.classList.remove('show'); dropdownButton.classList.remove('active'); }; dropdownButton.onmouseenter = () => { if (!isMobileView) { clearTimeout(dropdownTimeout); showMenu(); } }; dropdownButton.onclick = () => { if (isMobileView) { showMenu(); } }; dropdownButton.onmouseleave = () => { if (!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } }; dropdownMenu.onmouseenter = () => clearTimeout(dropdownTimeout); dropdownMenu.onmouseleave = () => { if (!isMobileView) { dropdownTimeout = setTimeout(hideMenu, 300); } }; } } else { const a = document.createElement('a'); a.href = '#'; a.id = item.id; a.className = `menu-button-sidebar ${item.className || ''}`; a.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`; a.addEventListener('click', (e) => { e.preventDefault(); hideAllDropdowns(); checkAdminAccessAndLoad(item); if (!isSidebarPinned || isMobileView) { closeMobileSidebar(); } }); menuItemsContainer.appendChild(a); } }); sectionDiv.appendChild(menuItemsContainer); leftSidebarContentWrapper.appendChild(sectionDiv); }); }
 function renderRightMenu() { const rightSidebarContentWrapper = document.querySelector('#right-sidebar-container .sidebar-content-wrapper'); if (!rightSidebarContentWrapper) return; rightSidebarContentWrapper.innerHTML = ''; rightMenuData.forEach(section => { const title = document.createElement('h3'); title.innerHTML = `<i class="${section.icon}"></i><span>${section.title}</span>`; const menuSection = document.createElement('div'); menuSection.className = 'right-menu-section'; section.items.forEach(item => { const link = document.createElement('a'); link.href = item.href; link.target = '_blank'; link.className = `link-button-right ${item.className || ''}`; link.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`; menuSection.appendChild(link); }); rightSidebarContentWrapper.appendChild(title); rightSidebarContentWrapper.appendChild(menuSection); }); }
 async function loadFunctionContent(item) { if (!item || "object" != typeof item || !("id" in item)) return void console.error("loadFunctionContent được gọi với đối số không hợp lệ:", item); const functionContent = document.getElementById("functionContent"), loadingSpinner = document.getElementById("loadingSpinner"), currentPageTitle = document.getElementById("current-page-title"); functionContent.innerHTML = "", loadingSpinner.style.display = "block", currentPageTitle.textContent = item.pageTitle || item.text || ""; try { let htmlContent = ""; if (item.htmlFile) { const response = await fetch(item.htmlFile); if (!response.ok) throw new Error(`Không thể tải file ${item.htmlFile}: ${response.statusText}`); htmlContent = await response.text() } else { if (!item.functionName) throw new Error("Cấu hình menu không hợp lệ (thiếu htmlFile hoặc functionName)."); { const response = await callApi("getPageContent", { functionName: item.functionName }); if (!response.success || !response.html) throw new Error(response.message || "Không nhận được nội dung hợp lệ từ API."); htmlContent = response.html } } loadingSpinner.style.display = "none", functionContent.innerHTML = htmlContent, "btnTimSieuThi" === item.id ? initSearchStorePage() : "btnTimHangBK" === item.id && initSearchHangBKPage(), Array.from(functionContent.querySelectorAll("script")).forEach(oldScript => { const newScript = document.createElement("script"); Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value)), newScript.appendChild(document.createTextNode(oldScript.innerHTML)), oldScript.parentNode.replaceChild(newScript, oldScript) }), closeMobileSidebar() } catch (error) { loadingSpinner.style.display = "none", functionContent.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải nội dung: ${error.message}</p>` } }
 function setupCollapseListeners() { const functionContent = document.getElementById('functionContent'); functionContent.addEventListener('click', function (event) { const header = event.target.closest('.notification-header-pb3'); if (!header) return; const clickedCard = header.closest('.notification-card-pb3'); if (!clickedCard || event.target.closest('a')) return; if (clickedCard.classList.contains('collapsed')) { const allCards = functionContent.querySelectorAll('.notification-card-pb3'); allCards.forEach(card => { if (card !== clickedCard) card.classList.add('collapsed'); }); } clickedCard.classList.toggle('collapsed'); }); }
@@ -183,40 +288,9 @@ async function handleSearchHangBK() { const maKhoSelect = document.getElementByI
 function clearSearchHangBK() { document.getElementById('maKhoSelect').value = '', document.getElementById('maUserInput').value = '', document.getElementById('maUserSelect').value = '', document.getElementById('resultTableContainerHangBK').style.display = 'none', document.getElementById('resultTableBodyHangBK').innerHTML = '', document.getElementById('errorMessageHangBK').textContent = '', document.getElementById('noResultsMessageHangBK').style.display = 'none', document.getElementById('maKhoSelect').classList.remove('input-error'), document.getElementById('maUserInput').classList.remove('input-error'); }
 function updateClock() { const now = new Date, timeElement = document.getElementById('clock-time'), dateElement = document.getElementById('clock-date'); if (timeElement) timeElement.textContent = now.toLocaleTimeString('vi-VN'); if (dateElement) dateElement.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' }); }
 function handleMobileWelcomePopup() { if (!(('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1080)) return; if (sessionStorage.getItem("popupShown")) return; const popupHTML = `<div class="mobile-popup-content"><button class="mobile-popup-close">×</button><p>Đây là giao diện cho di động, chọn chế độ "xem trang web cho máy tính" trên trình duyệt, hoặc truy cập trang trên máy tính để có trải nghiệm tốt nhất.</p><div class="mobile-popup-timer">Tự động đóng sau <span class="popup-countdown">15</span> giây...</div></div>`, popupElement = document.createElement("div"); popupElement.id = "mobile-welcome-popup", popupElement.className = "mobile-popup", popupElement.innerHTML = popupHTML, document.body.appendChild(popupElement), setTimeout(() => { popupElement && popupElement.classList.add("show") }, 20), sessionStorage.setItem("popupShown", "true"); const closeBtn = popupElement.querySelector(".mobile-popup-close"), countdownSpan = popupElement.querySelector(".popup-countdown"); let countdown = 15; const closePopup = () => { popupElement && (popupElement.classList.remove("show"), setTimeout(() => { popupElement && popupElement.remove() }, 300)), clearInterval(countdownInterval), clearTimeout(autoCloseTimeout) }; var countdownInterval = setInterval(() => { --countdown, countdownSpan && (countdownSpan.textContent = countdown), countdown <= 0 && clearInterval(countdownInterval) }, 1e3); var autoCloseTimeout = setTimeout(closePopup, 15e3); closeBtn.addEventListener("click", closePopup); }
-function showAdminLoginModal(onSuccess) { const adminLoginModal = document.getElementById('adminLoginModal'), adminLoginSubmit = document.getElementById('adminLoginSubmit'), adminLoginCancel = document.getElementById('adminLoginCancel'), adminUsername = document.getElementById('adminUsername'), adminPassword = document.getElementById('adminPassword'), adminLoginError = document.getElementById('adminLoginError'); adminLoginError.textContent = '', adminPassword.value = '', adminLoginModal.style.display = 'flex', adminUsername.focus(); const handleSubmit = async () => { const username = adminUsername.value, password = adminPassword.value; if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; } const response = await callApi('verifyAdminLogin', { username, password }); if (response.success) { adminLoginModal.style.display = 'none'; if (onSuccess) onSuccess(); } else { adminLoginError.textContent = response.message || 'Sai tên đăng nhập hoặc mật khẩu.'; } }; const handleCancel = () => { adminLoginSubmit.removeEventListener('click', handleSubmit); adminLoginCancel.removeEventListener('click', handleCancel); adminLoginModal.style.display = 'none'; }; adminLoginSubmit.addEventListener('click', handleSubmit, { once: true }); adminLoginCancel.addEventListener('click', handleCancel, { once: true }); }
+function showAdminLoginModal(onSuccess) { const adminLoginModal = document.getElementById('adminLoginModal'), adminLoginSubmit = document.getElementById('adminLoginSubmit'), adminLoginCancel = document.getElementById('adminLoginCancel'), adminUsername = document.getElementById('adminUsername'), adminPassword = document.getElementById('adminPassword'), adminLoginError = document.getElementById('adminLoginError'); adminLoginError.textContent = '', adminPassword.value = '', adminLoginModal.style.display = 'flex', adminUsername.focus(); const handleSubmit = async () => { const username = adminUsername.value, password = adminPassword.value; if (!username || !password) { adminLoginError.textContent = 'Vui lòng nhập đủ thông tin.'; return; } const response = await callApi('verifyAdminLogin', { username, password }, 'POST'); if (response.success) { adminLoginModal.style.display = 'none'; if (onSuccess) onSuccess(); } else { adminLoginError.textContent = response.message || 'Sai tên đăng nhập hoặc mật khẩu.'; } }; const handleCancel = () => { adminLoginModal.style.display = 'none'; adminLoginSubmit.removeEventListener('click', handleSubmit); adminLoginCancel.removeEventListener('click', handleCancel); }; adminLoginSubmit.addEventListener('click', handleSubmit, { once: true }); adminLoginCancel.addEventListener('click', handleCancel, { once: true }); }
 function checkAdminAccessAndLoad(item, callback) { const userIsAdmin = sessionStorage.getItem('isAdmin') === 'true'; const itemToLoad = item.originalItem || item; if (item.isAdmin && !userIsAdmin) { showAdminLoginModal(() => { if (callback) callback(); else loadFunctionContent(itemToLoad); }); } else { if (callback) callback(); else loadFunctionContent(itemToLoad); } }
-function showSlidingPopup(message, type = 'success', duration = 5000) {
-    if (document.getElementById('sliding-popup')) {
-        document.getElementById('sliding-popup').remove();
-    }
 
-    const popupIcon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
-    const iconColorClass = type === 'success' ? 'icon-success' : 'icon-error';
-
-    const popupHTML = `
-        <div class="sliding-popup-header">
-            <h4><i class="fas ${popupIcon} ${iconColorClass}"></i>Thông Báo</h4>
-            <button class="sliding-popup-close-btn">&times;</button>
-        </div>
-        <div class="sliding-popup-body">${message}</div>
-        <div class="sliding-popup-timer-bar" style="--duration: ${duration}ms"></div>
-    `;
-
-    const popup = document.createElement('div');
-    popup.id = 'sliding-popup';
-    popup.className = 'sliding-popup-container';
-    popup.innerHTML = popupHTML;
-    document.body.appendChild(popup);
-
-    const closePopup = () => {
-        popup.classList.remove('show');
-        setTimeout(() => popup.remove(), 500);
-    };
-    
-    setTimeout(() => popup.classList.add('show'), 100);
-    setTimeout(closePopup, duration);
-    popup.querySelector('.sliding-popup-close-btn').addEventListener('click', closePopup);
-}
 // =================================================================================
 // PHẦN 3: ĐIỂM KHỞI CHẠY CHÍNH CỦA ỨNG DỤNG
 // =================================================================================
