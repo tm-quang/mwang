@@ -110,6 +110,7 @@ let searchableMenuItems = [], dropdownTimeout, isAdminAuthenticated = !1, countd
 // PHẦN 2: CÁC HÀM XỬ LÝ LOGIC
 // =================================================================================
 
+// --- Các hàm cho trang đăng nhập (index.html) ---
 function showErrorAlert(e) { const t = document.getElementById("errorAlert-login"), o = document.getElementById("errorAlertMessage-login"); o && t && (o.textContent = e, t.classList.add("show"), clearTimeout(errorAlertTimeout), errorAlertTimeout = setTimeout(() => { t.classList.remove("show") }, 4e3)) }
 function showSuccessAlert(e) { const t = document.getElementById("successAlert-login"), o = document.getElementById("successAlertMessage-login"); o && t && (o.textContent = e, t.classList.add("show"), clearTimeout(successAlertTimeout), successAlertTimeout = setTimeout(() => { t.classList.remove("show") }, 4e3)) }
 function showTab(e) { const t = document.getElementById(e + "Tab"); t && (document.querySelectorAll(".tab-content").forEach(e => e.classList.remove("active")), document.querySelectorAll(".tab-button").forEach(e => e.classList.remove("active")), t.classList.add("active"), document.getElementById(e + "-tab-button").classList.add("active")) }
@@ -119,12 +120,72 @@ function clearForm(e) { const t = document.getElementById(e); t && t.reset() }
 async function handleLogin(e) { e && e.preventDefault(), showLoadingIndicator(); const t = document.getElementById("loginUsername").value, o = document.getElementById("loginPassword").value; try { const e = await getUserIP(), n = await callApi("handleLogin", { username: t, password: o, ipAddress: e }); hideLoadingIndicator(), n.success ? (sessionStorage.setItem("isAuthenticated", "true"), sessionStorage.setItem("loginUsername", t), sessionStorage.setItem("userName", n.fullName), sessionStorage.setItem("userMode", "user"), showSuccessAlert("Đăng nhập thành công, đang chuyển trang..."), setTimeout(() => { window.location.href = "trang-chu.html" }, 1500)) : showErrorAlert(n.message) } catch (e) { hideLoadingIndicator() } }
 async function handleSignup(e) { e && e.preventDefault(); const t = document.getElementById("signupPassword").value, o = document.getElementById("signupConfirmPassword").value; if (t !== o) return void showErrorAlert("Mật khẩu xác nhận không khớp!"); showLoadingIndicator(); const n = document.getElementById("signupUsername").value, i = document.getElementById("signupFullName").value, s = document.getElementById("signupPhone").value; try { const e = await callApi("handleRegister", { username: n, password: t, fullName: i, phone: s }); hideLoadingIndicator(), e.success ? (document.getElementById("signupForm").reset(), showSuccessAlert(e.message), showTab("login")) : showErrorAlert(e.message) } catch (e) { hideLoadingIndicator() } }
 function handleGuestLogin() { sessionStorage.setItem("isAuthenticated", "true"), sessionStorage.setItem("userName", "Khách"), sessionStorage.setItem("userMode", "guest"), sessionStorage.setItem("loginUsername", "guest"), window.location.href = "trang-chu.html" }
+
+// --- Các hàm chung và cho trang chính (trang-chu.html) ---
+function showGuestPopup() { if (document.getElementById("guest-popup-container")) return; const e = `\n        <div class="guest-popup-header"><h4>Thông Báo</h4><button class="guest-popup-close-btn">×</button></div>\n        <div class="guest-popup-body">Bạn đang sử dụng tài khoản khách, đăng nhập hoặc đăng ký để sử dụng đầy đủ chức năng.</div>\n        <div class="guest-popup-timer-bar"></div>`, t = document.createElement("div"); t.id = "guest-popup-container", t.innerHTML = e, document.body.appendChild(t); const o = () => { t.classList.remove("show"), setTimeout(() => t.remove(), 500) }; setTimeout(() => t.classList.add("show"), 100), setTimeout(o, 15e3), t.querySelector(".guest-popup-close-btn").addEventListener("click", o) }
 async function getUserIP() { try { const e = await fetch("https://api.ipify.org?format=json"); if (!e.ok) return "N/A"; return (await e.json()).ip } catch (e) { return console.error("Không thể lấy địa chỉ IP:", e), "N/A" } }
 async function callApi(e, t = {}) { try { if (!API_URL.startsWith("https://script.google.com/macros/s/AKfy")) throw new Error("API_URL chưa được cấu hình trong file script.js."); const o = new URL(API_URL); o.searchParams.append("action", e), o.searchParams.append("payload", JSON.stringify(t)); const n = await fetch(o, { redirect: "follow" }); if (!n.ok) throw new Error(`Lỗi mạng: ${n.statusText}`); return await n.json() } catch (t) { if (console.error(`Lỗi khi gọi API cho action "${e}":`, t), window.location.pathname.includes("trang-chu.html")) { const e = document.getElementById("functionContent"), o = document.getElementById("loadingSpinner"); e && (e.innerHTML = `<p style="color: red; text-align: center;">Lỗi tải dữ liệu: ${t.message}</p>`), o && (o.style.display = "none") } else showErrorAlert("Lỗi hệ thống: " + t.message); throw t } }
 async function handleLogout(e) { const t = sessionStorage.getItem("loginUsername"); if (t && "guest" !== sessionStorage.getItem("userMode")) try { await callApi("logLogout", { username: t }) } catch (e) { console.error("Không thể ghi log đăng xuất:", e) } sessionStorage.clear(), alert(e), window.location.href = "index.html" }
 window.addEventListener("unload", function () { if ("true" === sessionStorage.getItem("isAuthenticated")) { const e = sessionStorage.getItem("loginUsername"); if (e && "guest" !== sessionStorage.getItem("userMode")) { const t = JSON.stringify({ username: e }), o = new URL(API_URL); o.searchParams.append("action", "logLogout"), o.searchParams.append("payload", t), navigator.sendBeacon(o) } } });
 function createSearchableMenu() { searchableMenuItems = []; const e = ["btnADMIN", "btnWorkLeader", "btnDailyWork", "btnTimKiem", "btnHuongDanIT", "btnphanmem"]; function t(o) { o.forEach(o => { o.isDropdown ? o.subItems && t(o.subItems) : e.includes(o.id) || searchableMenuItems.push({ text: o.text, icon: o.icon, originalItem: o }) }) } leftMenuData.forEach(e => { t(e.items) }) }
-function handleHeaderSearch(e) { const t = e.target, o = document.getElementById("header-search-suggestions"), n = t.value.trim().toLowerCase(); if (0 === n.length) return void (o.style.display = "none"); const i = searchableMenuItems.filter(e => e.text.toLowerCase().includes(n)); o.innerHTML = "", i.length > 0 ? (i.forEach(e => { const n = document.createElement("div"); n.className = "suggestion-item-header", n.innerHTML = `<i class="${e.icon} icon"></i><span>${e.text}</span>`, n.addEventListener("click", () => { loadFunctionContent(e.originalItem), t.value = "", o.style.display = "none", document.getElementById("header-search-container").classList.remove("mobile-search-active") }), o.appendChild(n) }), o.style.display = "block") : (o.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>', o.style.display = "block") }
+
+/* ================================================================== */
+/* === START: HÀM TÌM KIẾM ĐÃ ĐƯỢC VIẾT LẠI HOÀN TOÀN ĐỂ SỬA LỖI === */
+/* ================================================================== */
+function handleHeaderSearch(event) {
+    const input = event.target;
+    const suggestionsContainer = document.getElementById('header-search-suggestions');
+    const query = input.value.trim().toLowerCase();
+
+    // Luôn xóa gợi ý cũ trước khi bắt đầu
+    suggestionsContainer.innerHTML = '';
+
+    if (query.length === 0) {
+        suggestionsContainer.style.display = 'none';
+        return;
+    }
+
+    const filteredItems = searchableMenuItems.filter(item =>
+        item.text.toLowerCase().includes(query)
+    );
+
+    if (filteredItems.length > 0) {
+        filteredItems.forEach(item => {
+            // Tạo từng phần tử DOM một cách an toàn
+            const div = document.createElement('div');
+            div.className = 'suggestion-item-header';
+
+            const icon = document.createElement('i');
+            icon.className = `${item.icon} icon`;
+
+            const span = document.createElement('span');
+            span.textContent = item.text; // Dùng textContent an toàn hơn innerHTML
+
+            // Gắn các phần tử vào mục gợi ý
+            div.appendChild(icon);
+            div.appendChild(span);
+
+            // Gắn sự kiện click
+            div.addEventListener('click', () => {
+                loadFunctionContent(item.originalItem);
+                input.value = ''; // Xóa nội dung ô tìm kiếm
+                suggestionsContainer.style.display = 'none';
+                document.getElementById('header-search-container').classList.remove('mobile-search-active');
+            });
+
+            suggestionsContainer.appendChild(div);
+        });
+        suggestionsContainer.style.display = 'block';
+    } else {
+        // Hiển thị thông báo khi không có kết quả
+        suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>';
+        suggestionsContainer.style.display = 'block';
+    }
+}
+/* ================================================================== */
+/* === END: HÀM TÌM KIẾM ĐÃ ĐƯỢC VIẾT LẠI HOÀN TOÀN ĐỂ SỬA LỖI === */
+/* ================================================================== */
+
 function updateTimerDisplay(e) { const t = document.getElementById("session-timer"); if (t) { const o = Math.floor(e / 60); e %= 60, t.textContent = `${String(o).padStart(2, "0")}:${String(e).padStart(2, "0")}` } }
 function startCountdown() { clearInterval(countdownInterval); let e = 3600; updateTimerDisplay(e), countdownInterval = setInterval(() => { --e, updateTimerDisplay(e), e <= 0 && (clearInterval(countdownInterval), handleLogout("Phiên đã hết hạn. Vui lòng đăng nhập lại.")) }, 1e3) }
 function closeMobileSidebar() { const e = document.getElementById("left-sidebar-container"), t = document.getElementById("mobile-overlay"); isMobileView && (e.classList.remove("open"), t.classList.remove("show")) }
@@ -154,7 +215,6 @@ function handleMobileWelcomePopup() { if (!(("ontouchstart" in window || navigat
 // PHẦN 3: ĐIỂM KHỞI CHẠY CHÍNH CỦA ỨNG DỤNG
 // =================================================================================
 document.addEventListener('DOMContentLoaded', function () {
-
     if (window.location.pathname.includes('trang-chu.html')) {
         const leftSidebarContainer = document.getElementById('left-sidebar-container');
         const rightSidebarContainer = document.getElementById('right-sidebar-container');
