@@ -29,7 +29,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzly8Pbwvp0N4cWR8sb9MAu
 const leftMenuData = [{
     title: 'ADMIN',
     items: [{
-        id: 'btnADMIN', text: 'BẢNG ĐIỀU KHIỂN', icon: 'fa-solid fa-shield-quartered', isDropdown: true, isAdmin: true,
+        id: 'btnADMIN', text: 'BẢNG ĐIỀU KHIỂN', icon: 'fa-solid fa-gears', isDropdown: true, isAdmin: true,
         subItems: [
             { id: 'btnDatabase', text: 'DATABASE', htmlFile: 'admin-database.html', icon: 'fa-solid fa-database', isAdmin: true },
             { id: 'btnUserInfo', text: 'THÔNG TIN USER', htmlFile: 'admin-user-info.html', icon: 'fa-solid fa-users', isAdmin: true },
