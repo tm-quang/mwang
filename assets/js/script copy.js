@@ -234,69 +234,7 @@ function handleGuestLogin() {
 // =================================================================================
 // PHẦN 3: LOGIC GIAO DIỆN TRANG CHÍNH (trang-chu.html)
 // =================================================================================
-let searchableMenuItems = [];
 
-// --- Thêm hàm mới để tạo danh sách tìm kiếm ---
-function createSearchableMenu() {
-    searchableMenuItems = [];
-    const ignoredIds = ['btnADMIN', 'btnWorkLeader', 'btnDailyWork', 'btnTimKiem', 'btnHuongDanIT', 'btnphanmem'];
-
-    function flattenMenu(items) {
-        items.forEach(item => {
-            if (item.isDropdown) {
-                if (item.subItems) {
-                    flattenMenu(item.subItems);
-                }
-            } else if (!ignoredIds.includes(item.id)) {
-                searchableMenuItems.push({
-                    text: item.text,
-                    icon: item.icon,
-                    originalItem: item
-                });
-            }
-        });
-    }
-
-    leftMenuData.forEach(section => {
-        flattenMenu(section.items);
-    });
-}
-
-// --- Thêm hàm mới để xử lý tìm kiếm và hiển thị gợi ý ---
-function handleHeaderSearch(event) {
-    const input = event.target;
-    const suggestionsContainer = document.getElementById('header-search-suggestions');
-    const query = input.value.trim().toLowerCase();
-
-    if (query.length === 0) {
-        suggestionsContainer.style.display = 'none';
-        return;
-    }
-
-    const filteredItems = searchableMenuItems.filter(item =>
-        item.text.toLowerCase().includes(query)
-    );
-
-    suggestionsContainer.innerHTML = '';
-    if (filteredItems.length > 0) {
-        filteredItems.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'suggestion-item-header';
-            div.innerHTML = `<i class="${item.icon} icon"></i><span>${item.text}</span>`;
-            div.addEventListener('click', () => {
-                loadFunctionContent(item.originalItem);
-                input.value = '';
-                suggestionsContainer.style.display = 'none';
-                document.getElementById('header-search-container').classList.remove('mobile-search-active');
-            });
-            suggestionsContainer.appendChild(div);
-        });
-        suggestionsContainer.style.display = 'block';
-    } else {
-        suggestionsContainer.innerHTML = '<div class="suggestion-item-header"><span>Không tìm thấy kết quả</span></div>';
-        suggestionsContainer.style.display = 'block';
-    }
-}
 async function handleLogout(message) {
     const username = sessionStorage.getItem('loginUsername');
     if (username && sessionStorage.getItem('userMode') !== 'guest') {
@@ -357,25 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sidebarToggleButton = document.getElementById('sidebar-toggle-btn');
         const customConfirmModal = document.getElementById('customConfirmModal');
         const mobileOverlay = document.getElementById('mobile-overlay');
-        const headerSearchInput = document.getElementById('header-search-input');
-        const headerSearchIconMobile = document.getElementById('header-search-icon-mobile');
-        const headerSearchContainer = document.getElementById('header-search-container');
-        const suggestionsContainer = document.getElementById('header-search-suggestions');
 
-        createSearchableMenu();
-
-        headerSearchInput.addEventListener('input', handleHeaderSearch);
-        headerSearchInput.addEventListener('focus', handleHeaderSearch);
-
-        headerSearchIconMobile.addEventListener('click', (e) => {
-            e.stopPropagation();
-            headerSearchContainer.classList.toggle('mobile-search-active');
-            if (headerSearchContainer.classList.contains('mobile-search-active')) {
-                headerSearchInput.focus();
-            }
-        });
-
-    
         let dropdownTimeout;
         const HIDE_DELAY = 300;
         let isAdminAuthenticated = false; 
@@ -383,8 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let countdownSeconds = 3600;
         let isSidebarPinned = false;
         let isMobileView = window.innerWidth <= 1080;
-
-
+        
         const leftMenuData = [
             {
                 title: 'ADMIN',
@@ -1039,10 +958,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!e.target.closest('.dropdown')) hideAllDropdowns();
             if (supportPopup && !supportPopup.contains(e.target) && !supportBtn.contains(e.target)) {
                 supportPopup.classList.remove('show');
-            }
-            if (!headerSearchContainer.contains(e.target)) {
-                suggestionsContainer.style.display = 'none';
-                headerSearchContainer.classList.remove('mobile-search-active');
             }
         }, true);
         
