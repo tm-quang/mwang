@@ -102,7 +102,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .floating-button:hover { transform: translateY(-3px) scale(1.05); }
 .floating-button .icon { font-size: 1.5rem; }.popup-container { position: fixed; bottom: 85px; right: 20px; width: 320px; background-color: var(--bg-content); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-lg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; animation: fadeInScale 0.3s ease-out; }
 .popup-container.show { display: flex; }
-.popup-header { background-color: var(--primary-color); color: var(--text-on-primary); padding: 10px 10px; display: flex; justify-content: space-between; align-items: center; }
+.popup-header { background-color: var(--primary-color); color: var(--text-on-primary); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
 .popup-content { padding: 16px; }
 .popup-content p { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 14px 0; }
 .popup-content p .icon { color: var(--primary-color); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
