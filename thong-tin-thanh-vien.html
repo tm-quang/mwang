@@ -3,7 +3,7 @@
 <div class="profile-page-container">
     <div class="profile-card">
         <div class="profile-header-info">
-            <h2 id="profileFullNameDisplay" class="profile-main-name">Tên người dùng</h2>
+            <h2 id="profileFullNameDisplay" class="profile-main-name">Đang tải...</h2>
             <p id="profileUsernameDisplay" class="profile-main-username">@username</p>
         </div>
 
@@ -35,11 +35,9 @@
 
             <div class="password-change-section">
                 <h4>Đổi mật khẩu</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="currentPassword">Mật khẩu hiện tại</label>
-                        <input type="password" id="currentPassword" placeholder="Để trống nếu không đổi">
-                    </div>
+                <div class="form-group">
+                    <label for="currentPassword">Mật khẩu hiện tại</label>
+                    <input type="password" id="currentPassword" placeholder="Để trống nếu không đổi">
                 </div>
                 <div class="form-row">
                         <div class="form-group">
@@ -89,9 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmNewPassword: document.getElementById('confirmNewPassword')
     };
 
-    // 1. Tải thông tin người dùng
     async function loadUserProfile() {
-        const response = await callApi('getUserProfile', { username: username });
+        const response = await callApi('getUserProfile', { username: username }, 'GET');
         if (response.success && response.data) {
             const data = response.data;
             formElements.fullName.value = data.fullName;
@@ -99,8 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
             formElements.username.value = data.username;
             formElements.phone.value = data.phone;
             formElements.address.value = data.address;
-            
-            // Sửa lỗi hiển thị tên
             formElements.fullNameDisplay.textContent = data.fullName;
             formElements.usernameDisplay.textContent = `@${data.username}`;
         } else {
@@ -108,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. Xử lý khi nhấn nút Lưu
     formElements.profileForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         
@@ -133,23 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
             newPassword: formElements.newPassword.value
         };
 
-        // Dùng POST để gửi dữ liệu
         const response = await callApi('updateUserProfile', payload, 'POST');
         
-        if(response.success){
-            // Gọi popup trượt mới
+        if (response.success){
             showSlidingPopup('Đã cập nhật thông tin thành công!', 'success');
-            
-            // Cập nhật lại tên trên header nếu có thay đổi
             sessionStorage.setItem('userName', payload.fullName);
             document.querySelector('.greeting-text').textContent = `Xin chào, ${payload.fullName}`;
             formElements.fullNameDisplay.textContent = payload.fullName;
-
-            // Xoá các ô mật khẩu
+            
             formElements.currentPassword.value = '';
             formElements.newPassword.value = '';
             formElements.confirmNewPassword.value = '';
-            
+            formElements.formMessage.textContent = '';
+            formElements.formMessage.className = `form-message-placeholder`;
+
         } else {
             showInlineMessage(response.message, 'error');
         }
@@ -157,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setLoading(false);
     });
 
-    // Hàm hiển thị thông báo lỗi ngay dưới form
     function showInlineMessage(msg, type = 'error') {
         formElements.formMessage.textContent = msg;
         formElements.formMessage.className = `profile-message ${type}`;
@@ -166,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLoading(isLoading) {
         const btnText = formElements.saveButton.querySelector('.btn-text');
         const spinner = formElements.saveButton.querySelector('.spinner-sm');
-        if(isLoading){
+        if (isLoading) {
             formElements.saveButton.disabled = true;
             btnText.style.display = 'none';
             spinner.style.display = 'inline-block';
