@@ -102,7 +102,7 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 .floating-button:hover { transform: translateY(-3px) scale(1.05); }
 .floating-button .icon { font-size: 1.5rem; }.popup-container { position: fixed; bottom: 85px; right: 20px; width: 320px; background-color: var(--bg-content); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-lg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; animation: fadeInScale 0.3s ease-out; }
 .popup-container.show { display: flex; }
-.popup-header { background-color: var(--primary-color); color: var(--text-on-primary); padding: 10px 10px; display: flex; justify-content: space-between; align-items: center; }
+.popup-header { background-color: var(--primary-color); color: var(--text-on-primary); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
 .popup-content { padding: 16px; }
 .popup-content p { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 14px 0; }
 .popup-content p .icon { color: var(--primary-color); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
@@ -318,8 +318,14 @@ body.login-page-body {
     opacity: 0.9;
 }
 
-/* Container chứa các chấm, nằm ở lớp nền */
-.animated-shapes {
+/*
+=====================================================================
+=== CSS MỚI: HIỆU ỨNG CHẤM SÁNG DÀY ĐẶC (BOX-SHADOW) ===
+=====================================================================
+*/
+
+/* Container chính, đảm bảo các lớp con nằm đúng vị trí */
+.css-particles-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -329,60 +335,100 @@ body.login-page-body {
     z-index: 1;
 }
 
-/* Định dạng chung cho mỗi chấm (particle) */
-.shape {
+/* Định dạng chung cho các lớp chứa chấm */
+.particles-layer {
     position: absolute;
-    bottom: -20px; /* Bắt đầu từ bên dưới */
-    background-color: rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    opacity: 0;
-    animation: rise-up 10s infinite linear;
+    width: 100%;
+    height: 100%;
+    transform: translateY(100%); /* Bắt đầu từ dưới màn hình */
+    animation: move-up linear infinite;
+    opacity: 0.7;
 }
 
-/* Animation cho các chấm bay lên */
-@keyframes rise-up {
-    0% {
-        transform: translateY(0);
-        opacity: 0;
-    }
-    10% {
-        opacity: 1; /* Hiện ra sau khi bắt đầu bay */
-    }
-    90% {
-        opacity: 1; /* Giữ nguyên độ mờ trong quá trình bay */
-    }
-    100% {
-        transform: translateY(-110vh); /* Bay ra khỏi đỉnh màn hình */
-        opacity: 0;
+/* Animation bay lên */
+@keyframes move-up {
+    to {
+        transform: translateY(-100%);
     }
 }
 
-/*
-  Sử dụng nth-child để tạo sự ngẫu nhiên cho từng chấm.
-  Mỗi chấm sẽ có vị trí, kích thước, và thời gian animation khác nhau.
-*/
-.shape:nth-child(1) { left: 10%; width: 10px; height: 10px; animation-duration: 12s; animation-delay: 5s; }
-.shape:nth-child(2) { left: 20%; width: 11px; height: 11px; animation-duration: 9s; animation-delay: 1s; }
-.shape:nth-child(3) { left: 30%; width: 8px; height: 8px; animation-duration: 15s; animation-delay: 2s; }
-.shape:nth-child(4) { left: 40%; width: 6px; height: 6px; animation-duration: 8s; animation-delay: 3s; }
-.shape:nth-child(5) { left: 50%; width: 5px; height: 5px; animation-duration: 11s; animation-delay: 0.5s; }
-.shape:nth-child(6) { left: 60%; width: 8px; height: 8px; animation-duration: 13s; animation-delay: 1.5s; }
-.shape:nth-child(7) { left: 70%; width: 4px; height: 4px; animation-duration: 10s; animation-delay: 4s; }
-.shape:nth-child(8) { left: 80%; width: 8px; height: 8px; animation-duration: 7s; animation-delay: 2.5s; }
-.shape:nth-child(9) { left: 90%; width: 10px; height: 10px; animation-duration: 14s; animation-delay: 5s; }
-.shape:nth-child(10) { left: 5%; width: 6px; height: 6px; animation-duration: 10s; animation-delay: 6s; }
-.shape:nth-child(11) { left: 15%; width: 4px; height: 4px; animation-duration: 12s; animation-delay: 7s; }
-.shape:nth-child(12) { left: 25%; width: 9px; height: 9px; animation-duration: 9s; animation-delay: 9s; }
-.shape:nth-child(13) { left: 35%; width: 5px; height: 5px; animation-duration: 11s; animation-delay: 9s; }
-.shape:nth-child(14) { left: 45%; width: 8px; height: 8px; animation-duration: 13s; animation-delay: 6s; } 
-.shape:nth-child(15) { left: 55%; width: 14px; height: 14px; animation-duration: 8s; animation-delay: 11s; }
-.shape:nth-child(16) { left: 65%; width: 4px; height: 4px; animation-duration: 15s; animation-delay: 3s; }
-.shape:nth-child(17) { left: 75%; width: 7px; height: 7px; animation-duration: 10s; animation-delay: 3s; } 
-.shape:nth-child(18) { left: 85%; width: 11px; height: 11px; animation-duration: 12s; animation-delay: 6s; }
-.shape:nth-child(19) { left: 95%; width: 11px; height: 11px; animation-duration: 9s; animation-delay: 4s; }
-.shape:nth-child(20) { left: 2%; width: 6px; height: 6px; animation-duration: 11s; animation-delay: 9s; }
-.shape:nth-child(21) { left: 12%; width: 3px; height: 3px; animation-duration: 14s; animation-delay: 7s; }
-.shape:nth-child(22) { left: 22%; width: 9px; height: 9px; animation-duration: 8s; animation-delay: 5s; }
+/* Lớp chấm nhỏ - di chuyển nhanh nhất */
+#particles-small {
+    /* Mỗi dòng là một chấm: x y color */
+    box-shadow: 
+        9vw 88vh #FFF, 88vw 80vh #FFF, 2vw 29vh #FFF, 8vw 1vh #FFF, 54vw 4vh #FFF, 
+        1vw 8vh #FFF, 7vw 88vh #FFF, 62vw 61vh #FFF, 38vw 53vh #FFF, 47vw 8vh #FFF, 
+        87vw 9vh #FFF, 89vw 53vh #FFF, 61vw 73vh #FFF, 55vw 52vh #FFF, 93vw 36vh #FFF, 
+        25vw 27vh #FFF, 32vw 9vh #FFF, 87vw 41vh #FFF, 93vw 77vh #FFF, 32vw 76vh #FFF, 
+        81vw 96vh #FFF, 60vw 58vh #FFF, 73vw 85vh #FFF, 48vw 98vh #FFF, 71vw 4vh #FFF, 
+        5vw 71vh #FFF, 3vw 12vh #FFF, 53vw 30vh #FFF, 24vw 82vh #FFF, 4vw 22vh #FFF;
+    width: 1px;
+    height: 1px;
+    animation-duration: 15s;
+    animation-delay: -5s;
+}
+
+/* Lớp chấm vừa - di chuyển tốc độ trung bình */
+#particles-medium {
+    box-shadow: 
+        19vw 3vh #FFF, 82vw 88vh #FFF, 89vw 4vh #FFF, 59vw 10vh #FFF, 54vw 22vh #FFF, 
+        23vw 32vh #FFF, 38vw 89vh #FFF, 15vw 63vh #FFF, 42vw 85vh #FFF, 17vw 95vh #FFF, 
+        88vw 27vh #FFF, 45vw 52vh #FFF, 89vw 84vh #FFF, 26vw 42vh #FFF, 3vw 69vh #FFF;
+    width: 2px;
+    height: 2px;
+    animation-duration: 25s;
+    animation-delay: -7s;
+}
+
+/* Lớp chấm lớn - di chuyển chậm nhất, tạo chiều sâu */
+#particles-large {
+    box-shadow: 
+        3vw 86vh #FFF, 6vw 53vh #FFF, 67vw 23vh #FFF, 84vw 69vh #FFF, 23vw 94vh #FFF, 
+        72vw 5vh #FFF, 11vw 12vh #FFF, 94vw 35vh #FFF, 54vw 98vh #FFF, 95vw 5vh #FFF;
+    width: 3px;
+    height: 3px;
+    animation-duration: 40s;
+    animation-delay: -10s;
+}
+
+/* Đảm bảo nội dung chính vẫn hiển thị đúng */
+.login-page-body .info-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Các style cũ cho chữ và ảnh vẫn giữ nguyên */
+.login-page-body .info-title {
+    color: white;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 30px 0;
+    text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.login-page-body .info-image {
+    display: block;
+    width: 33.33%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: none;
+    animation: glowing-image 5s ease-in-out infinite;
+}
+
+@keyframes glowing-image {
+    0% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
+    50% { box-shadow: 0 0 16px rgba(255,255,255,0.7), 0 0 24px rgba(255,255,255,0.7), 0 10px 30px rgba(0, 0, 0, 0.2); }
+    100% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
+}
+
+.login-page-body .info-panel p {
+    display: none;
+}
+
 
 /* === Phần Form bên phải (1/3) === */
 .login-page-body .form-panel { 
@@ -820,7 +866,7 @@ body.login-page-body {
 /* Định dạng lại cho hình ảnh */
 .login-page-body .info-image {
     display: block;
-    width: 70%; /* Kích thước bằng 1/3 khối */
+    width: 100%; /* Kích thước bằng 1/3 khối */
     height: auto;
     margin: 0 auto; /* Căn giữa ảnh */
     border-radius: 12px;
@@ -829,12 +875,11 @@ body.login-page-body {
 }
 
 /* Hiệu ứng phát sáng cho ảnh */
-/*@keyframes glowing-image {
+@keyframes glowing-image {
     0% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
     50% { box-shadow: 0 0 16px rgba(255,255,255,0.7), 0 0 24px rgba(255,255,255,0.7), 0 10px 30px rgba(0, 0, 0, 0.2); }
     100% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
 }
-*/
 
 .login-page-body .info-image {
     animation: glowing-image 5s ease-in-out infinite;
