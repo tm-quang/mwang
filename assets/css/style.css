@@ -900,3 +900,7 @@ body.login-page-body {
 .guest-mode #header-search-suggestions .suggestion-item-header:hover {
     background-color: inherit; /* Vô hiệu hóa hiệu ứng hover */
 }
+/* Ẩn tiêu đề trang ở giữa header */
+#current-page-title {
+    display: none !important;
+}
