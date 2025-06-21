@@ -777,292 +777,38 @@ body.login-page-body {
 /* === END: SỬA LỖI MÀU CHỮ GỢI Ý TÌM KIẾM === */
 /* ======================================================= */
 /* === CSS CHO TRANG THÔNG TIN THÀNH VIÊN (MỚI THÊM) === */
-/* ======================================================= */
+.profile-page-container { padding: 20px; max-width: 900px; margin: 20px auto; }
+.profile-card { background-color: #ffffff; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); padding: 30px 40px; border: 1px solid var(--border-color); }
+.profile-header-info { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+.profile-main-name { font-size: 1.8rem; color: var(--text-primary); margin: 0; }
+.profile-main-username { font-size: 1rem; color: var(--text-secondary); margin-top: 4px; }
+.profile-form-section .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.profile-form-section .form-group { margin-bottom: 20px; }
+.profile-form-section label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; }
+.profile-form-section input[type="text"], .profile-form-section input[type="tel"], .profile-form-section input[type="password"], .profile-form-section textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.profile-form-section input:disabled { background-color: #f3f4f6; cursor: not-allowed; }
+.profile-form-section input:focus, .profile-form-section textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15); }
+.password-change-section { border-top: 1px solid var(--border-color); margin-top: 20px; padding-top: 20px; }
+.password-change-section h4 { margin-top: 0; font-size: 1.1rem; color: var(--text-primary); }
+.form-actions { text-align: right; margin-top: 20px; }
+.profile-btn-save { background-color: var(--success-color); color: white; padding: 12px 28px; border: none; border-radius: var(--border-radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; min-width: 150px; }
+.profile-btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
+.profile-btn-save:disabled { background-color: #9ca3af; cursor: not-allowed; }
+.spinner-sm { border: 3px solid rgba(255, 255, 255, 0.3); border-top: 3px solid white; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; margin: 0 auto; }
+.form-message-placeholder { min-height: 1.5em; margin-top: 15px; }
+.profile-message { text-align: center; font-weight: 500; padding: 10px; border-radius: var(--border-radius-md); display: block; }
+.profile-message.error { color: var(--danger-color); background-color: #fee2e2; }
+.profile-message.success { color: #166534; background-color: #dcfce7; }
+@media (max-width: 768px) { .profile-form-section .form-row { grid-template-columns: 1fr; } }
 
-.profile-page-container {
-    padding: 20px;
-    max-width: 900px;
-    margin: 20px auto;
-}
-
-.profile-card {
-    background-color: #ffffff;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: 30px 40px;
-    border: 1px solid var(--border-color);
-}
-
-.profile-title {
-    text-align: center;
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-
-.profile-subtitle {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-top: 0;
-    margin-bottom: 30px;
-}
-
-.profile-content-grid {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 40px;
-}
-
-.profile-avatar-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-right: 1px solid var(--border-color);
-    padding-right: 40px;
-}
-
-.avatar-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
-    margin-bottom: 15px;
-}
-
-#profileAvatarPreview {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid var(--bg-content);
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.avatar-upload-label {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 40px;
-    height: 40px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 2px solid white;
-    transition: background-color 0.2s;
-}
-
-.avatar-upload-label:hover {
-    background-color: var(--primary-hover);
-}
-
-#avatarUploadInput {
-    display: none;
-}
-
-.avatar-name {
-    font-size: 1.3rem;
-    margin: 0;
-    text-align: center;
-}
-
-.avatar-username {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-top: 4px;
-}
-
-.profile-form-section .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.profile-form-section .form-group {
-    margin-bottom: 20px;
-}
-
-.profile-form-section label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.profile-form-section input[type="text"],
-.profile-form-section input[type="tel"],
-.profile-form-section input[type="password"],
-.profile-form-section textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-md);
-    box-sizing: border-box;
-    font-size: 1rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.profile-form-section input:disabled {
-    background-color: #f3f4f6;
-    cursor: not-allowed;
-}
-
-.profile-form-section input:focus,
-.profile-form-section textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
-}
-
-.password-change-section {
-    border-top: 1px solid var(--border-color);
-    margin-top: 20px;
-    padding-top: 20px;
-}
-
-.password-change-section h4 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-}
-
-.form-actions {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.profile-btn-save {
-    background-color: var(--success-color);
-    color: white;
-    padding: 12px 28px;
-    border: none;
-    border-radius: var(--border-radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 150px;
-}
-
-.profile-btn-save:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-}
-
-.profile-btn-save:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-}
-
-.spinner-sm {
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
-
-.profile-message {
-    text-align: center;
-    font-weight: 500;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: var(--border-radius-md);
-    display: block;
-    min-height: 1.5em;
-}
-.profile-message.error {
-    color: var(--danger-color);
-    background-color: #fee2e2;
-}
-.profile-message.success {
-    color: #166534;
-    background-color: #dcfce7;
-}
-
-@media (max-width: 768px) {
-    .profile-content-grid {
-        grid-template-columns: 1fr;
-    }
-    .profile-avatar-section {
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        padding-right: 0;
-        padding-bottom: 30px;
-    }
-    .profile-form-section .form-row {
-        grid-template-columns: 1fr;
-    }
-}
-/* === CSS CHO POPUP TRƯỢT THÔNG BÁO (MỚI THÊM) === */
-.sliding-popup-container {
-    position: fixed;
-    top: 80px;
-    right: 0;
-    transform: translateX(110%);
-    background-color: var(--bg-content);
-    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border-color);
-    border-right: none;
-    z-index: 9999;
-    transition: transform 0.4s ease-in-out;
-    width: 320px;
-    max-width: 90%;
-}
-
-.sliding-popup-container.show {
-    transform: translateX(0);
-}
-
-.sliding-popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.sliding-popup-header h4 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
+/* === CSS CHO POPUP TRƯỢT THÔNG BÁO === */
+.sliding-popup-container { position: fixed; top: 80px; right: 0; transform: translateX(110%); background-color: var(--bg-content); border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); border-right: none; z-index: 9999; transition: transform 0.4s ease-in-out; width: 320px; max-width: 90%; }
+.sliding-popup-container.show { transform: translateX(0); }
+.sliding-popup-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-bottom: 1px solid var(--border-color); }
+.sliding-popup-header h4 { margin: 0; font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 .sliding-popup-header .icon-success { color: var(--success-color); }
 .sliding-popup-header .icon-error { color: var(--danger-color); }
-
-.sliding-popup-close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-secondary);
-}
-
-.sliding-popup-body {
-    padding: 15px;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-.sliding-popup-timer-bar {
-    height: 4px;
-    background-color: var(--primary-color);
-    width: 100%;
-    animation: shrink var(--duration) linear forwards;
-}
-
-@keyframes shrink {
-    from { width: 100%; }
-    to { width: 0%; }
-}
+.sliding-popup-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+.sliding-popup-body { padding: 15px; font-size: 0.95rem; line-height: 1.5; }
+.sliding-popup-timer-bar { height: 4px; background-color: var(--primary-color); width: 100%; animation: shrink var(--duration, 5000ms) linear forwards; }
+@keyframes shrink { from { width: 100%; } to { width: 0%; } }
