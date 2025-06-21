@@ -886,11 +886,12 @@ body.login-page-body {
 }
 
 /* Hiệu ứng phát sáng cho ảnh */
-@keyframes glowing-image {
+/*@keyframes glowing-image {
     0% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
     50% { box-shadow: 0 0 16px rgba(255,255,255,0.7), 0 0 24px rgba(255,255,255,0.7), 0 10px 30px rgba(0, 0, 0, 0.2); }
     100% { box-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 12px rgba(255,255,255,0.4), 0 10px 30px rgba(0, 0, 0, 0.2); }
 }
+*/
 
 .login-page-body .info-image {
     animation: glowing-image 5s ease-in-out infinite;
