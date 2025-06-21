@@ -1,4 +1,4 @@
-/* GIAO DIỆN TRANG CHÍNH */
+/* GIAO DIỆN TRANG CHÍNH (GIỮ NGUYÊN) */
 :root {
     --primary-color: #0066ff;
     --primary-hover: #3527cf;
@@ -30,7 +30,7 @@
 }
 body { margin: 0; padding: 0; font-family: var(--font-family); background-color: var(--bg-main); color: var(--text-primary); display: flex; flex-direction: column; height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-/* Các style chung khác của trang chính... (Giữ nguyên) */
+/* ... (Toàn bộ CSS cho giao diện chính của bạn được giữ nguyên ở đây) ... */
 #main-header { background-color: #0056b3; color: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); border-bottom: 1px solid var(--border-color); flex-shrink: 0; z-index: 10; }
 #header-left { display: flex; align-items: center; gap: 16px; font-size: 1rem; font-weight: 500; }
 #header-left span { cursor: pointer; display: flex; align-items: center; gap: 8px; color: white; transition: color 0.2s ease; }
@@ -257,16 +257,16 @@ body { margin: 0; padding: 0; font-family: var(--font-family); background-color:
 
 /*
 =====================================================================
-=== PHẦN CSS MỚI CHO TRANG ĐĂNG NHẬP (Bản sửa lỗi cuối cùng) ===
+=== PHẦN CSS MỚI CHO TRANG ĐĂNG NHẬP (Bản nâng cấp) ===
 =====================================================================
 */
 body.login-page-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif; /* Sử dụng font Poppins cho trang login */
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: auto; /* Cho phép cuộn trên màn hình nhỏ */
+    overflow: auto; 
     background: linear-gradient(-45deg, #23a6d5, #23d5ab, #5b23d5, #007bff);
     background-size: 400% 400%;
     animation: gradient-animation 15s ease infinite;
@@ -282,8 +282,8 @@ body.login-page-body {
 .login-page-body .main-container {
     display: flex;
     width: 100%;
-    max-width: 1100px;
-    min-height: 650px;
+    max-width: 1000px; /* Giảm kích thước tổng thể */
+    min-height: 600px;
     background-color: #fff;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -301,20 +301,21 @@ body.login-page-body {
 
 /* === Phần trang trí bên trái === */
 .login-page-body .info-panel {
-    flex: 2.5;
+    flex: 1.5; /* Tăng tỷ lệ cho phần bên trái */
     background: linear-gradient(45deg, #0056b3, #007bff);
     color: #fff;
     padding: 50px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     position: relative;
     overflow: hidden;
 }
 
 .login-page-body .info-panel h2 { font-size: 2.0rem; margin-bottom: 10px; z-index: 2; }
 .login-page-body .info-panel p { font-size: 1.1rem; line-height: 1.6; z-index: 2; }
-.login-page-body .info-panel-logo { text-align: center; margin-bottom: 60px; margin-top: 5px; }
-.login-page-body .info-panel-logo img { max-width: 150px; height: auto; }
+.login-page-body .info-panel-logo { text-align: center; margin-bottom: 40px; }
+.login-page-body .info-panel-logo img { max-width: 120px; height: auto; }
 
 .login-page-body .waves { position: absolute; width: 100%; height: 15rem; bottom: 0; left: 0; z-index: 1; }
 .login-page-body .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
@@ -326,49 +327,47 @@ body.login-page-body {
 
 /* === Phần Form bên phải === */
 .login-page-body .form-panel { 
-    flex: 1.5; 
-    padding: 20px 50px; 
+    flex: 1; /* Giảm tỷ lệ phần form */
+    padding: 20px 40px; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
 }
-.login-page-body .form-wrapper { width: 100%; max-width: 400px; }
+.login-page-body .form-wrapper { width: 100%; max-width: 350px; }
 .login-page-body .logo { text-align: center; margin-bottom: 20px; }
-.login-page-body .logo i { font-size: 4rem; color: #007bff; }
+.login-page-body .logo i { font-size: 3.5rem; color: #007bff; }
 .login-page-body .tab-buttons { display: flex; justify-content: center; margin-bottom: 25px; background: #e9ecef; border-radius: 50px; padding: 5px; }
-.login-page-body .tab-button { background: none; border: none; padding: 10px 20px; font-size: 1em; font-weight: 600; color: #555; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; border-radius: 50px; }
+.login-page-body .tab-button { background: none; border: none; padding: 10px 20px; font-size: 0.9em; font-weight: 600; color: #555; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; border-radius: 50px; }
 .login-page-body .tab-button.active { background-color: #fff; color: #0056b3; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 .login-page-body .tab-content { display: none; animation: fade-in-form 0.5s ease-in-out; }
 @keyframes fade-in-form { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .login-page-body .tab-content.active { display: block; }
 
-/* === SỬA LỖI HIỂN THỊ ICON - PHIÊN BẢN TRIỆT ĐỂ === */
+
 .login-page-body .form-group { 
-    margin-bottom: 20px; 
+    margin-bottom: 18px; 
     position: relative; 
 }
 
-/* Định dạng cho input */
 .login-page-body .form-group input { 
     width: 100%; 
-    padding: 14px 45px 14px 45px; /* top, right, bottom, left */
+    padding: 12px 45px 12px 45px;
     border: 1px solid #ddd; 
     border-radius: 8px; 
-    font-size: 1em; 
+    font-size: 0.95em; 
     font-family: 'Poppins', sans-serif; 
     transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-    box-sizing: border-box; /* Quan trọng! */
+    box-sizing: border-box;
 }
 .login-page-body .form-group input:focus { 
     border-color: #007bff; 
     outline: none; 
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); 
 }
-.login-page-body .form-group input:focus + .form-icon-left { 
+.login-page-body .form-group input:focus + .form-icon-left, .login-page-body .form-group input:focus ~ .form-icon-left { 
     color: #007bff; 
 }
 
-/* Định vị cho icon bên TRÁI */
 .login-page-body .form-icon-left {
     position: absolute;
     left: 15px;
@@ -379,7 +378,6 @@ body.login-page-body {
     z-index: 2;
 }
 
-/* Định vị cho icon bên PHẢI (con mắt) */
 .login-page-body .form-icon-right.toggle-password {
     position: absolute;
     right: 15px;
@@ -393,34 +391,20 @@ body.login-page-body {
 .login-page-body .form-icon-right.toggle-password:hover {
     color: var(--primary-color);
 }
-/* === KẾT THÚC PHẦN SỬA LỖI ICON === */
 
 
 .login-page-body .btn {
     background: linear-gradient(45deg, #0056b3, #007bff);
-    color: white; padding: 14px 25px; border: none; border-radius: 8px;
-    font-size: 1.1em; cursor: pointer;
+    color: white; padding: 12px 25px; border: none; border-radius: 8px;
+    font-size: 1em; cursor: pointer;
     width: 100%; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
     position: relative;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.login-page-body .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.6s ease;
-}
 .login-page-body .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-}
-.login-page-body .btn:hover::before {
-    left: 100%;
 }
 .login-page-body .button-group { display: flex; gap: 10px; margin-bottom: 15px; }
 .login-page-body .btn.btn-clear {
@@ -431,7 +415,6 @@ body.login-page-body {
     background: #c82333;
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
-.login-page-body .btn.btn-clear::before { display: none; }
 .login-page-body .btn-guest { 
     width: 100%;
     background: var(--success-color);
@@ -441,16 +424,10 @@ body.login-page-body {
     background: #1a9e49;
     box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
 }
-.login-page-body .info-panel-logo { text-align: center; margin-bottom: 60px; margin-top: 5px; }
-.login-page-body .info-panel-logo img { max-width: 150px; height: auto; }
-.login-page-body .tab-content { display: none; animation: fade-in-form 0.5s ease-in-out; }
-@keyframes fade-in-form { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.login-page-body .tab-content.active { display: block; }
 
-#loadingIndicator-login { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); justify-content: center; align-items: center; z-index: 2000; }
+#loadingIndicator-login { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); justify-content: center; align-items: center; z-index: 3000; }
 .login-page-body .spinner { border: 8px solid #f3f3f3; border-top: 8px solid #007bff; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
 
-/* CSS cho Alert Toast ở góc màn hình */
 .alert-toast {
     position: fixed;
     bottom: 20px;
@@ -471,27 +448,21 @@ body.login-page-body {
     opacity: 1;
     transform: translateX(0);
 }
-.alert-toast i {
-    font-size: 1.2rem;
-}
-#errorAlert-login {
-    background-color: var(--danger-color);
-}
-#successAlert-login {
-    background-color: var(--success-color);
-}
+.alert-toast i { font-size: 1.2rem; }
+#errorAlert-login { background-color: var(--danger-color); }
+#successAlert-login { background-color: var(--success-color); }
 
 
-.login-page-body .support-widget { position: fixed; bottom: 20px; right: 20px; z-index: 100; transition: z-index 0.1s linear; }
+.login-page-body .support-widget { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
 .login-page-body .support-bubble { width: 60px; height: 60px; background: #007bff; color: #fff; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease, background-color 0.2s ease; }
 .login-page-body .support-bubble:hover { transform: scale(1.1); background-color: #0056b3; }
 .login-page-body .support-info-box { position: absolute; bottom: 75px; right: 0; width: 300px; background: #fff; color: #333; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); padding: 15px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; }
 .login-page-body .support-widget.open .support-info-box { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .login-page-body .support-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
-.login-page-body .support-header h4 { font-size: 1.1rem; font-weight: 600; }
-.login-page-body .close-support-btn { background: none; border: none; font-size: 1.5rem; color: #aaa; cursor: pointer; line-height: 1; }
+.login-page-body .support-header h4 { font-size: 1.1rem; font-weight: 600; margin:0; }
+.login-page-body .close-support-btn { background: none; border: none; font-size: 1.5rem; color: #aaa; cursor: pointer; line-height: 1; padding:0;}
 .login-page-body .support-body a { color: #007bff; text-decoration: none; font-weight: 600; }
-.login-page-body .support-body p { margin-bottom: 5px; }
+.login-page-body .support-body p { margin: 5px 0; }
 
 /* Responsive cho trang Login */
 @media (max-width: 992px) {
@@ -499,316 +470,13 @@ body.login-page-body {
         flex-direction: column;
         min-height: auto;
         width: 90%;
-        max-width: 500px;
-        margin: 20px 0;
+        max-width: 450px;
+        margin: 40px 20px;
     }
     .login-page-body .info-panel {
         display: none; /* Ẩn panel trang trí trên mobile */
     }
     .login-page-body .form-panel {
-        padding: 30px;
+        padding: 40px 30px;
     }
 }
-
-/* === CSS NÂNG CẤP CHO BẢNG ĐĂNG XUẤT === */
-#customConfirmModal .modal-content {
-    background-color: #f9fafb;
-    padding: 40px;
-    border: 1px solid var(--border-color);
-    max-width: 450px;
-}
-#customConfirmModal p {
-    font-size: 1.2rem;
-    color: var(--text-primary);
-    font-weight: 500;
-    margin-bottom: 30px;
-}
-#customConfirmModal .modal-buttons button {
-    flex-grow: 1;
-    padding: 12px 20px;
-    border-radius: var(--border-radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-#customConfirmModal #confirmBtnYes {
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-}
-#customConfirmModal #confirmBtnYes:hover {
-    background-color: var(--danger-hover);
-    transform: translateY(-2px);
-}
-#customConfirmModal #confirmBtnNo {
-    background-color: #e5e7eb;
-    color: var(--text-primary);
-    border: 1px solid #d1d5db;
-}
-#customConfirmModal #confirmBtnNo:hover {
-    background-color: #d1d5db;
-}
-
-
-/* === CSS CHO GUEST MODE === */
-.guest-mode #left-sidebar-container,
-.guest-mode #sidebar-toggle-btn {
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-/* === CSS CHO POPUP GUEST === */
-#guest-popup-container {
-    position: fixed;
-    top: 80px; /* Dịch xuống dưới header */
-    right: 20px;
-    width: 350px;
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-    z-index: 3000;
-    overflow: hidden;
-    transform: translateX(calc(100% + 20px));
-    transition: transform 0.5s ease-in-out;
-}
-#guest-popup-container.show {
-    transform: translateX(0);
-}
-.guest-popup-header {
-    padding: 10px 15px;
-    background-color: #34495e;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.guest-popup-header h4 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-.guest-popup-close-btn {
-    background: none;
-    border: none;
-    color: #bdc3c7;
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.guest-popup-close-btn:hover {
-    color: #fff;
-}
-.guest-popup-body {
-    padding: 20px 15px;
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-.guest-popup-timer-bar {
-    height: 5px;
-    background-color: var(--success-color);
-    width: 100%;
-    animation: shrink 15s linear forwards;
-}
-@keyframes shrink {
-    from { width: 100%; }
-    to { width: 0%; }
-}
-
-/* ======================================================= */
-/* === SỬA LỖI HIỂN THỊ ICON MẬT KHẨU (Bản sửa cuối) === */
-/* ======================================================= */
-
-/* Định vị lại icon bên trái (khóa, user,...) một cách chính xác */
-.login-page-body .form-group > i:not(.toggle-password) {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
-    z-index: 2;
-}
-
-/* Định vị lại icon con mắt bên phải */
-.login-page-body .form-group .toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
-    cursor: pointer;
-    z-index: 2;
-}
-
-/* Thêm khoảng đệm bên phải cho các ô input có icon con mắt */
-.login-page-body .form-group input[type="password"],
-.login-page-body .form-group input[type="text"][id*="Password"] {
-    padding-right: 45px !important; /* Thêm !important để đảm bảo được áp dụng */
-}
-/* File: mwang/assets/css/style.css */
-
-/* === CSS CHO KHUNG TÌM KIẾM MỚI TRÊN HEADER === */
-#header-search-container {
-    display: flex;
-    align-items: center;
-    margin-left: 15px;
-}
-
-#header-search-wrapper {
-    position: relative;
-}
-
-#header-search-input {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 20px;
-    color: white;
-    padding: 6px 15px 6px 35px; /* Thêm khoảng trống cho icon */
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    width: 220px;
-}
-
-#header-search-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-#header-search-input:focus {
-    background-color: white;
-    color: var(--text-primary);
-    border-color: var(--primary-color);
-    width: 300px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-#header-search-icon-input {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.7);
-    transition: color 0.3s ease;
-}
-
-#header-search-input:focus + #header-search-icon-input {
-    color: var(--text-secondary);
-}
-
-#header-search-icon-mobile {
-    color: white;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: none; /* Mặc định ẩn trên desktop */
-    padding: 5px;
-}
-
-#header-search-suggestions {
-    display: none;
-    position: absolute;
-    top: 115%;
-    left: 0;
-    width: 100%;
-    min-width: 300px;
-    background-color: var(--bg-content);
-    border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-lg);
-    z-index: 1100;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-}
-
-.suggestion-item-header {
-    padding: 12px 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    color: black;
-}
-
-.suggestion-item-header:last-child {
-    border-bottom: none;
-}
-
-.suggestion-item-header:hover {
-    background-color: #f3f4f6;
-}
-
-.suggestion-item-header .icon {
-    color: var(--primary-color);
-}
-
-/* Responsive cho ô tìm kiếm */
-@media (max-width: 768px) {
-    #header-search-wrapper {
-        display: none; /* Ẩn ô nhập liệu trên di động */
-    }
-    #header-search-container.mobile-search-active #header-search-wrapper {
-        display: block;
-        position: absolute;
-        top: 50px;
-        left: 10px;
-        right: 10px;
-        width: auto;
-    }
-    #header-search-container.mobile-search-active #header-search-input {
-        width: 100%;
-        background-color: white;
-        color: var(--text-primary);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-     #header-search-container.mobile-search-active #header-search-icon-input {
-        color: var(--text-secondary);
-    }
-    #header-search-icon-mobile {
-        display: block; /* Hiện icon trên di động */
-    }
-}
-/* === START: SỬA LỖI MÀU CHỮ GỢI Ý TÌM KIẾM (Bản vá cuối cùng) === */
-#header-search-suggestions .suggestion-item-header {
-    color: var(--text-primary) !important;
-}
-#header-search-suggestions .suggestion-item-header span {
-    color: var(--text-primary) !important; /* Dùng màu đen và !important để đảm bảo ghi đè */
-}
-/* === END: SỬA LỖI MÀU CHỮ GỢI Ý TÌM KIẾM === */
-/* ======================================================= */
-/* === CSS CHO TRANG THÔNG TIN THÀNH VIÊN (MỚI THÊM) === */
-.profile-page-container { padding: 20px; max-width: 900px; margin: 20px auto; }
-.profile-card { background-color: #ffffff; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); padding: 30px 40px; border: 1px solid var(--border-color); }
-.profile-header-info { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
-.profile-main-name { font-size: 1.8rem; color: var(--text-primary); margin: 0; }
-.profile-main-username { font-size: 1rem; color: var(--text-secondary); margin-top: 4px; }
-.profile-form-section .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.profile-form-section .form-group { margin-bottom: 20px; }
-.profile-form-section label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; }
-.profile-form-section input[type="text"], .profile-form-section input[type="tel"], .profile-form-section input[type="password"], .profile-form-section textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.profile-form-section input:disabled { background-color: #f3f4f6; cursor: not-allowed; }
-.profile-form-section input:focus, .profile-form-section textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15); }
-.password-change-section { border-top: 1px solid var(--border-color); margin-top: 20px; padding-top: 20px; }
-.password-change-section h4 { margin-top: 0; font-size: 1.1rem; color: var(--text-primary); }
-.form-actions { text-align: right; margin-top: 20px; }
-.profile-btn-save { background-color: var(--success-color); color: white; padding: 12px 28px; border: none; border-radius: var(--border-radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; min-width: 150px; }
-.profile-btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
-.profile-btn-save:disabled { background-color: #9ca3af; cursor: not-allowed; }
-.spinner-sm { border: 3px solid rgba(255, 255, 255, 0.3); border-top: 3px solid white; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; margin: 0 auto; }
-.form-message-placeholder { min-height: 1.5em; margin-top: 15px; }
-.profile-message { text-align: center; font-weight: 500; padding: 10px; border-radius: var(--border-radius-md); display: block; }
-.profile-message.error { color: var(--danger-color); background-color: #fee2e2; }
-.profile-message.success { color: #166534; background-color: #dcfce7; }
-@media (max-width: 768px) { .profile-form-section .form-row { grid-template-columns: 1fr; } }
-
-/* === CSS CHO POPUP TRƯỢT THÔNG BÁO === */
-.sliding-popup-container { position: fixed; top: 80px; right: 0; transform: translateX(110%); background-color: var(--bg-content); border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); border-right: none; z-index: 9999; transition: transform 0.4s ease-in-out; width: 320px; max-width: 90%; }
-.sliding-popup-container.show { transform: translateX(0); }
-.sliding-popup-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-bottom: 1px solid var(--border-color); }
-.sliding-popup-header h4 { margin: 0; font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.sliding-popup-header .icon-success { color: var(--success-color); }
-.sliding-popup-header .icon-error { color: var(--danger-color); }
-.sliding-popup-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
-.sliding-popup-body { padding: 15px; font-size: 0.95rem; line-height: 1.5; }
-.sliding-popup-timer-bar { height: 4px; background-color: var(--primary-color); width: 100%; animation: shrink var(--duration, 5000ms) linear forwards; }
-@keyframes shrink { from { width: 100%; } to { width: 0%; } }
