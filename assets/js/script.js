@@ -29,68 +29,71 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzly8Pbwvp0N4cWR8sb9MAu
 const leftMenuData = [{
     title: 'ADMIN',
     items: [{
-        id: 'btnADMIN', text: 'QUẢN TRỊ HỆ THỐNG', icon: 'fa-solid fa-sliders', isDropdown: true, isAdmin: true,
+        id: 'btnADMIN', text: 'BẢNG ĐIỀU KHIỂN', icon: 'fa-solid fa-shield-halved', isDropdown: true, isAdmin: true,
         subItems: [
-            { id: 'btnDatabase', text: 'DATABASE', htmlFile: 'admin-database.html', icon: 'fa-solid fa-database', isAdmin: true },
-            { id: 'btnUserInfo', text: 'THÔNG TIN USER', htmlFile: 'admin-user-info.html', icon: 'fa-solid fa-users', isAdmin: true },
-            { id: 'btnThongBao', text: 'TẠO THÔNG BÁO MỚI', htmlFile: 'admin-thong-bao.html', icon: 'fa-regular fa-newspaper', isAdmin: true },
+            { id: 'btnDatabase', htmlFile: 'admin-database.html', icon: 'fa-solid fa-database', isAdmin: true },
+            { id: 'btnUserInfo', text: '', htmlFile: 'admin-user-info.html', icon: 'fa-solid fa-users', isAdmin: true },
+            { id: 'btnThongBao', htmlFile: 'admin-thong-bao.html', icon: 'fa-regular fa-newspaper', isAdmin: true },
         ]
     }]
 }, {
     title: '2025 - IT MTAY2',
     items: [{
-        id: 'btnWorkLeader', text: '2025 - IT MTAY2', icon: 'fa-solid fa-user-group', isDropdown: true,
+        id: 'btnWorkLeader', icon: 'fa-solid fa-user-group', isDropdown: true,
         subItems: [
-            { id: 'btnWorkMT2', text: 'TRIỂN KHAI MIỀN TÂY 2', htmlFile: 'cv-trien-khai.html', icon: 'fa-solid fa-user-group' },
-            { id: 'btnBHXToiUu', text: 'BHX - TỐI ƯU THIẾT BỊ', htmlFile: 'cv-trien-khai-bhx.html', icon: 'fa-solid fa-circle-check' },
+            { id: 'btnWorkMT2',htmlFile: 'cv-trien-khai.html', icon: 'fa-solid fa-user-group' },
+            { id: 'btnBHXToiUu', htmlFile: 'cv-trien-khai-bhx.html', icon: 'fa-solid fa-circle-check' },
         ]
     }, {
-        id: 'btnDailyWork', text: 'CÔNG VIỆC HÀNG NGÀY', icon: 'fas fa-calendar-alt', isDropdown: true,
+        id: 'btnDailyWork', icon: 'fas fa-calendar-alt', isDropdown: true,
         subItems: [
-            { id: 'btnMonitor', text: 'KIỂM TRA LỖI HỆ THỐNG', htmlFile: 'cv-monitor.html', icon: 'fa-solid fa-desktop' },
-            { id: 'btnCbs', text: 'BÁO CÁO CHÀO BUỔI SÁNG', htmlFile: 'cv-cbs.html', icon: 'fa-solid fa-circle-check' },
-            { id: 'btnTimSheet', text: 'TÌM KIẾM SHEET CÔNG VIỆC', htmlFile: 'tim-kiem-tai-lieu.html', pageTitle: 'TÌM KIẾM SHEET CÔNG VIỆC', icon: 'fa-solid fa-folder-tree' }
+            { id: 'btnMonitor', htmlFile: 'cv-monitor.html', icon: 'fa-solid fa-desktop' },
+            { id: 'btnCbs', htmlFile: 'cv-cbs.html', icon: 'fa-solid fa-circle-check' },
+            { id: 'btnTimSheet', htmlFile: 'tim-kiem-tai-lieu.html', icon: 'fa-solid fa-folder-tree' }
         ]
     }, {
-        id: 'btnBTKK', text: 'LỊCH BẢO TRÌ - KIỂM KÊ', htmlFile: 'cv-bao-tri-kiem-ke.html', icon: 'fas fa-tools'
+        id: 'btnBTKK', htmlFile: 'cv-bao-tri-kiem-ke.html', icon: 'fas fa-tools'
     }, {
-        id: 'btnTimKiem', text: 'TÌM THÔNG TIN', icon: 'fas fa-search', isDropdown: true,
+        id: 'btnTimKiem', icon: 'fas fa-search', isDropdown: true,
         subItems: [
-            { id: 'btnTimSieuThi', text: 'TÌM KIẾM SIÊU THỊ', htmlFile: 'tim-kiem-sieu-thi.html', icon: 'fas fa-store-alt' },
-            { id: 'btnTimHangBK', text: 'TÌM HÀNG HÓA BACKUP', htmlFile: 'tim-kiem-hang-bk.html', icon: 'fas fa-box-open' },
-            { id: 'btnTraCuuFTTH', text: 'TRA CỨU FTTH', htmlFile: 'tra-cuu-ftth.html', icon: 'fa-solid fa-wifi' },
-            { id: 'btnTimDuAn', text: 'TÌM KIẾM DỰ ÁN', htmlFile: 'tai-lieu-du-an.html', pageTitle: 'ĐANG PHÁT TRIỂN', icon: 'fa-solid fa-diagram-project' },
+            { id: 'btnTimSieuThi', htmlFile: 'tim-kiem-sieu-thi.html', icon: 'fas fa-store-alt' },
+            { id: 'btnTimHangBK', htmlFile: 'tim-kiem-hang-bk.html', icon: 'fas fa-box-open' },
+            { id: 'btnTraCuuFTTH', htmlFile: 'tra-cuu-ftth.html', icon: 'fa-solid fa-wifi' },
+            { id: 'btnTimDuAn', htmlFile: 'tai-lieu-du-an.html', icon: 'fa-solid fa-diagram-project' },
         ]
     }]
 }, {
     title: 'TÀI LIỆU - HƯỚNG DẪN',
     items: [{
-        id: 'btnHuongDanIT', text: 'TÀI LIỆU - HƯỚNG DẪN', icon: 'fas fa-book', isDropdown: true,
+        id: 'btnHuongDanIT', icon: 'fas fa-book', isDropdown: true,
         subItems: [
-            { id: 'btnTGDD', text: 'TGDD & ĐMX', htmlFile: 'tai-lieu-tgdd-dmx.html', icon: 'fas fa-mobile-alt' },
-            { id: 'btnBachHoaXanh', text: 'BÁCH HÓA XANH', htmlFile: 'tai-lieu-bhx.html', icon: 'fas fa-store' },
-            { id: 'btnAvakid', text: 'AVAKID', htmlFile: 'tai-lieu-avakid.html', icon: 'fas fa-child' },
-            { id: 'btnAnKhang', text: 'AN KHANG', htmlFile: 'tai-lieu-an-khang.html', icon: 'fas fa-pills' },
-            { id: 'btnKhoVp', text: 'KHO/VP', htmlFile: 'tai-lieu-kho-vp.html', icon: 'fas fa-warehouse' },
+            { id: 'btnTGDD', htmlFile: 'tai-lieu-tgdd-dmx.html', icon: 'fas fa-mobile-alt' },
+            { id: 'btnBachHoaXanh', htmlFile: 'tai-lieu-bhx.html', icon: 'fas fa-store' },
+            { id: 'btnAvakid', htmlFile: 'tai-lieu-avakid.html', icon: 'fas fa-child' },
+            { id: 'btnAnKhang', htmlFile: 'tai-lieu-an-khang.html', icon: 'fas fa-pills' },
+            { id: 'btnKhoVp', htmlFile: 'tai-lieu-kho-vp.html', icon: 'fas fa-warehouse' },
         ]
     }, {
-        id: 'btnphanmem', text: 'TẢI XUỐNG', icon: 'fa-solid fa-download', isDropdown: true,
+        id: 'btnphanmem', icon: 'fa-solid fa-download', isDropdown: true,
         subItems: [
-            { id: 'btnVPN', text: 'TẢI VPN', htmlFile: 'download-vpn.html', icon: 'fas fa-shield-alt' },
-            { id: 'btnDrive', text: 'DRIVE TÀI LIỆU', htmlFile: 'download-drive.html', icon: 'fab fa-google-drive' },
+            { id: 'btnVPN', text: 'DOWNLOAD VPN', htmlFile: 'download-vpn.html', icon: 'fas fa-shield-alt' },
+            { id: 'btnDrive', text: 'KHO TÀI LIỆU DRIVE', htmlFile: 'download-drive.html', icon: 'fab fa-google-drive' },
         ]
     }, {
-        id: 'btnDashboard', text: 'BẢNG ĐIỀU KHIỂN', functionName: 'getPage_TaiLieuDashboard', pageTitle: 'BẢNG ĐIỀU KHIỂN CHÍNH - TEST', icon: 'fas fa-tachometer-alt'
+        id: 'btnDashboard', text: 'DASHBOARD', functionName: 'getPage_TaiLieuDashboard', icon: 'fas fa-tachometer-alt'
     }, ]
 }];
 const rightMenuData = [{
     title: "TRANG CÔNG VIỆC", icon: "fas fa-briefcase",
     items: [
-        { text: "Báo Cáo Nội Bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
-        { text: "Xwork", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "primary" },
-        { text: "Pfcontroller", href: "https://pfsense.tgdd.vn/", icon: "fa-solid fa-server", className: "primary" },
-        { text: "IOT", href: "https://iot.tgdd.vn/", icon: "fa-regular fa-lightbulb", className: "primary" },
-    ]
+                    { text: "Báo Cáo Nội Bộ", href: "https://baocaonoibo.com", icon: "fas fa-chart-bar", className: "primary" },
+                    { text: "Xwork", href: "https://newticket.tgdd.vn/ticket", icon: "fas fa-ticket-alt", className: "primary" },
+                    { text: "Pfcontroller", href: "https://pfsense.tgdd.vn/", icon: "fa-solid fa-server", className: "primary" },
+                    { text: "IOT", href: "https://iot.tgdd.vn/", icon: "fa-regular fa-lightbulb", className: "primary" },
+                    { text: "AWS", href: "https://newticket.tgdd.vn/ticket", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+                    { text: "Cms App", href: "https://cmsapp.thegioididong.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+                    { text: "POS BHX", href: "https://pos.bachhoaxanh.com/", icon: "fa-solid fa-ellipsis-vertical", className: "primary" },
+                ]
 }, {
     title: "CÔNG CỤ", icon: "fas fa-tools",
     items: [
