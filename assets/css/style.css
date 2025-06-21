@@ -767,6 +767,11 @@ body.login-page-body {
         display: block; /* Hiện icon trên di động */
     }
 }
-#header-search-suggestions .suggestion-item-header span {
-    color: #111827 !important; /* Dùng màu đen và !important để đảm bảo ghi đè */
+/* === START: SỬA LỖI MÀU CHỮ GỢI Ý TÌM KIẾM (Bản vá cuối cùng) === */
+#header-search-suggestions .suggestion-item-header {
+    color: var(--text-primary) !important;
 }
+#header-search-suggestions .suggestion-item-header span {
+    color: var(--text-primary) !important; /* Dùng màu đen và !important để đảm bảo ghi đè */
+}
+/* === END: SỬA LỖI MÀU CHỮ GỢI Ý TÌM KIẾM === */
